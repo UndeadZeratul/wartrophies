@@ -1,0 +1,19 @@
+OptionMenu "WarTrophies"
+{
+	Title "War Trophies Options"
+	
+	Control "Toggle Stats Panel", "netevent wt_toggleui"
+	Option "Use Darker Displays", "wt_panel_blackdisplay", "YesNo"
+	Option "Ignore Classes From IWADs", "wt_filter_iwads", "YesNo"
+	StaticText ""
+	SafeCommand "Reset all statistics", "netevent wt_resettally"
+	StaticText ""
+	StaticText "---------- MANUAL ----------", "Teal"
+	StaticText "Use the arrow keys to navigate the weapons list.", "White"
+	StaticText "Use the page up/down keys to navigate the monster list.", "White"
+}
+
+AddOptionMenu "OptionsMenu"
+{
+	Submenu "War Trophies Options", "WarTrophies"
+}

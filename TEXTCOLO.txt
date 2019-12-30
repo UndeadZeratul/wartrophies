@@ -1,0 +1,49 @@
+MiscLabels
+{
+	#131313 #B3904C 0 128
+}
+
+TotalKills
+{
+	#131313 #FF0000 0 128
+}
+
+GenocideRank
+{
+	#131313 #C93935 0 128
+}
+
+PlayerRank
+{
+	#131313 #5EB34C 0 128
+}
+
+SelectedWeapon
+{
+	#131313 #D4452A 0 128
+}
+
+WeaponName
+{
+	#131313 #DDDDDD 0 128
+}
+
+WeaponRank
+{
+	#131313 #D4B62A 0 128
+}
+
+WeaponKills
+{
+	#131313 #FF0000 0 128
+}
+
+WeaponPreference
+{
+	#131313 #999999 0 128
+}
+
+MonsterStats
+{
+	#131313 #6B9BAD 0 128
+} 

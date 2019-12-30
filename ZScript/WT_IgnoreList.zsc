@@ -1,0 +1,244 @@
+extend class WT_MainHandler
+{
+	// --------------------------------------------------
+	// IGNORE LIST
+	// --------------------------------------------------
+
+	static const class<Actor> IgnoredWeapons[] =
+	{
+		// Doom.
+		"Fist",
+		"Chainsaw",
+		"Pistol",
+		"Shotgun",
+		"SuperShotgun",
+		"Chaingun",
+		"RocketLauncher",
+		"PlasmaRifle",
+		"BFG9000",
+
+		// Heretic.
+		"Beak",
+		"BeakPowered",
+		"Blaster",
+		"BlasterPowered",
+		"Crossbow",
+		"CrossbowPowered",
+		"Gauntlets",
+		"GauntletsPowered",
+		"GoldWand",
+		"GoldWandPowered",
+		"Mace",
+		"MacePowered",
+		"PhoenixRod",
+		"PhoenixRodPowered",
+		"SkullRod",
+		"SkullRodPowered",
+		"Staff",
+		"StaffPowered",
+
+		// Hexen.
+		"CWeapFlame",
+		"CWeapMace",
+		"CWeapStaff",
+		"CWeapWraithverge",
+		"FWeapAxe",
+		"FWeapFist",
+		"FWeapHammer",
+		"FWeapQuietus",
+		"MWeapBloodscourge",
+		"MWeapFrost",
+		"MWeapLightning",
+		"MWeapWand",
+
+		// Strife.
+		"PunchDagger",
+		"StrifeCrossbow",
+		"StrifeCrossbow2",
+		"AssaultGun",
+		"AssaultGunStanding",
+		"MiniMissileLauncher",
+		"FlameThrower",
+		"Mauler",
+		"Mauler2",
+		"StrifeGrenadeLauncher",
+		"StrifeGrenadeLauncher2",
+		"Sigil",
+		"Sigil1",
+		"Sigil2",
+		"Sigil3",
+		"Sigil4",
+		"Sigil5"
+	};
+
+	static const class<Actor> IgnoredMonsters[] =
+	{
+		// Doom.
+		"Arachnotron",
+		"Archvile",
+		"BaronOfHell",
+		"HellKnight",
+		"Cacodemon",
+		"Cyberdemon",
+		"Demon",
+		"Spectre",
+		"ChaingunGuy",
+		"DoomImp",
+		"Fatso",
+		"LostSoul",
+		"PainElemental",
+		"Revenant",
+		"ShotgunGuy",
+		"SpiderMastermind",
+		"WolfensteinSS",
+		"ZombieMan",
+		"StealthArachnotron",
+		"StealthArchvile",
+		"StealthBaron",
+		"StealthHellKnight",
+		"StealthCacodemon",
+		"StealthDemon",
+		"StealthChaingunGuy",
+		"StealthDoomImp",
+		"StealthFatso",
+		"StealthRevenant",
+		"StealthShotgunGuy",
+		"StealthZombieMan",
+
+		// Heretic.
+		"Beast",
+		"Chicken",
+		"CLink",
+		"Ironlich",
+		"Knight",
+		"KnightGhost",
+		"Minotaur",
+		"Mummy",
+		"MummyGhost",
+		"MummyLeader",
+		"MummyLeaderGhost",
+		"Snake",
+		"Sorcerer1",
+		"Sorcerer2",
+		"Wizard",
+		"HereticImp",
+		"HereticImpLeader",
+
+		// Hexen.
+		"Bishop",
+		"Centaur",
+		"CentaurLeader",
+		"CentaurMash",
+		"Demon1",
+		"Demon1Mash",
+		"Demon2",
+		"Demon2Mash",
+		"Ettin",
+		"EttinMash",
+		"FireDemon",
+		"IceGuy",
+		"Serpent",
+		"SerpentLeader",
+		"Wraith",
+		"WraithBuried",
+		"Dragon",
+		"ClericBoss",
+		"FighterBoss",
+		"MageBoss",
+		"Heresiarch",
+		"Korax",
+		"Bat",
+		"MinotaurFriend",
+		"Pig",
+
+		// Strife.
+		"Acolyte",
+		"AcolyteTan",
+		"AcolyteRed",
+		"AcolyteRust",
+		"AcolyteGray",
+		"AcolyteDGreen",
+		"AcolyteGold",
+		"AcolyteLGreen",
+		"AcolyteBlue",
+		"AcolyteShadow",
+		"AcolyteToBe",
+		"Macil1",
+		"Macil2",
+		"Rebel",
+		"Rebel1",
+		"Rebel2",
+		"Rebel3",
+		"Rebel4",
+		"Rebel5",
+		"Rebel6",
+		"Beggar",
+		"Beggar1",
+		"Beggar2",
+		"Beggar3",
+		"Beggar4",
+		"Beggar5",
+		"Peasant",
+		"Peasant1",
+		"Peasant2",
+		"Peasant3",
+		"Peasant4",
+		"Peasant5",
+		"Peasant6",
+		"Peasant7",
+		"Peasant8",
+		"Peasant9",
+		"Peasant10",
+		"Peasant11",
+		"Peasant12",
+		"Peasant13",
+		"Peasant14",
+		"Peasant15",
+		"Peasant16",
+		"Peasant17",
+		"Peasant18",
+		"Peasant19",
+		"Peasant20",
+		"Peasant21",
+		"Peasant22",
+		"AlienSpectre1",
+		"AlienSpectre2",
+		"AlienSpectre3",
+		"AlienSpectre4",
+		"AlienSpectre5",
+		"EntityBoss",
+		"EntitySecond",
+		"Loremaster",
+		"Oracle",
+		"Programmer",
+		"StrifeBishop",
+		"KneelingGuy",
+		"Sentinel",
+		"Crusader",
+		"Inquisitor",
+		"Stalker",
+		"CeilingTurret",
+		"Templar",
+		"Reaver"
+	};
+
+	private ui bool IsIgnoredWeapon(class<Actor> wpn)
+	{
+		for (int i = 0; i < IgnoredWeapons.Size(); ++i)
+		{
+			if (wpn == IgnoredWeapons[i]) return true;
+		}
+
+		return false;
+	}
+
+	private ui bool IsIgnoredMonster(class<Actor> mon)
+	{
+		for (int i = 0; i < IgnoredMonsters.Size(); ++i)
+		{
+			if (mon == IgnoredMonsters[i]) return true;
+		}
+		
+		return false;
+	}
+}

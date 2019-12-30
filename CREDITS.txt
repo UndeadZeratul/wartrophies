@@ -1,0 +1,19 @@
+Accensus
+ - Code
+ - HUD
+
+Tapwave
+ - FragTrak, which inspired me to make a universal version.
+
+m8f
+ - Adding Dictionary to GZDoom. None of this would have been possible without it. Thank you!
+ - Coding help and helpful hax. :P
+
+phantombeta
+ - Proving me wrong every step of the way.
+
+Tetris: The Grand Master 3 - Terror-Instinct
+ - Weapon medals
+
+Dave Barr at http://www.foreverbroken.org/
+ - Rank icons

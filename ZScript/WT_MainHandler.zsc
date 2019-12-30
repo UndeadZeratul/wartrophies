@@ -1,0 +1,194 @@
+class WT_MainHandler : EventHandler
+{
+	// --------------------------------------------------
+	// CVARS & GLOBAL VARS
+	// --------------------------------------------------
+
+	private transient CVar WeaponStorage;
+	private transient CVar ExperienceStorage;
+	private transient CVar BlackDisplay;
+	private transient CVar IgnoreIWADs;
+	private int Experience;
+	private int Initialized;
+
+	// --------------------------------------------------
+	// DICTIONARIES
+	// --------------------------------------------------
+
+	// [Ace] The value of each key is the monster dictionary's JSON.
+	// The key is the weapon.
+	Dictionary MonsterKills;
+
+	// [Ace] Key - projectile, value - weapon.
+	Dictionary ProjectileBinds;
+
+	void UpdateTallyFor(string weapon, string victim)
+	{
+		// [Ace] If weapon exists, update info.
+		string CurrWeaponKills = MonsterKills.At(weapon);
+		if (CurrWeaponKills != "")
+		{
+			Dictionary KillStats = Dictionary.FromString(CurrWeaponKills);
+
+			string Kills = KillStats.At(victim);
+			KillStats.Insert(victim, Kills != "" ? String.Format("%i", int(Kills.ToDouble()) + 1) : "1");
+
+			MonsterKills.Insert(weapon, KillStats.ToString());
+		}
+
+		// [Ace] Otherwise, create it and update info.
+		else
+		{
+			Dictionary KillStats = Dictionary.Create();
+			KillStats.Insert(victim, "1");
+
+			MonsterKills.Insert(weapon, KillStats.ToString());
+		}
+	}
+
+	// --------------------------------------------------
+	// DEATH STUFF
+	// --------------------------------------------------
+
+	// [Ace] WTD gets called *after* the damage is dealt. Just sayin'.
+	// 10 bucks it's going to break with Hideous Destructor.
+	// 20 bucks I won't be able to fix it.
+	// 30 bucks I'm not paying up if I lose.
+	override void WorldThingDamaged(WorldEvent e)
+	{
+		if (e.Thing && e.Thing.bISMONSTER && e.DamageSource && e.DamageSource is "PlayerPawn" && e.Thing.Health <= 0)
+		{
+			double FastMonstersMult = sv_fastmonsters || G_SkillPropertyInt(SKILLP_FastMonsters) ? 2.5 : 1;
+			int SkillNumber = (G_SkillPropertyInt(SKILLP_ACSReturn) + 1);
+			int ExperienceGained = int(e.Thing.GetSpawnHealth() * 0.1 * SkillNumber * FastMonstersMult);
+
+			// [Ace] Killer is a projectile.
+			if (e.Inflictor && e.Inflictor.bMISSILE)
+			{
+				string WeaponUsed = ProjectileBinds.At(e.Inflictor.GetClassName());
+				if (WeaponUsed != "")
+				{
+					UpdateTallyFor(WeaponUsed, e.Thing.GetClassName());
+					
+					Experience += ExperienceGained;
+				}
+			}
+
+			// [Ace] Killer is the player's hitscan.
+			else
+			{
+				let plr = PlayerPawn(e.DamageSource);
+				if (plr && plr.player && plr.player.ReadyWeapon)
+				{
+					string WeaponUsed = plr.player.ReadyWeapon.GetClassName();
+					UpdateTallyFor(WeaponUsed, e.Thing.GetClassName());
+
+					Experience += ExperienceGained;
+				}
+			}
+		}
+	}
+
+	// --------------------------------------------------
+	// PROJECTILE TO WEAPON ASSIGNMENT
+	// --------------------------------------------------
+
+	override void WorldThingSpawned(WorldEvent e)
+	{
+		if (e.Thing && e.Thing.bMISSILE && e.Thing.target && e.Thing.target is "PlayerPawn")
+		{
+			let plr = PlayerPawn(e.Thing.target);
+			if (plr && plr.player && plr.player.ReadyWeapon)
+			{
+				ProjectileBinds.Insert(e.Thing.GetClassName(), plr.player.ReadyWeapon.GetClassName());
+			}
+		}
+	}
+
+	// --------------------------------------------------
+	// INITIALIZATION
+	// --------------------------------------------------
+
+	override void OnRegister()
+	{
+		WeaponStorage = CVar.FindCVar('wt_stats_weapons_kills');
+		ExperienceStorage = CVar.FindCVar('wt_stats_experience');
+		BlackDisplay = CVar.FindCVar('wt_panel_blackdisplay');
+		IgnoreIWADs = CVar.FindCVar('wt_filter_iwads');
+	}
+
+	override void WorldLoaded(WorldEvent e)
+	{
+		Initialize(false);
+	}
+
+	void Initialize(bool reset)
+	{
+		ProjectileBinds = Dictionary.Create();
+
+		// [Ace] This exists because calling ResetTally clears the CVars, but not before Dictionary.FromString can recreate the dictionary using the old CVars.
+		// This forces creation of new dictionaries instead of relying on empty strings.
+		if (reset)
+		{
+			WeaponStorage.ResetToDefault();
+			ExperienceStorage.ResetToDefault();
+			MonsterKills = Dictionary.Create();
+			Experience = 0;
+		}
+		else
+		{
+			// [Ace] Glorious m8f hax. At least they actually work.
+			String s = WeaponStorage.GetString();
+			s.Replace("@", String.Format("%c", 92));
+			MonsterKills = Dictionary.FromString(s);
+			Experience = ExperienceStorage.GetInt();
+		}
+	}
+
+	// --------------------------------------------------
+	// PROGRESS SAVING
+	// --------------------------------------------------
+
+	override void WorldTick()
+	{
+		if (level.time % (35 * 1) == 0)
+		{
+			SaveTally();
+		}
+	}
+
+	private void SaveTally()
+	{
+		String s = MonsterKills.ToString();
+		s.Replace(String.Format("%c", 92), "@");
+		WeaponStorage.SetString(s);
+		ExperienceStorage.SetInt(Experience);
+	}
+
+	// --------------------------------------------------
+	// PROGRESS ERASING
+	// --------------------------------------------------
+
+	private void ResetTally()
+	{
+		Initialize(true);
+		Console.Printf("Tally successfully reset!");
+	}
+
+	// --------------------------------------------------
+	// MISCELLANEOUS
+	// --------------------------------------------------
+
+	override void NetworkProcess(ConsoleEvent e)
+	{
+		if (e.Name ~== "WT_ResetTally")
+		{
+			ResetTally();
+		}
+
+		if (e.Name ~== "WT_ToggleUI")
+		{
+			DrawUi = !DrawUi;
+		}
+	}
+}

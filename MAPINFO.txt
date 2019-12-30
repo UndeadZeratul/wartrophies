@@ -1,0 +1,4 @@
+Gameinfo
+{
+	AddEventHandlers = "WT_MainHandler"
+}
