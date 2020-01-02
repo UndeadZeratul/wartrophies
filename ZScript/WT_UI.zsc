@@ -275,12 +275,10 @@ extend class WT_MainHandler
 			for (int i = 0; i < AllActorClasses.Size(); ++i)
 			{
 				class<Actor> a = AllActorClasses[i];
-				if (!(a is "Weapon") || IgnoreIWADs.GetBool() && IsIgnoredWeapon(a))
-				{
-					continue;
-				}
+				int IwadType = GetIwadType(Search_Weapons, a);
+				int Filter = IWADFilterWeapons.GetInt();
 
-				if (a.GetClassName() == it.Key())
+				if (a is "Weapon" && a.GetClassName() == it.Key() && (Filter == IwadType || Filter == Filter_All || IwadType == Filter_None))
 				{
 					AvailableWeapons.Push(a);
 					break;
@@ -301,12 +299,10 @@ extend class WT_MainHandler
 				for (int i = 0; i < AllActorClasses.Size(); ++i)
 				{
 					class<Actor> a = AllActorClasses[i];
-					if (!GetDefaultByType(a).bISMONSTER || IgnoreIWADs.GetBool() && IsIgnoredMonster(a))
-					{
-						continue;
-					}
+					int IwadType = GetIwadType(Search_Monsters, a);
+					int Filter = IWADFilterMonsters.GetInt();
 
-					if (a.GetClassName() == it2.Key() && AvailableMonsters.Find(a) == AvailableMonsters.Size())
+					if (GetDefaultByType(a).bISMONSTER && a.GetClassName() == it2.Key() && AvailableMonsters.Find(a) == AvailableMonsters.Size() && (Filter == IwadType || Filter == Filter_All || IwadType == Filter_None))
 					{
 						AvailableMonsters.Push(a);
 					}

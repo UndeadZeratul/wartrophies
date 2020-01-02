@@ -1,5 +1,15 @@
 class WT_MainHandler : EventHandler
 {
+	enum FilterIWAD
+	{
+		Filter_None,
+		Filter_Doom,
+		Filter_Heretic,
+		Filter_Hexen,
+		Filter_Strife,
+		Filter_All
+	}
+
 	// --------------------------------------------------
 	// CVARS & GLOBAL VARS
 	// --------------------------------------------------
@@ -7,7 +17,8 @@ class WT_MainHandler : EventHandler
 	private transient CVar WeaponStorage;
 	private transient CVar ExperienceStorage;
 	private transient CVar BlackDisplay;
-	private transient CVar IgnoreIWADs;
+	private transient CVar IWADFilterWeapons;
+	private transient CVar IWADFilterMonsters;
 	private int Experience;
 	private int Initialized;
 
@@ -114,7 +125,8 @@ class WT_MainHandler : EventHandler
 		WeaponStorage = CVar.FindCVar('wt_stats_weapons_kills');
 		ExperienceStorage = CVar.FindCVar('wt_stats_experience');
 		BlackDisplay = CVar.FindCVar('wt_panel_blackdisplay');
-		IgnoreIWADs = CVar.FindCVar('wt_filter_iwads');
+		IWADFilterWeapons = CVar.FindCVar('wt_filter_iwad_weapons');
+		IWADFilterMonsters = CVar.FindCVar('wt_filter_iwad_monsters');
 	}
 
 	override void WorldLoaded(WorldEvent e)

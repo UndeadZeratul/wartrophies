@@ -1,12 +1,17 @@
 extend class WT_MainHandler
 {
+	enum SearchType
+	{
+		Search_Weapons,
+		Search_Monsters
+	}
+
 	// --------------------------------------------------
 	// IGNORE LIST
 	// --------------------------------------------------
 
-	static const class<Actor> IgnoredWeapons[] =
+	static const class<Actor> DoomWeapons[] =
 	{
-		// Doom.
 		"Fist",
 		"Chainsaw",
 		"Pistol",
@@ -15,9 +20,11 @@ extend class WT_MainHandler
 		"Chaingun",
 		"RocketLauncher",
 		"PlasmaRifle",
-		"BFG9000",
+		"BFG9000"
+	};
 
-		// Heretic.
+	static const class<Actor> HereticWeapons[] =
+	{
 		"Beak",
 		"BeakPowered",
 		"Blaster",
@@ -35,9 +42,11 @@ extend class WT_MainHandler
 		"SkullRod",
 		"SkullRodPowered",
 		"Staff",
-		"StaffPowered",
+		"StaffPowered"
+	};
 
-		// Hexen.
+	static const class<Actor> HexenWeapons[] =
+	{
 		"CWeapFlame",
 		"CWeapMace",
 		"CWeapStaff",
@@ -49,9 +58,11 @@ extend class WT_MainHandler
 		"MWeapBloodscourge",
 		"MWeapFrost",
 		"MWeapLightning",
-		"MWeapWand",
+		"MWeapWand"
+	};
 
-		// Strife.
+	static const class<Actor> StrifeWeapons[] =
+	{
 		"PunchDagger",
 		"StrifeCrossbow",
 		"StrifeCrossbow2",
@@ -71,9 +82,8 @@ extend class WT_MainHandler
 		"Sigil5"
 	};
 
-	static const class<Actor> IgnoredMonsters[] =
+	static const class<Actor> DoomMonsters[] =
 	{
-		// Doom.
 		"Arachnotron",
 		"Archvile",
 		"BaronOfHell",
@@ -103,9 +113,11 @@ extend class WT_MainHandler
 		"StealthFatso",
 		"StealthRevenant",
 		"StealthShotgunGuy",
-		"StealthZombieMan",
+		"StealthZombieMan"
+	};
 
-		// Heretic.
+	static const class<Actor> HereticMonsters[] =
+	{
 		"Beast",
 		"Chicken",
 		"CLink",
@@ -122,9 +134,11 @@ extend class WT_MainHandler
 		"Sorcerer2",
 		"Wizard",
 		"HereticImp",
-		"HereticImpLeader",
+		"HereticImpLeader"
+	};
 
-		// Hexen.
+	static const class<Actor> HexenMonsters[] =
+	{
 		"Bishop",
 		"Centaur",
 		"CentaurLeader",
@@ -149,9 +163,11 @@ extend class WT_MainHandler
 		"Korax",
 		"Bat",
 		"MinotaurFriend",
-		"Pig",
+		"Pig"
+	};
 
-		// Strife.
+	static const class<Actor> StrifeMonsters[] =
+	{
 		"Acolyte",
 		"AcolyteTan",
 		"AcolyteRed",
@@ -222,23 +238,26 @@ extend class WT_MainHandler
 		"Reaver"
 	};
 
-	private ui bool IsIgnoredWeapon(class<Actor> wpn)
+	// [Ace] Looks absolutely disgusting, doesn't it? I agree.
+	private ui FilterIWAD GetIwadType(SearchType type, class<Actor> a) const
 	{
-		for (int i = 0; i < IgnoredWeapons.Size(); ++i)
+		switch (type)
 		{
-			if (wpn == IgnoredWeapons[i]) return true;
+			case Search_Weapons:
+				for (int i = 0; i < DoomWeapons.Size(); ++i) if (a == DoomWeapons[i]) return Filter_Doom;
+				for (int i = 0; i < HereticWeapons.Size(); ++i) if (a == HereticWeapons[i]) return Filter_Heretic;
+				for (int i = 0; i < HexenWeapons.Size(); ++i) if (a == HexenWeapons[i]) return Filter_Hexen;
+				for (int i = 0; i < StrifeWeapons.Size(); ++i) if (a == StrifeWeapons[i]) return Filter_Strife;
+				break;
+
+			case Search_Monsters:
+				for (int i = 0; i < DoomMonsters.Size(); ++i) if (a == DoomMonsters[i]) return Filter_Doom;
+				for (int i = 0; i < HereticMonsters.Size(); ++i) if (a == HereticMonsters[i]) return Filter_Heretic;
+				for (int i = 0; i < HexenMonsters.Size(); ++i) if (a == HexenMonsters[i]) return Filter_Hexen;
+				for (int i = 0; i < StrifeMonsters.Size(); ++i) if (a == StrifeMonsters[i]) return Filter_Strife;
+				break;
 		}
 
-		return false;
-	}
-
-	private ui bool IsIgnoredMonster(class<Actor> mon)
-	{
-		for (int i = 0; i < IgnoredMonsters.Size(); ++i)
-		{
-			if (mon == IgnoredMonsters[i]) return true;
-		}
-		
-		return false;
+		return Filter_None;
 	}
 }

@@ -1,5 +1,5 @@
 version 4.2
 
 #include "ZScript/WT_MainHandler.zsc"
-#include "ZScript/WT_IgnoreList.zsc"
+#include "ZScript/WT_FilterList.zsc"
 #include "ZScript/WT_UI.zsc"

@@ -4,7 +4,11 @@ OptionMenu "WarTrophies"
 	
 	Control "Toggle Stats Panel", "netevent wt_toggleui"
 	Option "Use Darker Displays", "wt_panel_blackdisplay", "YesNo"
-	Option "Ignore Classes From IWADs", "wt_filter_iwads", "YesNo"
+	StaticText ""
+	Option "Filter Weapons To IWAD", "wt_filter_iwad_weapons", "IWADFilterMode"
+	Option "Filter Monsters To IWAD", "wt_filter_iwad_monsters", "IWADFilterMode"
+	StaticText "Use the filters to only show classes from a specific IWAD.", "White"
+	StaticText "Mod classes will always appear, regardless of this setting.", "White"
 	StaticText ""
 	SafeCommand "Reset all statistics", "netevent wt_resettally"
 	StaticText ""
@@ -16,4 +20,14 @@ OptionMenu "WarTrophies"
 AddOptionMenu "OptionsMenu"
 {
 	Submenu "War Trophies Options", "WarTrophies"
+}
+
+OptionValue "IWADFilterMode"
+{
+	0, "None"
+	1, "Doom"
+	2, "Heretic"
+	3, "Hexen"
+	4, "Strife"
+	5, "All" // [Ace] y tho?
 }
