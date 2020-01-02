@@ -1,0 +1,22 @@
+WT/KillSound1 POINT1
+WT/KillSound2 POINT2
+WT/KillSound3 POINT3
+WT/KillSound4 POINT4
+WT/KillSound5 POINT5
+
+WT/LevelUp LEVELUP
+WT/RankUp RANKUP
+WT/Milestone MILESTN
+WT/Prestige PRESTIGE
+WT/ThatsRight YOUGO // [Ace] Timmy Turner, my name is DougsDaleDimmaDaleDimmaDimmsDomeDoDiDomeDimmsDimmaDimmaDome, Owner of the DougDimmsDimmaDaleDimmsDomeDoDiDimmaDimmsDaleDimmaDimmsDaleDimmaDome.
+WT/ResetStats WHOOPS
+WT/XPRankA XPUPA
+WT/XPRankB XPUPB
+
+$pitchshift WT/LevelUp 0
+$pitchshift WT/RankUp 0
+$pitchshift WT/Milestone 0
+$pitchshift WT/Prestige 0
+$pitchshift WT/ThatsRight 0
+$pitchshift WT/XPRankA 0
+$pitchshift WT/XPRankB 0

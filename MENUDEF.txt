@@ -4,6 +4,7 @@ OptionMenu "WarTrophies"
 	
 	Control "Toggle Stats Panel", "netevent wt_toggleui"
 	Option "Use Darker Displays", "wt_panel_blackdisplay", "YesNo"
+	Option "Kill Sound Type", "wt_killsound", "KillSoundType"
 	StaticText ""
 	Option "Filter Weapons To IWAD", "wt_filter_iwad_weapons", "IWADFilterMode"
 	Option "Filter Monsters To IWAD", "wt_filter_iwad_monsters", "IWADFilterMode"
@@ -19,7 +20,7 @@ OptionMenu "WarTrophies"
 
 AddOptionMenu "OptionsMenu"
 {
-	Submenu "War Trophies Options", "WarTrophies"
+	Submenu "War Trophies", "WarTrophies"
 }
 
 OptionValue "IWADFilterMode"
@@ -30,4 +31,14 @@ OptionValue "IWADFilterMode"
 	3, "Hexen"
 	4, "Strife"
 	5, "All" // [Ace] y tho?
+}
+
+OptionValue "KillSoundType"
+{
+	0, "Disabled"
+	1, "Beep"
+	2, "Bleeple"
+	3, "Boop"
+	4, "Blips"
+	5, "Bing"
 }

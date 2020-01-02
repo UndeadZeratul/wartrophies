@@ -19,6 +19,7 @@ class WT_MainHandler : EventHandler
 	private transient CVar BlackDisplay;
 	private transient CVar IWADWeaponFilter;
 	private transient CVar IWADMonsterFilter;
+	private transient CVar KillSoundType;
 	private int Experience;
 	private int Initialized;
 
@@ -45,6 +46,7 @@ class WT_MainHandler : EventHandler
 			KillStats.Insert(victim, Kills != "" ? String.Format("%i", int(Kills.ToDouble()) + 1) : "1");
 
 			MonsterKills.Insert(weapon, KillStats.ToString());
+
 		}
 
 		// [Ace] Otherwise, create it and update info.
@@ -82,6 +84,7 @@ class WT_MainHandler : EventHandler
 					UpdateTallyFor(WeaponUsed, e.Thing.GetClassName());
 					
 					Experience += ExperienceGained;
+					PlayKillSound();
 				}
 			}
 
@@ -95,6 +98,7 @@ class WT_MainHandler : EventHandler
 					UpdateTallyFor(WeaponUsed, e.Thing.GetClassName());
 
 					Experience += ExperienceGained;
+					PlayKillSound();
 				}
 			}
 		}
@@ -127,6 +131,7 @@ class WT_MainHandler : EventHandler
 		BlackDisplay = CVar.FindCVar('wt_panel_blackdisplay');
 		IWADWeaponFilter = CVar.FindCVar('wt_filter_iwad_weapons');
 		IWADMonsterFilter = CVar.FindCVar('wt_filter_iwad_monsters');
+		KillSoundType = CVar.FindCVar('wt_killsound');
 	}
 
 	override void WorldLoaded(WorldEvent e)
@@ -190,6 +195,11 @@ class WT_MainHandler : EventHandler
 	// --------------------------------------------------
 	// MISCELLANEOUS
 	// --------------------------------------------------
+
+	private void PlayKillSound()
+	{
+		S_StartSound("WT/KillSound"..KillSoundType.GetInt(), CHANF_UI, CHAN_AUTO | CHAN_UI);
+	}
 
 	override void NetworkProcess(ConsoleEvent e)
 	{

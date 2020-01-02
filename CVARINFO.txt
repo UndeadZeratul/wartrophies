@@ -5,3 +5,5 @@ server cheat int wt_stats_experience = 0;
 user int wt_filter_iwad_weapons = 5;
 user int wt_filter_iwad_monsters = 5;
 user bool wt_panel_blackdisplay = false;
+
+user int wt_killsound = 0;
