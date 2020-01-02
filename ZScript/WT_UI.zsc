@@ -269,19 +269,22 @@ extend class WT_MainHandler
 	private ui void GetAvailableWeapons()
 	{
 		AvailableWeapons.Clear();
+		int Filter = IWADWeaponFilter.GetInt();
+
 		let it = DictionaryIterator.Create(MonsterKills); 
 		while (it.Next())
 		{
 			for (int i = 0; i < AllActorClasses.Size(); ++i)
 			{
 				class<Actor> a = AllActorClasses[i];
-				int IwadType = GetIwadType(Search_Weapons, a);
-				int Filter = IWADFilterWeapons.GetInt();
-
-				if (a is "Weapon" && a.GetClassName() == it.Key() && (Filter == IwadType || Filter == Filter_All || IwadType == Filter_None))
+				if (a is "Weapon" && a.GetClassName() == it.Key())
 				{
-					AvailableWeapons.Push(a);
-					break;
+					bool IsFromIwad = IsIwadClass(Filter, Search_Weapons, a);
+					if (Filter == Filter_All || Filter == Filter_None && !IsFromIwad || Filter > Filter_None && IsFromIwad)
+					{
+						AvailableWeapons.Push(a);
+						break;
+					}
 				}
 			}
 		}
@@ -290,6 +293,8 @@ extend class WT_MainHandler
 	private ui void GetAvailableMonsters()
 	{
 		AvailableMonsters.Clear();
+		int Filter = IWADMonsterFilter.GetInt();
+
 		let it = DictionaryIterator.Create(MonsterKills);
 		while (it.Next())
 		{
@@ -298,13 +303,16 @@ extend class WT_MainHandler
 			{
 				for (int i = 0; i < AllActorClasses.Size(); ++i)
 				{
+					// [Ace] The AvailableMonsters.Find check is here so that monsters aren't re-added by the next weapon.
 					class<Actor> a = AllActorClasses[i];
-					int IwadType = GetIwadType(Search_Monsters, a);
-					int Filter = IWADFilterMonsters.GetInt();
-
-					if (GetDefaultByType(a).bISMONSTER && a.GetClassName() == it2.Key() && AvailableMonsters.Find(a) == AvailableMonsters.Size() && (Filter == IwadType || Filter == Filter_All || IwadType == Filter_None))
+					if (GetDefaultByType(a).bISMONSTER && a.GetClassName() == it2.Key() && AvailableMonsters.Find(a) == AvailableMonsters.Size())
 					{
-						AvailableMonsters.Push(a);
+						bool IsFromIwad = IsIwadClass(Filter, Search_Monsters, a);
+						if (Filter == Filter_All || Filter == Filter_None && !IsFromIwad || Filter > Filter_None && IsFromIwad)
+						{
+							AvailableMonsters.Push(a);
+							break;
+						}
 					}
 				}
 			}

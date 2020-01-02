@@ -17,8 +17,8 @@ class WT_MainHandler : EventHandler
 	private transient CVar WeaponStorage;
 	private transient CVar ExperienceStorage;
 	private transient CVar BlackDisplay;
-	private transient CVar IWADFilterWeapons;
-	private transient CVar IWADFilterMonsters;
+	private transient CVar IWADWeaponFilter;
+	private transient CVar IWADMonsterFilter;
 	private int Experience;
 	private int Initialized;
 
@@ -125,8 +125,8 @@ class WT_MainHandler : EventHandler
 		WeaponStorage = CVar.FindCVar('wt_stats_weapons_kills');
 		ExperienceStorage = CVar.FindCVar('wt_stats_experience');
 		BlackDisplay = CVar.FindCVar('wt_panel_blackdisplay');
-		IWADFilterWeapons = CVar.FindCVar('wt_filter_iwad_weapons');
-		IWADFilterMonsters = CVar.FindCVar('wt_filter_iwad_monsters');
+		IWADWeaponFilter = CVar.FindCVar('wt_filter_iwad_weapons');
+		IWADMonsterFilter = CVar.FindCVar('wt_filter_iwad_monsters');
 	}
 
 	override void WorldLoaded(WorldEvent e)
