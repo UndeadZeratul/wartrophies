@@ -96,7 +96,7 @@ extend class WT_MainHandler
 
 			// [Ace] If the stats above aren't visible, shift the entire thing up.
 			int YOffset = LiteHUD == 2 ? -98 : 0;
-			if (LiteHUD > 1 && WeaponListSel)
+			if (LiteHUD > 1 && WeaponListSel && WeaponListSel == SelectedWeapon)
 			{
 				// Weapon name.
 				StatusBar.DrawString(mMainFont, GetDefaultByType(WeaponListSel).GetTag(), (2, 100 + YOffset), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponName"));
