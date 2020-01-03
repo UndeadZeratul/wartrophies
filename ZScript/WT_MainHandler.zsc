@@ -1,10 +1,3 @@
-class WT_MonsterInfo
-{
-	class<Actor> Cls;
-	int Kills;
-	int Percentage;
-}
-
 class WT_MainHandler : EventHandler
 {
 	enum IWADFilter
@@ -30,7 +23,6 @@ class WT_MainHandler : EventHandler
 	private transient CVar LiteHUDType;
 
 	private transient Array<class<Weapon> > AvailableWeapons;
-	private transient Array<class<Actor> > AvailableMonsters;
 	private int Experience;
 
 	Dictionary MonsterKills; // [Ace] The value of each key is the monster dictionary's JSON. The key is the weapon.
@@ -91,14 +83,11 @@ class WT_MainHandler : EventHandler
 		}
 	}
 
-	private void GetAvailableActors()
+	private void GetAvailableWeapons()
 	{
 		AvailableWeapons.Clear();
-		AvailableMonsters.Clear();
-
 		int WFilter = IWADWeaponFilter.GetInt();
-		int MFilter = IWADMonsterFilter.GetInt();
-
+		
 		let it = DictionaryIterator.Create(MonsterKills);
 		while (it.Next())
 		{
@@ -116,29 +105,49 @@ class WT_MainHandler : EventHandler
 					}
 				}
 			}
+		}
 
-			// Monsters.
-			let it2 = DictionaryIterator.Create(Dictionary.FromString(it.Value()));
-			while (it2.Next())
+		SortWeaponList();
+	}
+
+	private void GetMonstersForWeapon(string weapon, out Array<class<Actor> > arr) const // [Ace] This may break someday. When that day comes, fix it.
+	{
+		int MFilter = IWADMonsterFilter.GetInt();
+
+		let it = DictionaryIterator.Create(Dictionary.FromString(MonsterKills.At(weapon)));
+		while (it.Next())
+		{
+			for (int i = 0; i < AllActorClasses.Size(); ++i)
 			{
-				for (int i = 0; i < AllActorClasses.Size(); ++i)
+				// [Ace] The AvailableMonsters.Find check is here so that monsters aren't re-added by the next weapon.
+				class<Actor> a = AllActorClasses[i];
+				if (GetDefaultByType(a).bISMONSTER && a.GetClassName() == it.Key())
 				{
-					// [Ace] The AvailableMonsters.Find check is here so that monsters aren't re-added by the next weapon.
-					class<Actor> a = AllActorClasses[i];
-					if (GetDefaultByType(a).bISMONSTER && a.GetClassName() == it2.Key() && AvailableMonsters.Find(a) == AvailableMonsters.Size())
+					int IwadType = GetIwadType(Search_Monsters, a);
+					if (MFilter == Filter_All || MFilter == IWadType || IwadType == Filter_None)
 					{
-						int IwadType = GetIwadType(Search_Monsters, a);
-						if (MFilter == Filter_All || MFilter == IWadType || IwadType == Filter_None)
-						{
-							AvailableMonsters.Push(a);
-							break;
-						}
+						arr.Push(a);
+						break;
 					}
 				}
 			}
 		}
 
-		SortWeaponList();
+		// [Ace] Sort the darn thing while it's at it.
+		for (int i = 0; i < arr.Size() - 1; ++i)
+		{
+			for (int j = i + 1; j < arr.Size(); ++j)
+			{
+				let CurrMonster = GetDefaultByType(arr[i]);
+				let NextMonster = GetDefaultByType(arr[j]);
+				if (CurrMonster.Health >= NextMonster.Health)
+				{
+					let Swap = arr[i];
+					arr[i] = arr[j];
+					arr[j] = Swap;
+				}
+			}
+		}
 	}
 
 	// --------------------------------------------------
@@ -257,7 +266,7 @@ class WT_MainHandler : EventHandler
 		{
 			SaveTally();
 
-			GetAvailableActors();
+			GetAvailableWeapons();
 
 			// [Ace] This will desync. You have been warned. I have been warned.
 			let plr = PlayerPawn(players[consoleplayer].mo);

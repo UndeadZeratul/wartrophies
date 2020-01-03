@@ -230,37 +230,19 @@ extend class WT_MainHandler
 				StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(SelMonsterPage + 1, 1, 3), (116, 12), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
 
 				// [Ace] Filter the monsters and get all the necessary data.
-				Array<WT_MonsterInfo> ValidMonstersForWeapon;
-				let MonDictIterator = DictionaryIterator.Create(Dictionary.FromString(MonsterKills.At(GetDefaultByType(WeaponListSel).GetClassName())));
-				while (MonDictIterator.Next())
-				{
-					for (int i = 0; i < AvailableMonsters.Size(); ++i)
-					{
-						if (MonDictIterator.Key() == AvailableMonsters[i].GetClassName())
-						{
-							let CurrMonster = GetDefaultByType(AvailableMonsters[i]);
-							WT_MonsterInfo Monster = new("WT_MonsterInfo");
 
-							Monster.Cls = AvailableMonsters[i];
-							Monster.Kills = int(MonDictIterator.Value().ToDouble());
-							Monster.Percentage = int((Monster.Kills / double(WeaponKills)) * 100);
-
-							ValidMonstersForWeapon.Push(Monster);
-							break;
-						}
-					}
-				}
+				Array<class<Actor> > AvailableMonsters;
+				GetMonstersForWeapon(WeaponListSel.GetClassName(), AvailableMonsters);
 
 				// [Ace] Then display them.
 				int StartIndex = MonsterListEntries * SelMonsterPage;
 				int row = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
-				SortFilteredMonsterList(ValidMonstersForWeapon);
-				for (int i = StartIndex; i < ValidMonstersForWeapon.Size() && row < MonsterListEntries; ++i)
+				for (int i = StartIndex; i < AvailableMonsters.Size() && row < MonsterListEntries; ++i)
 				{
-					WT_MonsterInfo Monster = ValidMonstersForWeapon[i];
+					let Monster = GetDefaultByType(AvailableMonsters[i]);
 
 					// [Ace] Truncate name if it's too long.
-					string MonsterName = GetDefaultByType(Monster.Cls).GetTag();
+					string MonsterName = Monster.GetTag();
 					if (MonsterName.Length() > MonsterListMaxStringWidth)
 					{
 						MonsterName = MonsterName.Mid(0, MonsterListMaxStringWidth).."...";
@@ -268,10 +250,11 @@ extend class WT_MainHandler
 					StatusBar.DrawString(mMainFont, MonsterName, (-7, 36 + 9 * row), DI_TEXT_LEFT, Font.FindFontColor("MonsterStats"));
 
 					// Kills.
-					StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(Monster.Kills, 1, 5), (180, 36 + 9 * row), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
+					int Kills = GetKillsForMonster(WeaponListSel.GetClassName(), Monster.GetClassName());
+					StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(Kills, 1, 5), (180, 36 + 9 * row), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
 
 					// Percentage compared to other kills.
-					StatusBar.DrawString(mMainFont, Monster.Percentage.."%", (224, 36 + 9 * row), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
+					StatusBar.DrawString(mMainFont, int((Kills / double(WeaponKills)) * 100).."%", (224, 36 + 9 * row), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
 					row++;
 				}
 			}
@@ -294,25 +277,6 @@ extend class WT_MainHandler
 			{
 				WeaponListSelIndex = i;
 				break;
-			}
-		}
-	}
-
-	private ui void SortFilteredMonsterList(out Array<WT_MonsterInfo> arr)
-	{
-		// [Ace] Sort the list.
-		for (int i = 0; i < arr.Size() - 1; ++i)
-		{
-			for (int j = i + 1; j < arr.Size(); ++j)
-			{
-				let CurrMonster = GetDefaultByType(arr[i].Cls);
-				let NextMonster = GetDefaultByType(arr[j].Cls);
-				if (CurrMonster.Health >= NextMonster.Health)
-				{
-					let Swap = arr[i];
-					arr[i] = arr[j];
-					arr[j] = Swap;
-				}
 			}
 		}
 	}
@@ -441,6 +405,12 @@ extend class WT_MainHandler
 		return TotalKills;
 	}
 
+	private ui int GetKillsForMonster(string weapon, string monster) const
+	{
+		let Monsters = Dictionary.FromString(MonsterKills.At(weapon));
+		return int(Monsters.At(monster).ToDouble());
+	}
+
 	// --------------------------------------------------
 	// INPUT
 	// --------------------------------------------------
@@ -453,28 +423,24 @@ extend class WT_MainHandler
 			if (e.KeyScan == InputEvent.Key_UpArrow && WeaponListSelIndex > 0)
 			{
 				WeaponListSelIndex--;
-				return true;
 			}
 
 			// [Ace] Move weapon selection down.
 			if (e.KeyScan == InputEvent.Key_DownArrow && WeaponListSelIndex < AvailableWeapons.Size() - 1)
 			{
 				WeaponListSelIndex++;
-				return true;
 			}
 
 			// [Ace] Move monster selection up.
 			if (e.KeyScan == InputEvent.Key_PgUp && SelMonsterPage > 0)
 			{
 				SelMonsterPage--;
-				return true;
 			}
 
 			// [Ace] No cap on this because it'd be a pain to get how many pages the current weapon has.
 			if (e.KeyScan == InputEvent.Key_PgDn)
 			{
 				SelMonsterPage++;
-				return true;
 			}
 		}
 
