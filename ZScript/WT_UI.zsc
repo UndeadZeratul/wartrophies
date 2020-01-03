@@ -31,13 +31,14 @@ extend class WT_MainHandler
 
 	override void RenderOverlay(RenderEvent e)
 	{
+		int LiteHUD = LiteHUDType.GetInt();
 		mMainFont = HUDFont.Create("STRPFNT");
 
 		// ------------------------------------------------
 		// LITE HUD
 		// ------------------------------------------------
 
-		if (ShowLiteHUD.GetBool() && !DrawUi)
+		if (LiteHUD > 0 && !DrawUi)
 		{
 			int DI_TL = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_ITEM_LEFT_TOP;
 			int DI_TL_TEXT_LEFT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
@@ -64,54 +65,59 @@ extend class WT_MainHandler
 
 			// --------------- MAIN STATS ---------------
 
-			// Total kills.
-			StatusBar.DrawString(mMainFont, "Total:", (2, 2), DI_TL_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
-			StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(TotalKills, 1, 10), (47, 2), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponKills"));
+			if (LiteHUD == 1 || LiteHUD == 3)
+			{
+				// Total kills.
+				StatusBar.DrawString(mMainFont, "Total:", (2, 2), DI_TL_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
+				StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(TotalKills, 1, 10), (47, 2), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponKills"));
 
-			// Genocide rank.
-			StatusBar.DrawString(mMainFont, GetGenocideRank(TotalKills), (2, 12), DI_TL_TEXT_LEFT, Font.FindFontColor("GenocideRank"));
+				// Genocide rank.
+				StatusBar.DrawString(mMainFont, GetGenocideRank(TotalKills), (2, 12), DI_TL_TEXT_LEFT, Font.FindFontColor("GenocideRank"));
 
-			// Player rank.
-			int PlayerRank; string PlayerRankString;
-			[PlayerRank, PlayerRankString] = GetPlayerRank();
-			StatusBar.DrawString(mMainFont, PlayerRankString, (2, 26), DI_TL_TEXT_LEFT, Font.FindFontColor("PlayerRank"));
+				// Player rank.
+				int PlayerRank; string PlayerRankString;
+				[PlayerRank, PlayerRankString] = GetPlayerRank();
+				StatusBar.DrawString(mMainFont, PlayerRankString, (2, 26), DI_TL_TEXT_LEFT, Font.FindFontColor("PlayerRank"));
 
-			// Player experience.
-			StatusBar.DrawString(mMainFont, "XP:", (2, 36), DI_TL_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
-			StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(Experience, 1, 7), (24, 36), DI_TL_TEXT_LEFT, Font.FindFontColor("PlayerRank"));
+				// Player experience.
+				StatusBar.DrawString(mMainFont, "XP:", (2, 36), DI_TL_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
+				StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(Experience, 1, 7), (24, 36), DI_TL_TEXT_LEFT, Font.FindFontColor("PlayerRank"));
 
-			// Player experience for next level.
-			string NextPlayerRankExp = PlayerRank < XPReq.Size() - 1 ? StatusBar.FormatNumber(XPReq[PlayerRank + 1], 1, 7) : "-";
-			StatusBar.DrawString(mMainFont, "NX:", (2, 46), DI_TL_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
-			StatusBar.DrawString(mMainFont, NextPlayerRankExp, (24, 46), DI_TL_TEXT_LEFT, Font.FindFontColor("PlayerRank"));
+				// Player experience for next level.
+				string NextPlayerRankExp = PlayerRank < XPReq.Size() - 1 ? StatusBar.FormatNumber(XPReq[PlayerRank + 1], 1, 7) : "-";
+				StatusBar.DrawString(mMainFont, "NX:", (2, 46), DI_TL_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
+				StatusBar.DrawString(mMainFont, NextPlayerRankExp, (24, 46), DI_TL_TEXT_LEFT, Font.FindFontColor("PlayerRank"));
 
-			// Player medal.
-			StatusBar.DrawImage("RANK"..PlayerRank, (4, 58), DI_TL);
+				// Player medal.
+				StatusBar.DrawImage("RANK"..PlayerRank, (4, 58), DI_TL);
+			}
 
 			// --------------- WEAPON STATS ---------------
 
-			if (WeaponListSel)
+			// [Ace] If the stats above aren't visible, shift the entire thing up.
+			int YOffset = LiteHUD == 2 ? -98 : 0;
+			if (LiteHUD > 1 && WeaponListSel)
 			{
 				// Weapon name.
-				StatusBar.DrawString(mMainFont, GetDefaultByType(WeaponListSel).GetTag(), (2, 100), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponName"));
+				StatusBar.DrawString(mMainFont, GetDefaultByType(WeaponListSel).GetTag(), (2, 100 + YOffset), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponName"));
 
 				// Weapon rank.
 				int WeaponRank; string WeaponRankString;
 				[WeaponRank, WeaponRankString] = GetWeaponRank(WeaponKills);
-				StatusBar.DrawString(mMainFont, WeaponRankString, (2, 114), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponRank"));
-				StatusBar.DrawString(mMainFont, WeaponRank.."/"..WeapRanks.Size(), (2, 124), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponRank"));
+				StatusBar.DrawString(mMainFont, WeaponRankString, (2, 114 + YOffset), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponRank"));
+				StatusBar.DrawString(mMainFont, WeaponRank.."/"..WeapRanks.Size(), (2, 124 + YOffset), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponRank"));
 
 				// Weapon kills.
-				StatusBar.DrawString(mMainFont, "K:", (2, 138), DI_TL_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
-				StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(WeaponKills, 1, 6), (16, 138), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponKills"));
+				StatusBar.DrawString(mMainFont, "K:", (2, 138 + YOffset), DI_TL_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
+				StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(WeaponKills, 1, 6), (16, 138 + YOffset), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponKills"));
 
 				// Weapon kills for next level.
 				string NextWeaponRankKills = WeaponRank < WeapKillReq.Size() ? StatusBar.FormatNumber(WeapKillReq[WeaponRank], 1, 6) : "-";
-				StatusBar.DrawString(mMainFont, "NX:", (2, 148), DI_TL_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
-				StatusBar.DrawString(mMainFont, NextWeaponRankKills, (26, 148), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponRank"));
+				StatusBar.DrawString(mMainFont, "NX:", (2, 148 + YOffset), DI_TL_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
+				StatusBar.DrawString(mMainFont, NextWeaponRankKills, (26, 148 + YOffset), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponRank"));
 
 				// Weapon medals.
-				DrawWeaponMedals(WeaponKills, 2, 162, DI_TL);
+				DrawWeaponMedals(WeaponKills, 2, 162 + YOffset, DI_TL);
 			}
 		}
 

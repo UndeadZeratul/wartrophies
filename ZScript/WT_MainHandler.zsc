@@ -20,7 +20,7 @@ class WT_MainHandler : EventHandler
 	private transient CVar IWADWeaponFilter;
 	private transient CVar IWADMonsterFilter;
 	private transient CVar KillSoundType;
-	private transient CVar ShowLiteHUD;
+	private transient CVar LiteHUDType;
 
 	private transient Array<class<Weapon> > AvailableWeapons;
 	private transient Array<class<Actor> > AvailableMonsters;
@@ -226,7 +226,7 @@ class WT_MainHandler : EventHandler
 		IWADWeaponFilter = CVar.FindCVar('wt_filter_iwad_weapons');
 		IWADMonsterFilter = CVar.FindCVar('wt_filter_iwad_monsters');
 		KillSoundType = CVar.FindCVar('wt_killsound');
-		ShowLiteHUD = CVar.FindCVar('wt_showlite');
+		LiteHUDType = CVar.FindCVar('wt_showlite');
 	}
 
 	override void WorldLoaded(WorldEvent e)
