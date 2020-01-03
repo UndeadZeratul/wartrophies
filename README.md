@@ -4,7 +4,8 @@ Download the zip and load it into GZDoom. No need to change its extension to .pk
 
 ### Important
 ---
-The mod is not multiplayer compatible!
+- The mod is not multiplayer compatible!
+- You currently need a dev build of GZDoom to run this! It uses bleeding edge features. Get a dev build [here](https://devbuilds.drdteam.org/gzdoom/).
 
 ### Do this if you want addon support
 ---
