@@ -31,51 +31,115 @@ extend class WT_MainHandler
 
 	override void RenderOverlay(RenderEvent e)
 	{
-		if (DrawUi)
-		{
-			int DI_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_ITEM_CENTER;
-			int DI_TEXT_LEFT = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
-			int DI_TEXT_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
-			int DI_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
+		mMainFont = HUDFont.Create("STRPFNT");
 
-			mMainFont = HUDFont.Create("STRPFNT");
+		// ------------------------------------------------
+		// LITE HUD
+		// ------------------------------------------------
+
+		if (ShowLiteHUD.GetBool() && !DrawUi)
+		{
+			int DI_TL = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_ITEM_LEFT_TOP;
+			int DI_TL_TEXT_LEFT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
+			int DI_TL_CENTER_TEXT_CENTER = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
+			int DI_TL_CENTER_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
+
+			int DI_TR = BaseStatusBar.DI_SCREEN_RIGHT_TOP | BaseStatusBar.DI_ITEM_RIGHT_TOP;
+			int DI_TR_TEXT_LEFT = BaseStatusBar.DI_SCREEN_RIGHT_TOP | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
+			int DI_TR_TEXT_CENTER = BaseStatusBar.DI_SCREEN_RIGHT_TOP | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
+			int DI_TR_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_RIGHT_TOP | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
 
 			// [Ace] Mmmm, code injections!
 			StatusBar.BeginHUD();
 
 			// --------------- MISCELLANEOUS ---------------
 
+			AutoSelectCurrentWeapon();
+
+			// --------------- SHARED ---------------
+
+			class<Weapon> WeaponListSel = GetSelectedWeaponInList();
+			int WeaponKills = WeaponListSel ? GetKillsForWeapon(GetDefaultByType(WeaponListSel).GetClassName()) : 0;
+			int TotalKills = GetTotalKillsForAllWeapons();
+
+			// --------------- MAIN STATS ---------------
+
+			// Total kills.
+			StatusBar.DrawString(mMainFont, "Total:", (2, 2), DI_TL_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
+			StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(TotalKills, 1, 10), (47, 2), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponKills"));
+
+			// Genocide rank.
+			StatusBar.DrawString(mMainFont, GetGenocideRank(TotalKills), (2, 12), DI_TL_TEXT_LEFT, Font.FindFontColor("GenocideRank"));
+
+			// Player rank.
+			int PlayerRank; string PlayerRankString;
+			[PlayerRank, PlayerRankString] = GetPlayerRank();
+			StatusBar.DrawString(mMainFont, PlayerRankString, (2, 26), DI_TL_TEXT_LEFT, Font.FindFontColor("PlayerRank"));
+
+			// Player experience.
+			StatusBar.DrawString(mMainFont, "XP:", (2, 36), DI_TL_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
+			StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(Experience, 1, 7), (24, 36), DI_TL_TEXT_LEFT, Font.FindFontColor("PlayerRank"));
+
+			// Player experience for next level.
+			string NextPlayerRankExp = PlayerRank < XPReq.Size() - 1 ? StatusBar.FormatNumber(XPReq[PlayerRank + 1], 1, 7) : "-";
+			StatusBar.DrawString(mMainFont, "NX:", (2, 46), DI_TL_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
+			StatusBar.DrawString(mMainFont, NextPlayerRankExp, (24, 46), DI_TL_TEXT_LEFT, Font.FindFontColor("PlayerRank"));
+
+			// Player medal.
+			StatusBar.DrawImage("RANK"..PlayerRank, (4, 58), DI_TL);
+
+			// --------------- WEAPON STATS ---------------
+
+			if (WeaponListSel)
+			{
+				// Weapon name.
+				StatusBar.DrawString(mMainFont, GetDefaultByType(WeaponListSel).GetTag(), (2, 100), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponName"));
+
+				// Weapon rank.
+				int WeaponRank; string WeaponRankString;
+				[WeaponRank, WeaponRankString] = GetWeaponRank(WeaponKills);
+				StatusBar.DrawString(mMainFont, WeaponRankString, (2, 114), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponRank"));
+				StatusBar.DrawString(mMainFont, WeaponRank.."/"..WeapRanks.Size(), (2, 124), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponRank"));
+
+				// Weapon kills.
+				StatusBar.DrawString(mMainFont, "K:", (2, 138), DI_TL_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
+				StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(WeaponKills, 1, 6), (16, 138), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponKills"));
+
+				// Weapon kills for next level.
+				string NextWeaponRankKills = WeaponRank < WeapKillReq.Size() ? StatusBar.FormatNumber(WeapKillReq[WeaponRank], 1, 6) : "-";
+				StatusBar.DrawString(mMainFont, "NX:", (2, 148), DI_TL_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
+				StatusBar.DrawString(mMainFont, NextWeaponRankKills, (26, 148), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponRank"));
+
+				// Weapon medals.
+				DrawWeaponMedals(WeaponKills, 2, 162, DI_TL);
+			}
+		}
+
+		// ------------------------------------------------
+		// SCORECARD
+		// ------------------------------------------------
+
+		else if (DrawUi)
+		{
+			StatusBar.BeginHUD();
+
+			int DI_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_ITEM_CENTER;
+			int DI_TEXT_LEFT = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
+			int DI_TEXT_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
+			int DI_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
+
+			// --------------- MISCELLANEOUS ---------------
+
 			// [Ace] Autoselect in the list your currently selected weapon in the world.
 			if (!AutoSelected)
 			{
-				for (int i = 0; i < AvailableWeapons.Size(); ++i)
-				{
-					if (AvailableWeapons[i] == SelectedWeapon)
-					{
-						WeaponListSelIndex = i;
-						break;
-					}
-				}
-
+				AutoSelectCurrentWeapon();
 				AutoSelected = true;
 			}
 
 			// --------------- SHARED ---------------
 
-			// [Ace] If the list suddenly goes blank, reset the index to 0. It also prevents out-of-index exceptions if you've selected the last weapon in the list and apply a filter which will reduce the total count.
-			class<Weapon> WeaponListSel;
-			if (AvailableWeapons.Size() > 0)
-			{
-				if (WeaponListSelIndex >= AvailableWeapons.Size())
-				{
-					WeaponListSelIndex = AvailableWeapons.Size() - 1;
-				}
-				WeaponListSel = AvailableWeapons[WeaponListSelIndex];
-			}
-			else
-			{
-				WeaponListSelIndex = 0;
-			}
+			class<Weapon> WeaponListSel = GetSelectedWeaponInList();
 
 			// --------------- GRAPHIC ---------------
 			
@@ -90,34 +154,18 @@ extend class WT_MainHandler
 			StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(TotalKills, 1, 10), (-42, -84), DI_TEXT_RIGHT, Font.FindFontColor("WeaponKills"));
 
 			// Genocide rank.
-			string GenRank = "";
-			for (int i = 0; i < GenocideReqs.Size(); ++i)
-			{
-				if (TotalKills >= GenocideReqs[i])
-				{
-					GenRank = GenocideRanks[i];
-				}
-			}
-			StatusBar.DrawString(mMainFont, GenRank, (-223, -60), DI_TEXT_LEFT, Font.FindFontColor("WeaponKills"));
+			StatusBar.DrawString(mMainFont, GetGenocideRank(TotalKills), (-223, -60), DI_TEXT_LEFT, Font.FindFontColor("GenocideRank"));
 
 			// Player rank.
-			int PlayerRank = 0;
-			string PlayerRankString = "Recruit";
-			for (int i = 0; i < XPReq.Size(); ++i)
-			{
-				if (Experience >= XPReq[i])
-				{
-					PlayerRank = i;
-					PlayerRankString = XPRanks[i];
-				}
-			}
+			int PlayerRank; string PlayerRankString;
+			[PlayerRank, PlayerRankString] = GetPlayerRank();
 			StatusBar.DrawString(mMainFont, PlayerRankString, (-223, -36), DI_TEXT_LEFT, Font.FindFontColor("PlayerRank"));
 
 			// Player experience.
-			StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(Experience, 1, 8), (-139, -12), DI_TEXT_RIGHT, Font.FindFontColor("PlayerRank"));
+			StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(Experience, 1, 7), (-139, -12), DI_TEXT_RIGHT, Font.FindFontColor("PlayerRank"));
 
 			// Player experience for next level.
-			string NextPlayerRankExp = PlayerRank < XPReq.Size() - 1 ? StatusBar.FormatNumber(XPReq[PlayerRank + 1], 1, 8) : "-";
+			string NextPlayerRankExp = PlayerRank < XPReq.Size() - 1 ? StatusBar.FormatNumber(XPReq[PlayerRank + 1], 1, 7) : "-";
 			StatusBar.DrawString(mMainFont, NextPlayerRankExp, (-42, -12), DI_TEXT_RIGHT, Font.FindFontColor("PlayerRank"));
 
 			// Player medal.
@@ -147,16 +195,8 @@ extend class WT_MainHandler
 				StatusBar.DrawString(mMainFont, GetDefaultByType(WeaponListSel).GetTag(), (-7, -132), DI_TEXT_LEFT, Font.FindFontColor("WeaponName"));
 
 				// Weapon rank.
-				int WeaponRank = 0;
-				string WeaponRankString = "";
-				for (int i = 0; i < WeapKillReq.Size(); ++i)
-				{
-					if (WeaponKills >= WeapKillReq[i])
-					{
-						WeaponRank = i + 1;
-						WeaponRankString = WeapRanks[i];
-					}
-				}
+				int WeaponRank; string WeaponRankString;
+				[WeaponRank, WeaponRankString] = GetWeaponRank(WeaponKills);
 				StatusBar.DrawString(mMainFont, WeaponRankString, (-7, -108), DI_TEXT_LEFT, Font.FindFontColor("WeaponRank"));
 				StatusBar.DrawString(mMainFont, WeaponRank.."/"..WeapRanks.Size(), (223, -108), DI_TEXT_RIGHT, Font.FindFontColor("WeaponRank"));
 
@@ -164,7 +204,7 @@ extend class WT_MainHandler
 				StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(WeaponKills, 1, 6), (66, -84), DI_TEXT_RIGHT, Font.FindFontColor("WeaponKills"));
 
 				// Weapon kills for next level.
-				string NextWeaponRankKills = WeaponRank < WeapKillReq.Size() ? StatusBar.FormatNumber(WeapKillReq[WeaponRank], 1, 8) : "-";
+				string NextWeaponRankKills = WeaponRank < WeapKillReq.Size() ? StatusBar.FormatNumber(WeapKillReq[WeaponRank], 1, 6) : "-";
 				StatusBar.DrawString(mMainFont, NextWeaponRankKills, (152, -84), DI_TEXT_RIGHT, Font.FindFontColor("WeaponRank"));
 
 				// Weapon preference.
@@ -174,30 +214,7 @@ extend class WT_MainHandler
 				StatusBar.DrawImage(TexMan.GetName(GetDefaultByType(WeaponListSel).SpawnState.GetSpriteTexture(0)), (40, -33), DI_CENTER);
 
 				// Weapon medals.
-				int MedalCount[MedalTypesCount]; // [Ace] Each integer denotes how many medals of a given type there should be, starting at the highest type.
-				int TotalNumberOfMedals = WeaponKills / KillsPerMedal; // [Ace] More precisely, total number of tier 1 medals.
-				for (int i = MedalTypesCount; i > 0; --i)
-				{
-					// [Ace] I'm not going to remember how this works a week from now.
-					int MedalsForThisType = TotalNumberOfMedals / int(MedalsPerUpgrade ** (i - 1));
-					TotalNumberOfMedals -= MedalsForThisType * int(MedalsPerUpgrade ** (i - 1));
-
-					MedalCount[MedalTypesCount - i] = MedalsForThisType;
-				}
-
-				int MedalsShown = 0;
-				for (int i = 0; i < MedalTypesCount; ++i)
-				{
-					MedalsShown += MedalCount[i];
-					for (int j = 0; j < MedalCount[i]; ++j)
-					{
-						// [Ace] I'm definitely not going to remember how this works. I hate maths.
-						int XOffset = (j + (MedalsShown - MedalCount[i]));
-						int TotalXOffset = 11 * (XOffset % (MedalsPerLine));
-						int YOffset = 15 * (XOffset / MedalsPerLine);
-						StatusBar.DrawImage("WMEDAL"..(MedalTypesCount - i), (108 + TotalXOffset, -53 + YOffset), DI_CENTER);
-					}
-				}
+				DrawWeaponMedals(WeaponKills, 108, -53, DI_CENTER);
 
 				// --------------- MONSTER LIST & STATS ---------------
 
@@ -238,6 +255,112 @@ extend class WT_MainHandler
 		else
 		{
 			AutoSelected = false;
+		}
+	}
+
+	// --------------------------------------------------
+	// SHARED
+	// --------------------------------------------------
+
+	private ui void AutoSelectCurrentWeapon()
+	{
+		for (int i = 0; i < AvailableWeapons.Size(); ++i)
+		{
+			if (AvailableWeapons[i] == SelectedWeapon)
+			{
+				WeaponListSelIndex = i;
+				break;
+			}
+		}
+	}
+
+	// [Ace] If the list suddenly goes blank, reset the index to 0. It also prevents out-of-index exceptions if you've selected the last weapon in the list and apply a filter which will reduce the total count.
+	private ui class<Weapon> GetSelectedWeaponInList()
+	{
+		if (AvailableWeapons.Size() > 0)
+		{
+			if (WeaponListSelIndex >= AvailableWeapons.Size())
+			{
+				WeaponListSelIndex = AvailableWeapons.Size() - 1;
+			}
+			return AvailableWeapons[WeaponListSelIndex];
+		}
+
+		WeaponListSelIndex = 0;
+		return null;
+	}
+
+	private ui string GetGenocideRank(int kills) const
+	{
+		string GenRank = "";
+		for (int i = 0; i < GenocideReqs.Size(); ++i)
+		{
+			if (kills >= GenocideReqs[i])
+			{
+				GenRank = GenocideRanks[i];
+			}
+		}
+
+		return GenRank;
+	}
+
+	private ui int, string GetPlayerRank() const
+	{
+		int PlayerRank = 0;
+		string PlayerRankString = "Recruit";
+		for (int i = 0; i < XPReq.Size(); ++i)
+		{
+			if (Experience >= XPReq[i])
+			{
+				PlayerRank = i;
+				PlayerRankString = XPRanks[i];
+			}
+		}
+
+		return PlayerRank, PlayerRankString;
+	}
+
+	private ui int, string GetWeaponRank(int kills) const
+	{
+		int WeaponRank = 0;
+		string WeaponRankString = "";
+		for (int i = 0; i < WeapKillReq.Size(); ++i)
+		{
+			if (kills >= WeapKillReq[i])
+			{
+				WeaponRank = i + 1;
+				WeaponRankString = WeapRanks[i];
+			}
+		}
+
+		return WeaponRank, WeaponRankString;
+	}
+
+	private ui void DrawWeaponMedals(int kills, int x, int y, int flags)
+	{
+		int MedalCount[MedalTypesCount]; // [Ace] Each integer denotes how many medals of a given type there should be, starting at the highest type.
+		int TotalNumberOfMedals = kills / KillsPerMedal; // [Ace] More precisely, total number of tier 1 medals.
+		for (int i = MedalTypesCount; i > 0; --i)
+		{
+			// [Ace] I'm not going to remember how this works a week from now.
+			int MedalsForThisType = TotalNumberOfMedals / int(MedalsPerUpgrade ** (i - 1));
+			TotalNumberOfMedals -= MedalsForThisType * int(MedalsPerUpgrade ** (i - 1));
+
+			MedalCount[MedalTypesCount - i] = MedalsForThisType;
+		}
+
+		int MedalsShown = 0;
+		for (int i = 0; i < MedalTypesCount; ++i)
+		{
+			MedalsShown += MedalCount[i];
+			for (int j = 0; j < MedalCount[i]; ++j)
+			{
+				// [Ace] I'm definitely not going to remember how this works. I hate maths.
+				int XOffset = (j + (MedalsShown - MedalCount[i]));
+				int TotalXOffset = 11 * (XOffset % (MedalsPerLine));
+				int YOffset = 15 * (XOffset / MedalsPerLine);
+				StatusBar.DrawImage("WMEDAL"..(MedalTypesCount - i), (x + TotalXOffset, y + YOffset), flags);
+			}
 		}
 	}
 

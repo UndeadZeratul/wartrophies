@@ -4,6 +4,7 @@ OptionMenu "WarTrophies"
 	
 	Control "Toggle Stats Panel", "netevent wt_toggleui"
 	Option "Use Darker Displays", "wt_panel_blackdisplay", "YesNo"
+	Option "Show Lite HUD", "wt_showlite", "YesNo"
 	Option "Kill Sound Type", "wt_killsound", "KillSoundType"
 	StaticText ""
 	Option "Filter Weapons To IWAD", "wt_filter_iwad_weapons", "IWADFilterMode"
