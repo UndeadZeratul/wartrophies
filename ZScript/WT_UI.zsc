@@ -24,8 +24,6 @@ extend class WT_MainHandler
 	const MedalTypesCount = 6;
 	private transient ui int SelWeaponIndex;
 	private transient ui int SelMonsterPage;
-	private transient ui Array<class<Weapon> > AvailableWeapons;
-	private transient ui Array<class<Actor> > AvailableMonsters;
 	private transient bool DrawUi;
 
 	private transient ui HUDFont mMainFont;
@@ -46,12 +44,9 @@ extend class WT_MainHandler
 
 			// --------------- SHARED ---------------
 
-			GetAvailableWeapons();
-			GetAvailableMonsters();
 			class<Weapon> SelWeapon;
 			if (AvailableWeapons.Size() > 0)
 			{
-				SortWeaponList();
 				if (SelWeaponIndex >= AvailableWeapons.Size())
 				{
 					SelWeaponIndex = AvailableWeapons.Size() - 1;
@@ -192,7 +187,6 @@ extend class WT_MainHandler
 
 				let MonDictIterator = DictionaryIterator.Create(Dictionary.FromString(MonsterKills.At(GetDefaultByType(SelWeapon).GetClassName())));
 				int row = 0; // [Ace] The 'row' is used to manually advance the line.
-				SortMonsterList();
 				while (MonDictIterator.Next())
 				{
 					for (int i = 0; MonsterListEntries * SelMonsterPage + i < AvailableMonsters.Size() && i < MonsterListEntries; ++i)
@@ -217,101 +211,6 @@ extend class WT_MainHandler
 							StatusBar.DrawString(mMainFont, Percentage.."%", (224, 36 + 9 * row), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
 
 							row++;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	// --------------------------------------------------
-	// ARRAY OPERATIONS
-	// --------------------------------------------------
-
-	private ui void SortWeaponList()
-	{
-		for (int i = 0; i < AvailableWeapons.Size() - 1; ++i)
-		{
-			for (int j = i + 1; j < AvailableWeapons.Size(); ++j)
-			{
-				let CurrWeapon = GetDefaultByType(AvailableWeapons[i]);
-				let NextWeapon = GetDefaultByType(AvailableWeapons[j]);
-
-				// [Ace] Sort by numbers first, then by first letter if the numbers match.
-				if (CurrWeapon.SlotNumber >= NextWeapon.SlotNumber || (CurrWeapon.SlotNumber == NextWeapon.SlotNumber && String.Format("%s", CurrWeapon.GetClassName()).ByteAt(0) >= String.Format("%s", NextWeapon.GetClassName()).ByteAt(0)))
-				{
-					let Swap = AvailableWeapons[i];
-					AvailableWeapons[i] = AvailableWeapons[j];
-					AvailableWeapons[j] = Swap;
-				}
-			}
-		}
-	}
-
-	private ui void SortMonsterList()
-	{
-		for (int i = 0; i < AvailableMonsters.Size() - 1; ++i)
-		{
-			for (int j = i + 1; j < AvailableMonsters.Size(); ++j)
-			{
-				let CurrMonster = GetDefaultByType(AvailableMonsters[i]);
-				let NextMonster = GetDefaultByType(AvailableMonsters[j]);
-				if (CurrMonster.Health >= NextMonster.Health)
-				{
-					let Swap = AvailableMonsters[i];
-					AvailableMonsters[i] = AvailableMonsters[j];
-					AvailableMonsters[j] = Swap;
-				}
-			}
-		}
-	}
-
-	private ui void GetAvailableWeapons()
-	{
-		AvailableWeapons.Clear();
-		int Filter = IWADWeaponFilter.GetInt();
-
-		let it = DictionaryIterator.Create(MonsterKills); 
-		while (it.Next())
-		{
-			for (int i = 0; i < AllActorClasses.Size(); ++i)
-			{
-				class<Actor> a = AllActorClasses[i];
-				if (a is "Weapon" && a.GetClassName() == it.Key())
-				{
-					bool IsFromIwad = IsIwadClass(Filter, Search_Weapons, a);
-					if (Filter == Filter_All || Filter == Filter_None && !IsFromIwad || Filter > Filter_None && IsFromIwad)
-					{
-						AvailableWeapons.Push(a);
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	private ui void GetAvailableMonsters()
-	{
-		AvailableMonsters.Clear();
-		int Filter = IWADMonsterFilter.GetInt();
-
-		let it = DictionaryIterator.Create(MonsterKills);
-		while (it.Next())
-		{
-			let it2 = DictionaryIterator.Create(Dictionary.FromString(it.Value()));
-			while (it2.Next())
-			{
-				for (int i = 0; i < AllActorClasses.Size(); ++i)
-				{
-					// [Ace] The AvailableMonsters.Find check is here so that monsters aren't re-added by the next weapon.
-					class<Actor> a = AllActorClasses[i];
-					if (GetDefaultByType(a).bISMONSTER && a.GetClassName() == it2.Key() && AvailableMonsters.Find(a) == AvailableMonsters.Size())
-					{
-						bool IsFromIwad = IsIwadClass(Filter, Search_Monsters, a);
-						if (Filter == Filter_All || Filter == Filter_None && !IsFromIwad || Filter > Filter_None && IsFromIwad)
-						{
-							AvailableMonsters.Push(a);
-							break;
 						}
 					}
 				}
@@ -374,7 +273,6 @@ extend class WT_MainHandler
 			}
 
 			// [Ace] Move weapon selection down.
-			GetAvailableWeapons(); // [Ace] Call it just in case.
 			if (e.KeyScan == InputEvent.Key_DownArrow && SelWeaponIndex < AvailableWeapons.Size() - 1)
 			{
 				SelWeaponIndex++;

@@ -238,28 +238,26 @@ extend class WT_MainHandler
 		"Reaver"
 	};
 
-	// [Ace] Looks absolutely disgusting, doesn't it? I agree.
-	private ui bool IsIwadClass(FilterIWAD scope, SearchType type, class<Actor> a) const
+	private IWADFilter GetIwadType(SearchType type, class<Actor> a) const
 	{
-		// [Ace] If scope is Filter_None, it needs to go through all IWADs to determine if the class doesn't belong to any of them.
-		// Ironically, it's the most expensive operation.
+		// [Ace] Unfortunately it needs to go through all of these.
 		switch (type)
 		{
 			case Search_Weapons:
-				if (scope == Filter_Doom || scope == Filter_None) for (int i = 0; i < DoomWeapons.Size(); ++i) if (a == DoomWeapons[i]) return true;
-				if (scope == Filter_Heretic || scope == Filter_None) for (int i = 0; i < HereticWeapons.Size(); ++i) if (a == HereticWeapons[i]) return true;
-				if (scope == Filter_Hexen || scope == Filter_None) for (int i = 0; i < HexenWeapons.Size(); ++i) if (a == HexenWeapons[i]) return true;
-				if (scope == Filter_Strife || scope == Filter_None) for (int i = 0; i < StrifeWeapons.Size(); ++i) if (a == StrifeWeapons[i]) return true;
+				for (int i = 0; i < DoomWeapons.Size(); ++i) if (a == DoomWeapons[i]) return Filter_Doom;
+				for (int i = 0; i < HereticWeapons.Size(); ++i) if (a == HereticWeapons[i]) return Filter_Heretic;
+				for (int i = 0; i < HexenWeapons.Size(); ++i) if (a == HexenWeapons[i]) return Filter_Hexen;
+				for (int i = 0; i < StrifeWeapons.Size(); ++i) if (a == StrifeWeapons[i]) return Filter_Strife;
 				break;
 
 			case Search_Monsters:
-				if (scope == Filter_Doom || scope == Filter_None) for (int i = 0; i < DoomMonsters.Size(); ++i) if (a == DoomMonsters[i]) return true;
-				if (scope == Filter_Heretic || scope == Filter_None) for (int i = 0; i < HereticMonsters.Size(); ++i) if (a == HereticMonsters[i]) return true;
-				if (scope == Filter_Hexen || scope == Filter_None) for (int i = 0; i < HexenMonsters.Size(); ++i) if (a == HexenMonsters[i]) return true;
-				if (scope == Filter_Strife || scope == Filter_None) for (int i = 0; i < StrifeMonsters.Size(); ++i) if (a == StrifeMonsters[i]) return true;
+				for (int i = 0; i < DoomMonsters.Size(); ++i) if (a == DoomMonsters[i]) return Filter_Doom;
+				for (int i = 0; i < HereticMonsters.Size(); ++i) if (a == HereticMonsters[i]) return Filter_Heretic;
+				for (int i = 0; i < HexenMonsters.Size(); ++i) if (a == HexenMonsters[i]) return Filter_Hexen;
+				for (int i = 0; i < StrifeMonsters.Size(); ++i) if (a == StrifeMonsters[i]) return Filter_Strife;
 				break;
 		}
 
-		return false;
+		return Filter_None;
 	}
 }

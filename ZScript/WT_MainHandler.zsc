@@ -1,6 +1,6 @@
 class WT_MainHandler : EventHandler
 {
-	enum FilterIWAD
+	enum IWADFilter
 	{
 		Filter_None,
 		Filter_Doom,
@@ -20,19 +20,17 @@ class WT_MainHandler : EventHandler
 	private transient CVar IWADWeaponFilter;
 	private transient CVar IWADMonsterFilter;
 	private transient CVar KillSoundType;
+
+	private transient Array<class<Weapon> > AvailableWeapons;
+	private transient Array<class<Actor> > AvailableMonsters;
 	private int Experience;
-	private int Initialized;
+
+	Dictionary MonsterKills; // [Ace] The value of each key is the monster dictionary's JSON. The key is the weapon.
+	Dictionary ProjectileBinds; // [Ace] Key - projectile, value - weapon.
 
 	// --------------------------------------------------
-	// DICTIONARIES
+	// FUNCTIONS
 	// --------------------------------------------------
-
-	// [Ace] The value of each key is the monster dictionary's JSON.
-	// The key is the weapon.
-	Dictionary MonsterKills;
-
-	// [Ace] Key - projectile, value - weapon.
-	Dictionary ProjectileBinds;
 
 	void UpdateTallyFor(string weapon, string victim)
 	{
@@ -46,7 +44,6 @@ class WT_MainHandler : EventHandler
 			KillStats.Insert(victim, Kills != "" ? String.Format("%i", int(Kills.ToDouble()) + 1) : "1");
 
 			MonsterKills.Insert(weapon, KillStats.ToString());
-
 		}
 
 		// [Ace] Otherwise, create it and update info.
@@ -57,6 +54,106 @@ class WT_MainHandler : EventHandler
 
 			MonsterKills.Insert(weapon, KillStats.ToString());
 		}
+	}
+
+	private void PlayKillSound()
+	{
+		S_StartSound("WT/KillSound"..KillSoundType.GetInt(), CHANF_UI, CHAN_AUTO | CHAN_UI);
+	}
+
+	private void SortWeaponList()
+	{
+		for (int i = 0; i < AvailableWeapons.Size() - 1; ++i)
+		{
+			for (int j = i + 1; j < AvailableWeapons.Size(); ++j)
+			{
+				let CurrWeapon = GetDefaultByType(AvailableWeapons[i]);
+				let NextWeapon = GetDefaultByType(AvailableWeapons[j]);
+
+				// [Ace] Sort by numbers first, then by first letter if the numbers match.
+				if (CurrWeapon.SlotNumber >= NextWeapon.SlotNumber || (CurrWeapon.SlotNumber == NextWeapon.SlotNumber && String.Format("%s", CurrWeapon.GetClassName()).ByteAt(0) >= String.Format("%s", NextWeapon.GetClassName()).ByteAt(0)))
+				{
+					let Swap = AvailableWeapons[i];
+					AvailableWeapons[i] = AvailableWeapons[j];
+					AvailableWeapons[j] = Swap;
+				}
+			}
+		}
+	}
+
+	private void GetAvailableWeapons()
+	{
+		AvailableWeapons.Clear();
+		int Filter = IWADWeaponFilter.GetInt();
+
+		let it = DictionaryIterator.Create(MonsterKills); 
+		while (it.Next())
+		{
+			for (int i = 0; i < AllActorClasses.Size(); ++i)
+			{
+				class<Actor> a = AllActorClasses[i];
+				if (a is "Weapon" && a.GetClassName() == it.Key())
+				{
+					int IwadType = GetIwadType(Search_Weapons, a);
+					if (Filter == Filter_All || Filter == IWadType || IwadType == Filter_None)
+					{
+						AvailableWeapons.Push(a);
+						break;
+					}
+				}
+			}
+		}
+
+		SortWeaponList();
+	}
+
+	private void SortMonsterList()
+	{
+		for (int i = 0; i < AvailableMonsters.Size() - 1; ++i)
+		{
+			for (int j = i + 1; j < AvailableMonsters.Size(); ++j)
+			{
+				let CurrMonster = GetDefaultByType(AvailableMonsters[i]);
+				let NextMonster = GetDefaultByType(AvailableMonsters[j]);
+				if (CurrMonster.Health >= NextMonster.Health)
+				{
+					let Swap = AvailableMonsters[i];
+					AvailableMonsters[i] = AvailableMonsters[j];
+					AvailableMonsters[j] = Swap;
+				}
+			}
+		}
+	}
+
+	private void GetAvailableMonsters()
+	{
+		AvailableMonsters.Clear();
+		int Filter = IWADMonsterFilter.GetInt();
+
+		let it = DictionaryIterator.Create(MonsterKills);
+		while (it.Next())
+		{
+			let it2 = DictionaryIterator.Create(Dictionary.FromString(it.Value()));
+			while (it2.Next())
+			{
+				for (int i = 0; i < AllActorClasses.Size(); ++i)
+				{
+					// [Ace] The AvailableMonsters.Find check is here so that monsters aren't re-added by the next weapon.
+					class<Actor> a = AllActorClasses[i];
+					if (GetDefaultByType(a).bISMONSTER && a.GetClassName() == it2.Key() && AvailableMonsters.Find(a) == AvailableMonsters.Size())
+					{
+						int IwadType = GetIwadType(Search_Monsters, a);
+						if (Filter == Filter_All || Filter == IWadType || IwadType == Filter_None)
+						{
+							AvailableMonsters.Push(a);
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		SortMonsterList();
 	}
 
 	// --------------------------------------------------
@@ -163,14 +260,18 @@ class WT_MainHandler : EventHandler
 	}
 
 	// --------------------------------------------------
-	// PROGRESS SAVING
+	// VARIABLE UPDATES & OTHER
 	// --------------------------------------------------
 
 	override void WorldTick()
 	{
-		if (level.time % (35 * 1) == 0)
+		// [Ace] Increasing the delay should increase performance. Do it only if absolutely necessary!
+		if (level.time % 10 == 0)
 		{
 			SaveTally();
+
+			GetAvailableWeapons();
+			GetAvailableMonsters();
 		}
 	}
 
@@ -195,11 +296,6 @@ class WT_MainHandler : EventHandler
 	// --------------------------------------------------
 	// MISCELLANEOUS
 	// --------------------------------------------------
-
-	private void PlayKillSound()
-	{
-		S_StartSound("WT/KillSound"..KillSoundType.GetInt(), CHANF_UI, CHAN_AUTO | CHAN_UI);
-	}
 
 	override void NetworkProcess(ConsoleEvent e)
 	{
