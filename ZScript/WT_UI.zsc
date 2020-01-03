@@ -180,7 +180,7 @@ extend class WT_MainHandler
 			// --------------- WEAPON LIST ---------------
 
 			int WeaponPage = WeaponListSelIndex / WeaponListEntries;
-			for (int i = 0; WeaponListEntries * WeaponPage + i < AvailableWeapons.Size() && i < WeaponListEntries; ++i)
+			for (int i = 0; WeaponListEntries * WeaponPage + i < AvailableWeapons.Size() && i <= WeaponListEntries; ++i)
 			{
 				let CurrWeapon = GetDefaultByType(AvailableWeapons[WeaponListEntries * WeaponPage + i]);
 				
@@ -231,7 +231,7 @@ extend class WT_MainHandler
 				int row = 0; // [Ace] The 'row' is used to manually advance the line.
 				while (MonDictIterator.Next())
 				{
-					for (int i = 0; MonsterListEntries * SelMonsterPage + i < AvailableMonsters.Size() && i < MonsterListEntries; ++i)
+					for (int i = 0; MonsterListEntries * SelMonsterPage + i < AvailableMonsters.Size() && i <= MonsterListEntries; ++i)
 					{
 						if (MonDictIterator.Key() == AvailableMonsters[i].GetClassName())
 						{
