@@ -28,6 +28,8 @@ class WT_MainHandler : EventHandler
 	Dictionary MonsterKills; // [Ace] The value of each key is the monster dictionary's JSON. The key is the weapon.
 	Dictionary ProjectileBinds; // [Ace] Key - projectile, value - weapon.
 
+	private class<Weapon> SelectedWeapon;
+
 	// --------------------------------------------------
 	// FUNCTIONS
 	// --------------------------------------------------
@@ -81,32 +83,6 @@ class WT_MainHandler : EventHandler
 		}
 	}
 
-	private void GetAvailableWeapons()
-	{
-		AvailableWeapons.Clear();
-		int Filter = IWADWeaponFilter.GetInt();
-
-		let it = DictionaryIterator.Create(MonsterKills); 
-		while (it.Next())
-		{
-			for (int i = 0; i < AllActorClasses.Size(); ++i)
-			{
-				class<Actor> a = AllActorClasses[i];
-				if (a is "Weapon" && a.GetClassName() == it.Key())
-				{
-					int IwadType = GetIwadType(Search_Weapons, a);
-					if (Filter == Filter_All || Filter == IWadType || IwadType == Filter_None)
-					{
-						AvailableWeapons.Push(a);
-						break;
-					}
-				}
-			}
-		}
-
-		SortWeaponList();
-	}
-
 	private void SortMonsterList()
 	{
 		for (int i = 0; i < AvailableMonsters.Size() - 1; ++i)
@@ -125,14 +101,33 @@ class WT_MainHandler : EventHandler
 		}
 	}
 
-	private void GetAvailableMonsters()
+	private void GetAvailableActors()
 	{
+		AvailableWeapons.Clear();
 		AvailableMonsters.Clear();
-		int Filter = IWADMonsterFilter.GetInt();
+
+		int WFilter = IWADWeaponFilter.GetInt();
+		int MFilter = IWADMonsterFilter.GetInt();
 
 		let it = DictionaryIterator.Create(MonsterKills);
 		while (it.Next())
 		{
+			// Weapons.
+			for (int i = 0; i < AllActorClasses.Size(); ++i)
+			{
+				class<Actor> a = AllActorClasses[i];
+				if (a is "Weapon" && a.GetClassName() == it.Key())
+				{
+					int IwadType = GetIwadType(Search_Weapons, a);
+					if (WFilter == Filter_All || WFilter == IWadType || IwadType == Filter_None)
+					{
+						AvailableWeapons.Push(a);
+						break;
+					}
+				}
+			}
+
+			// Monsters.
 			let it2 = DictionaryIterator.Create(Dictionary.FromString(it.Value()));
 			while (it2.Next())
 			{
@@ -143,7 +138,7 @@ class WT_MainHandler : EventHandler
 					if (GetDefaultByType(a).bISMONSTER && a.GetClassName() == it2.Key() && AvailableMonsters.Find(a) == AvailableMonsters.Size())
 					{
 						int IwadType = GetIwadType(Search_Monsters, a);
-						if (Filter == Filter_All || Filter == IWadType || IwadType == Filter_None)
+						if (MFilter == Filter_All || MFilter == IWadType || IwadType == Filter_None)
 						{
 							AvailableMonsters.Push(a);
 							break;
@@ -153,6 +148,7 @@ class WT_MainHandler : EventHandler
 			}
 		}
 
+		SortWeaponList();
 		SortMonsterList();
 	}
 
@@ -265,13 +261,20 @@ class WT_MainHandler : EventHandler
 
 	override void WorldTick()
 	{
-		// [Ace] Increasing the delay should increase performance. Do it only if absolutely necessary!
+		// [Ace] Increasing the delay might increase performance. Do it only if absolutely necessary!
+		// There's no guarantee it will.
 		if (level.time % 10 == 0)
 		{
 			SaveTally();
 
-			GetAvailableWeapons();
-			GetAvailableMonsters();
+			GetAvailableActors();
+
+			// [Ace] This will desync. You have been warned. I have been warned.
+			let plr = PlayerPawn(players[consoleplayer].mo);
+			if (plr && plr.player && plr.player.ReadyWeapon)
+			{
+				SelectedWeapon = plr.player.ReadyWeapon.GetClass();
+			}
 		}
 	}
 

@@ -22,8 +22,9 @@ extend class WT_MainHandler
 	const MedalsPerUpgrade = 5;
 	const MedalsPerLine = 11;
 	const MedalTypesCount = 6;
-	private transient ui int SelWeaponIndex;
+	private transient ui int WeaponListSelIndex;
 	private transient ui int SelMonsterPage;
+	private transient ui bool AutoSelected;
 	private transient bool DrawUi;
 
 	private transient ui HUDFont mMainFont;
@@ -42,20 +43,38 @@ extend class WT_MainHandler
 			// [Ace] Mmmm, code injections!
 			StatusBar.BeginHUD();
 
+			// --------------- MISCELLANEOUS ---------------
+
+			// [Ace] Autoselect in the list your currently selected weapon in the world.
+			if (!AutoSelected)
+			{
+				for (int i = 0; i < AvailableWeapons.Size(); ++i)
+				{
+					if (AvailableWeapons[i] == SelectedWeapon)
+					{
+						WeaponListSelIndex = i;
+						break;
+					}
+				}
+
+				AutoSelected = true;
+			}
+
 			// --------------- SHARED ---------------
 
-			class<Weapon> SelWeapon;
+			// [Ace] If the list suddenly goes blank, reset the index to 0. It also prevents out-of-index exceptions if you've selected the last weapon in the list and apply a filter which will reduce the total count.
+			class<Weapon> WeaponListSel;
 			if (AvailableWeapons.Size() > 0)
 			{
-				if (SelWeaponIndex >= AvailableWeapons.Size())
+				if (WeaponListSelIndex >= AvailableWeapons.Size())
 				{
-					SelWeaponIndex = AvailableWeapons.Size() - 1;
+					WeaponListSelIndex = AvailableWeapons.Size() - 1;
 				}
-				SelWeapon = AvailableWeapons[SelWeaponIndex];
+				WeaponListSel = AvailableWeapons[WeaponListSelIndex];
 			}
 			else
 			{
-				SelWeaponIndex = 0;
+				WeaponListSelIndex = 0;
 			}
 
 			// --------------- GRAPHIC ---------------
@@ -64,7 +83,7 @@ extend class WT_MainHandler
 
 			// --------------- MAIN STATS ---------------
 
-			int WeaponKills = SelWeapon ? GetKillsForWeapon(GetDefaultByType(SelWeapon).GetClassName()) : 0;
+			int WeaponKills = WeaponListSel ? GetKillsForWeapon(GetDefaultByType(WeaponListSel).GetClassName()) : 0;
 			int TotalKills = GetTotalKillsForAllWeapons();
 
 			// Total kills.
@@ -106,7 +125,7 @@ extend class WT_MainHandler
 
 			// --------------- WEAPON LIST ---------------
 
-			int WeaponPage = SelWeaponIndex / WeaponListEntries;
+			int WeaponPage = WeaponListSelIndex / WeaponListEntries;
 			for (int i = 0; WeaponListEntries * WeaponPage + i < AvailableWeapons.Size() && i < WeaponListEntries; ++i)
 			{
 				let CurrWeapon = GetDefaultByType(AvailableWeapons[WeaponListEntries * WeaponPage + i]);
@@ -117,15 +136,15 @@ extend class WT_MainHandler
 				{
 					WeaponName = WeaponName.Mid(0, WeaponListMaxStringWidth).."...";
 				}
-				StatusBar.DrawString(mMainFont, WeaponName, (-174, 36 + 9 * i), DI_TEXT_LEFT, SelWeapon == CurrWeapon.GetClass() ? Font.FindFontColor("SelectedWeapon") : Font.FindFontColor("MiscLabels"));
+				StatusBar.DrawString(mMainFont, WeaponName, (-174, 36 + 9 * i), DI_TEXT_LEFT, WeaponListSel == CurrWeapon.GetClass() ? Font.FindFontColor("SelectedWeapon") : Font.FindFontColor("MiscLabels"));
 			}
 
 			// --------------- WEAPON STATS ---------------
 
-			if (SelWeapon)
+			if (WeaponListSel)
 			{
 				// Weapon name.
-				StatusBar.DrawString(mMainFont, GetDefaultByType(SelWeapon).GetTag(), (-7, -132), DI_TEXT_LEFT, Font.FindFontColor("WeaponName"));
+				StatusBar.DrawString(mMainFont, GetDefaultByType(WeaponListSel).GetTag(), (-7, -132), DI_TEXT_LEFT, Font.FindFontColor("WeaponName"));
 
 				// Weapon rank.
 				int WeaponRank = 0;
@@ -152,7 +171,7 @@ extend class WT_MainHandler
 				StatusBar.DrawString(mMainFont, int(WeaponKills / double(TotalKills) * 100).."%", (223, -84), DI_TEXT_RIGHT, Font.FindFontColor("WeaponPreference"));
 
 				// Weapon icon.
-				StatusBar.DrawImage(TexMan.GetName(GetDefaultByType(SelWeapon).SpawnState.GetSpriteTexture(0)), (40, -33), DI_CENTER);
+				StatusBar.DrawImage(TexMan.GetName(GetDefaultByType(WeaponListSel).SpawnState.GetSpriteTexture(0)), (40, -33), DI_CENTER);
 
 				// Weapon medals.
 				int MedalCount[MedalTypesCount]; // [Ace] Each integer denotes how many medals of a given type there should be, starting at the highest type.
@@ -185,7 +204,7 @@ extend class WT_MainHandler
 				// Display current monster page.
 				StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(SelMonsterPage, 1, 3), (116, 12), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
 
-				let MonDictIterator = DictionaryIterator.Create(Dictionary.FromString(MonsterKills.At(GetDefaultByType(SelWeapon).GetClassName())));
+				let MonDictIterator = DictionaryIterator.Create(Dictionary.FromString(MonsterKills.At(GetDefaultByType(WeaponListSel).GetClassName())));
 				int row = 0; // [Ace] The 'row' is used to manually advance the line.
 				while (MonDictIterator.Next())
 				{
@@ -207,7 +226,7 @@ extend class WT_MainHandler
 							StatusBar.DrawString(mMainFont, MonDictIterator.Value(), (180, 36 + 9 * row), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
 
 							// Percentage compared to other kills.
-							int Percentage = int(double(GetKillsForMonster(GetDefaultByType(SelWeapon).GetClassName(), CurrMonster.GetClassName())) / WeaponKills * 100);
+							int Percentage = int(double(GetKillsForMonster(GetDefaultByType(WeaponListSel).GetClassName(), CurrMonster.GetClassName())) / WeaponKills * 100);
 							StatusBar.DrawString(mMainFont, Percentage.."%", (224, 36 + 9 * row), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
 
 							row++;
@@ -215,6 +234,10 @@ extend class WT_MainHandler
 					}
 				}
 			}
+		}
+		else
+		{
+			AutoSelected = false;
 		}
 	}
 
@@ -266,16 +289,16 @@ extend class WT_MainHandler
 		if (e.Type == InputEvent.Type_KeyDown && DrawUi)
 		{
 			// [Ace] Move weapon selection up.
-			if (e.KeyScan == InputEvent.Key_UpArrow && SelWeaponIndex > 0)
+			if (e.KeyScan == InputEvent.Key_UpArrow && WeaponListSelIndex > 0)
 			{
-				SelWeaponIndex--;
+				WeaponListSelIndex--;
 				return true;
 			}
 
 			// [Ace] Move weapon selection down.
-			if (e.KeyScan == InputEvent.Key_DownArrow && SelWeaponIndex < AvailableWeapons.Size() - 1)
+			if (e.KeyScan == InputEvent.Key_DownArrow && WeaponListSelIndex < AvailableWeapons.Size() - 1)
 			{
-				SelWeaponIndex++;
+				WeaponListSelIndex++;
 				return true;
 			}
 
