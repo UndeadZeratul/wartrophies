@@ -1,3 +1,10 @@
+class WT_MonsterInfo
+{
+	class<Actor> Cls;
+	int Kills;
+	int Percentage;
+}
+
 class WT_MainHandler : EventHandler
 {
 	enum IWADFilter
@@ -29,7 +36,7 @@ class WT_MainHandler : EventHandler
 	Dictionary MonsterKills; // [Ace] The value of each key is the monster dictionary's JSON. The key is the weapon.
 	Dictionary ProjectileBinds; // [Ace] Key - projectile, value - weapon.
 
-	private class<Weapon> SelectedWeapon;
+	private class<Weapon> ReadyWeapon;
 
 	// --------------------------------------------------
 	// FUNCTIONS
@@ -84,24 +91,6 @@ class WT_MainHandler : EventHandler
 		}
 	}
 
-	private void SortMonsterList()
-	{
-		for (int i = 0; i < AvailableMonsters.Size() - 1; ++i)
-		{
-			for (int j = i + 1; j < AvailableMonsters.Size(); ++j)
-			{
-				let CurrMonster = GetDefaultByType(AvailableMonsters[i]);
-				let NextMonster = GetDefaultByType(AvailableMonsters[j]);
-				if (CurrMonster.Health >= NextMonster.Health)
-				{
-					let Swap = AvailableMonsters[i];
-					AvailableMonsters[i] = AvailableMonsters[j];
-					AvailableMonsters[j] = Swap;
-				}
-			}
-		}
-	}
-
 	private void GetAvailableActors()
 	{
 		AvailableWeapons.Clear();
@@ -150,7 +139,6 @@ class WT_MainHandler : EventHandler
 		}
 
 		SortWeaponList();
-		SortMonsterList();
 	}
 
 	// --------------------------------------------------
@@ -275,7 +263,7 @@ class WT_MainHandler : EventHandler
 			let plr = PlayerPawn(players[consoleplayer].mo);
 			if (plr && plr.player && plr.player.ReadyWeapon)
 			{
-				SelectedWeapon = plr.player.ReadyWeapon.GetClass();
+				ReadyWeapon = plr.player.ReadyWeapon.GetClass();
 			}
 		}
 	}

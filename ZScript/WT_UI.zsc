@@ -15,7 +15,7 @@ extend class WT_MainHandler
 	static const string GenocideRanks[]= { "Innocent", "Pacifist", "Gun-shy", "Unbloodied", "Still Afraid", "Base Grunt", "Bounty Hunter", "Grave Digger", "Ditch Filler", "Killer", "Murderous Spree", "Mass Assassin", "Master Gunman", "Basically Mor' Ladim", "Anti-Army", "Diablophobe", "Bloodthirsty", "Ludicrous", "Warlord", "The Cleaner", "Psychopath", "Unstoppable Force", "Carnage Elemental", "Death Incarnate", "Doomslayer", "God of Genocide" };
 
 	const WeaponListEntries = 11;
-	const WeaponListMaxStringWidth = 17;
+	const WeaponListMaxStringWidth = 16;
 	const MonsterListEntries = 11;
 	const MonsterListMaxStringWidth = 15;
 	const KillsPerMedal = 5;
@@ -59,7 +59,7 @@ extend class WT_MainHandler
 
 			// --------------- SHARED ---------------
 
-			class<Weapon> WeaponListSel = GetSelectedWeaponInList();
+			class<Weapon> WeaponListSel = GetReadyWeaponInList();
 			int WeaponKills = WeaponListSel ? GetKillsForWeapon(GetDefaultByType(WeaponListSel).GetClassName()) : 0;
 			int TotalKills = GetTotalKillsForAllWeapons();
 
@@ -96,7 +96,7 @@ extend class WT_MainHandler
 
 			// [Ace] If the stats above aren't visible, shift the entire thing up.
 			int YOffset = LiteHUD == 2 ? -98 : 0;
-			if (LiteHUD > 1 && WeaponListSel && WeaponListSel == SelectedWeapon)
+			if (LiteHUD > 1 && WeaponListSel && WeaponListSel == ReadyWeapon)
 			{
 				// Weapon name.
 				StatusBar.DrawString(mMainFont, GetDefaultByType(WeaponListSel).GetTag(), (2, 100 + YOffset), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponName"));
@@ -145,7 +145,7 @@ extend class WT_MainHandler
 
 			// --------------- SHARED ---------------
 
-			class<Weapon> WeaponListSel = GetSelectedWeaponInList();
+			class<Weapon> WeaponListSel = GetReadyWeaponInList();
 
 			// --------------- GRAPHIC ---------------
 			
@@ -180,7 +180,9 @@ extend class WT_MainHandler
 			// --------------- WEAPON LIST ---------------
 
 			int WeaponPage = WeaponListSelIndex / WeaponListEntries;
-			for (int i = 0; WeaponListEntries * WeaponPage + i < AvailableWeapons.Size() && i <= WeaponListEntries; ++i)
+			StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(WeaponPage + 1, 1), (-42, 12), DI_TEXT_RIGHT, Font.FindFontColor("MiscLabels"));
+
+			for (int i = 0; WeaponListEntries * WeaponPage + i < AvailableWeapons.Size() && i < WeaponListEntries; ++i)
 			{
 				let CurrWeapon = GetDefaultByType(AvailableWeapons[WeaponListEntries * WeaponPage + i]);
 				
@@ -224,37 +226,53 @@ extend class WT_MainHandler
 
 				// --------------- MONSTER LIST & STATS ---------------
 
-				// Display current monster page.
-				StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(SelMonsterPage, 1, 3), (116, 12), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
+				// Monster page.
+				StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(SelMonsterPage + 1, 1, 3), (116, 12), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
 
+				// [Ace] Filter the monsters and get all the necessary data.
+				Array<WT_MonsterInfo> ValidMonstersForWeapon;
 				let MonDictIterator = DictionaryIterator.Create(Dictionary.FromString(MonsterKills.At(GetDefaultByType(WeaponListSel).GetClassName())));
-				int row = 0; // [Ace] The 'row' is used to manually advance the line.
 				while (MonDictIterator.Next())
 				{
-					for (int i = 0; MonsterListEntries * SelMonsterPage + i < AvailableMonsters.Size() && i <= MonsterListEntries; ++i)
+					for (int i = 0; i < AvailableMonsters.Size(); ++i)
 					{
 						if (MonDictIterator.Key() == AvailableMonsters[i].GetClassName())
 						{
-							let CurrMonster = GetDefaultByType(AvailableMonsters[MonsterListEntries * SelMonsterPage + i]);
+							let CurrMonster = GetDefaultByType(AvailableMonsters[i]);
+							WT_MonsterInfo Monster = new("WT_MonsterInfo");
 
-							// [Ace] Truncate name if it's too long.
-							string MonsterName = CurrMonster.GetTag();
-							if (MonsterName.Length() > MonsterListMaxStringWidth)
-							{
-								MonsterName = MonsterName.Mid(0, MonsterListMaxStringWidth).."...";
-							}
-							StatusBar.DrawString(mMainFont, MonsterName, (-7, 36 + 9 * row), DI_TEXT_LEFT, Font.FindFontColor("MonsterStats"));
+							Monster.Cls = AvailableMonsters[i];
+							Monster.Kills = int(MonDictIterator.Value().ToDouble());
+							Monster.Percentage = int((Monster.Kills / double(WeaponKills)) * 100);
 
-							// Kills.
-							StatusBar.DrawString(mMainFont, MonDictIterator.Value(), (180, 36 + 9 * row), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
-
-							// Percentage compared to other kills.
-							int Percentage = int(double(GetKillsForMonster(GetDefaultByType(WeaponListSel).GetClassName(), CurrMonster.GetClassName())) / WeaponKills * 100);
-							StatusBar.DrawString(mMainFont, Percentage.."%", (224, 36 + 9 * row), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
-
-							row++;
+							ValidMonstersForWeapon.Push(Monster);
+							break;
 						}
 					}
+				}
+
+				// [Ace] Then display them.
+				int StartIndex = MonsterListEntries * SelMonsterPage;
+				int row = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
+				SortFilteredMonsterList(ValidMonstersForWeapon);
+				for (int i = StartIndex; i < ValidMonstersForWeapon.Size() && row < MonsterListEntries; ++i)
+				{
+					WT_MonsterInfo Monster = ValidMonstersForWeapon[i];
+
+					// [Ace] Truncate name if it's too long.
+					string MonsterName = GetDefaultByType(Monster.Cls).GetTag();
+					if (MonsterName.Length() > MonsterListMaxStringWidth)
+					{
+						MonsterName = MonsterName.Mid(0, MonsterListMaxStringWidth).."...";
+					}
+					StatusBar.DrawString(mMainFont, MonsterName, (-7, 36 + 9 * row), DI_TEXT_LEFT, Font.FindFontColor("MonsterStats"));
+
+					// Kills.
+					StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(Monster.Kills, 1, 5), (180, 36 + 9 * row), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
+
+					// Percentage compared to other kills.
+					StatusBar.DrawString(mMainFont, Monster.Percentage.."%", (224, 36 + 9 * row), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
+					row++;
 				}
 			}
 		}
@@ -272,7 +290,7 @@ extend class WT_MainHandler
 	{
 		for (int i = 0; i < AvailableWeapons.Size(); ++i)
 		{
-			if (AvailableWeapons[i] == SelectedWeapon)
+			if (AvailableWeapons[i] == ReadyWeapon)
 			{
 				WeaponListSelIndex = i;
 				break;
@@ -280,8 +298,27 @@ extend class WT_MainHandler
 		}
 	}
 
+	private ui void SortFilteredMonsterList(out Array<WT_MonsterInfo> arr)
+	{
+		// [Ace] Sort the list.
+		for (int i = 0; i < arr.Size() - 1; ++i)
+		{
+			for (int j = i + 1; j < arr.Size(); ++j)
+			{
+				let CurrMonster = GetDefaultByType(arr[i].Cls);
+				let NextMonster = GetDefaultByType(arr[j].Cls);
+				if (CurrMonster.Health >= NextMonster.Health)
+				{
+					let Swap = arr[i];
+					arr[i] = arr[j];
+					arr[j] = Swap;
+				}
+			}
+		}
+	}
+
 	// [Ace] If the list suddenly goes blank, reset the index to 0. It also prevents out-of-index exceptions if you've selected the last weapon in the list and apply a filter which will reduce the total count.
-	private ui class<Weapon> GetSelectedWeaponInList()
+	private ui class<Weapon> GetReadyWeaponInList()
 	{
 		if (AvailableWeapons.Size() > 0)
 		{
@@ -295,6 +332,38 @@ extend class WT_MainHandler
 		WeaponListSelIndex = 0;
 		return null;
 	}
+
+	private ui void DrawWeaponMedals(int kills, int x, int y, int flags)
+	{
+		int MedalCount[MedalTypesCount]; // [Ace] Each integer denotes how many medals of a given type there should be, starting at the highest type.
+		int TotalNumberOfMedals = kills / KillsPerMedal; // [Ace] More precisely, total number of tier 1 medals.
+		for (int i = MedalTypesCount; i > 0; --i)
+		{
+			// [Ace] I'm not going to remember how this works a week from now.
+			int MedalsForThisType = TotalNumberOfMedals / int(MedalsPerUpgrade ** (i - 1));
+			TotalNumberOfMedals -= MedalsForThisType * int(MedalsPerUpgrade ** (i - 1));
+
+			MedalCount[MedalTypesCount - i] = MedalsForThisType;
+		}
+
+		int MedalsShown = 0;
+		for (int i = 0; i < MedalTypesCount; ++i)
+		{
+			MedalsShown += MedalCount[i];
+			for (int j = 0; j < MedalCount[i]; ++j)
+			{
+				// [Ace] I'm definitely not going to remember how this works. I hate maths.
+				int XOffset = (j + (MedalsShown - MedalCount[i]));
+				int TotalXOffset = 11 * (XOffset % (MedalsPerLine));
+				int YOffset = 15 * (XOffset / MedalsPerLine);
+				StatusBar.DrawImage("WMEDAL"..(MedalTypesCount - i), (x + TotalXOffset, y + YOffset), flags);
+			}
+		}
+	}
+
+	// --------------------------------------------------
+	// INFORMATION
+	// --------------------------------------------------
 
 	private ui string GetGenocideRank(int kills) const
 	{
@@ -342,37 +411,6 @@ extend class WT_MainHandler
 		return WeaponRank, WeaponRankString;
 	}
 
-	private ui void DrawWeaponMedals(int kills, int x, int y, int flags)
-	{
-		int MedalCount[MedalTypesCount]; // [Ace] Each integer denotes how many medals of a given type there should be, starting at the highest type.
-		int TotalNumberOfMedals = kills / KillsPerMedal; // [Ace] More precisely, total number of tier 1 medals.
-		for (int i = MedalTypesCount; i > 0; --i)
-		{
-			// [Ace] I'm not going to remember how this works a week from now.
-			int MedalsForThisType = TotalNumberOfMedals / int(MedalsPerUpgrade ** (i - 1));
-			TotalNumberOfMedals -= MedalsForThisType * int(MedalsPerUpgrade ** (i - 1));
-
-			MedalCount[MedalTypesCount - i] = MedalsForThisType;
-		}
-
-		int MedalsShown = 0;
-		for (int i = 0; i < MedalTypesCount; ++i)
-		{
-			MedalsShown += MedalCount[i];
-			for (int j = 0; j < MedalCount[i]; ++j)
-			{
-				// [Ace] I'm definitely not going to remember how this works. I hate maths.
-				int XOffset = (j + (MedalsShown - MedalCount[i]));
-				int TotalXOffset = 11 * (XOffset % (MedalsPerLine));
-				int YOffset = 15 * (XOffset / MedalsPerLine);
-				StatusBar.DrawImage("WMEDAL"..(MedalTypesCount - i), (x + TotalXOffset, y + YOffset), flags);
-			}
-		}
-	}
-
-	// --------------------------------------------------
-	// INFORMATION
-	// --------------------------------------------------
 
 	private ui int GetKillsForWeapon(string weapon) const
 	{
@@ -401,12 +439,6 @@ extend class WT_MainHandler
 			}
 		}
 		return TotalKills;
-	}
-
-	private ui int GetKillsForMonster(string weapon, string monster) const
-	{
-		let Monsters = Dictionary.FromString(MonsterKills.At(weapon));
-		return int(Monsters.At(monster).ToDouble());
 	}
 
 	// --------------------------------------------------
