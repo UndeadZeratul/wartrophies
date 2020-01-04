@@ -8,18 +8,18 @@ extend class WT_MainHandler
 	static const string XPRanks[] = { "Private", "Private 1st Class", "Specialist", "Corporal", "Sergeant", "Staff Sergeant", "Sergeant 1st Class", "Master Sergeant", "First Sergeant", "Sergeant Major", "Cmd. Sergeant Major", "Master Chief Sergeant", "2nd Lieutenant", "1st Lieutenant", "Captain", "Major", "Lieutenant Colonel", "Colonel", "Brigadier General", "Major General", "Lieutenant General", "General", "General of the Army", "Field Marshal", "Force Of Freedom", "Savior of Humanity", "Immortal Demonslayer", "Heavenly Demiurge" };
 	const RankImagesPrefix = "RANK";
 
-	static const int WeapKillReq[] = { 10, 25, 50, 100, 150, 250, 375, 500, 750, 999, 1000, 1500, 2500, 5000, 7500, 7616, 8500, 10000, 14444, 19670, 30000 };
-	static const string WeapRanks[] = { "Strange", "Uninteresting", "Common", "Vaguely Rough", "Slightly Dangerous", "Plenty Hurtful", "Heavily Damaging", "Blood Splattered", "Wicked", "Positively Demonic", "Absolutely Ordinary", "Face-Gibbing", "Death-Inducing", "Absolutely Barbaric", "Ultraviolent", "Nightmarish", "American", "iD Select", "Carmack's Own", "Ludicrously Deadly", "Romero's Prized"};
+	static const int WeapKillReq[] = { 10, 25, 50, 100, 150, 250, 375, 500, 750, 999, 1000, 1500, 2500, 5000, 7500, 1, 8500, 10000, 14444, 19670 };
+	static const string WeapRanks[] = { "Uninteresting", "Common", "Vaguely Rough", "Slightly Dangerous", "Plenty Hurtful", "Heavily Damaging", "Blood Splattered", "Wicked", "Positively Demonic", "Absolutely Ordinary", "Face-Gibbing", "Death-Inducing", "Absolutely Barbaric", "Ultraviolent", "Nightmarish", "American", "id Select", "Carmack's Own", "Ludicrously Deadly", "Romero's Prized"};
 
 	static const int GenocideReqs[] = { 100, 500, 1500, 2750, 5500, 9000, 14000, 22000, 30000, 45000, 66666, 99999, 125000, 150000, 175000, 200000, 225000, 250000, 275000, 300000, 325000, 350000, 375000, 400000, 450000, 500000  };
-	static const string GenocideRanks[]= { "Innocent", "Pacifist", "Gun-shy", "Unbloodied", "Still Afraid", "Base Grunt", "Bounty Hunter", "Grave Digger", "Ditch Filler", "Killer", "Murderous Spree", "Mass Assassin", "Master Gunman", "Basically Mor' Ladim", "Anti-Army", "Diablophobe", "Bloodthirsty", "Ludicrous", "Warlord", "The Cleaner", "Psychopath", "Unstoppable Force", "Carnage Elemental", "Death Incarnate", "Doomslayer", "God of Genocide" };
+	static const string GenocideRanks[]= { "Innocent", "Pacifist", "Gun-shy", "Unbloodied", "Still Afraid", "Base Grunt", "Bounty Hunter", "Grave Digger", "Ditch Filler", "Killer", "Murderous Spree", "Mass Assassin", "Master Gunman", "Basically Mor'Ladim", "Anti-Army", "Diablophobe", "Bloodthirsty", "Ludicrous", "Warlord", "The Cleaner", "Psychopath", "Unstoppable Force", "Carnage Elemental", "Death Incarnate", "Doomslayer", "God of Genocide" };
 
 	const WeaponListEntries = 11;
 	const WeaponListMaxStringWidth = 16;
 	const MonsterListEntries = 11;
 	const MonsterListMaxStringWidth = 15;
 	const KillsPerMedal = 5;
-	const MedalsPerUpgrade = 5;
+	const MedalsPerUpgrade = 5; // [Ace] This must be 2 or above!
 	const MedalsPerLine = 11;
 	const MedalTypesCount = 6;
 	private transient ui int WeaponListSelIndex;
@@ -362,7 +362,7 @@ extend class WT_MainHandler
 	private ui int, string GetWeaponRank(int kills) const
 	{
 		int WeaponRank = 0;
-		string WeaponRankString = "";
+		string WeaponRankString = "Strange";
 		for (int i = 0; i < WeapKillReq.Size(); ++i)
 		{
 			if (kills >= WeapKillReq[i])
