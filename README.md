@@ -5,8 +5,8 @@ Download the zip and load it into GZDoom. No need to change its extension to .pk
 ### Important
 ---
 - The mod is not multiplayer compatible!
-- You currently need a dev build of GZDoom to run this! It uses bleeding edge features. Get a dev build [here](https://devbuilds.drdteam.org/gzdoom/).
-- Loading a previous a save game will revert progress to what it was at the time of saving! This is, unfortunately, unavoidable. Data is saved in server CVars as user CVars have a length limit. A feature suggestion has been opened on the forum to allow excluding server CVars from being saved. Until it gets implemented, if at all, keep this note in mind.
+- Requires at least GZDoom 4.3.0!
+- Loading a previous save game will revert kill stats to what they were at the time of saving! A feature to help fix this was requested and implemented engine-side, but it is currently only available in a GZDoom dev build. If you're reading this, the issue has not been fixed.
 
 ### Do this if you want addon support
 ---
