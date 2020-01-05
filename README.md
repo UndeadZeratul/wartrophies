@@ -5,7 +5,7 @@ Download the zip and load it into GZDoom. No need to change its extension to .pk
 ### Important
 ---
 - The mod is not multiplayer compatible!
-- Requires at least GZDoom 4.3.0!
+- Requires at least GZDoom 4.3.1!
 
 ### Do this if you want addon support
 ---
