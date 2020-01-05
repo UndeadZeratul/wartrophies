@@ -23,12 +23,12 @@ class WT_MainHandler : EventHandler
 	private transient CVar LiteHUDType;
 
 	private transient Array<class<Weapon> > AvailableWeapons;
-	private int Experience;
+	private transient int Experience;
 
-	Dictionary MonsterKills; // [Ace] The value of each key is the monster dictionary's JSON. The key is the weapon.
-	Dictionary ProjectileBinds; // [Ace] Key - projectile, value - weapon.
+	private transient Dictionary MonsterKills; // [Ace] The value of each key is the monster dictionary's JSON. The key is the weapon.
+	private transient Dictionary ProjectileBinds; // [Ace] Key - projectile, value - weapon.
 
-	private class<Weapon> ReadyWeapon;
+	private transient class<Weapon> ReadyWeapon;
 
 	// --------------------------------------------------
 	// FUNCTIONS
@@ -214,6 +214,7 @@ class WT_MainHandler : EventHandler
 	// INITIALIZATION
 	// --------------------------------------------------
 
+	// [Ace] OnRegister is called when save games are loaded.
 	override void OnRegister()
 	{
 		WeaponStorage = CVar.FindCVar('wt_stats_weapons_kills');
@@ -223,10 +224,7 @@ class WT_MainHandler : EventHandler
 		IWADMonsterFilter = CVar.FindCVar('wt_filter_iwad_monsters');
 		KillSoundType = CVar.FindCVar('wt_killsound');
 		LiteHUDType = CVar.FindCVar('wt_showlite');
-	}
 
-	override void WorldLoaded(WorldEvent e)
-	{
 		Initialize(false);
 	}
 
@@ -246,6 +244,7 @@ class WT_MainHandler : EventHandler
 		else
 		{
 			// [Ace] Glorious m8f hax. At least they actually work.
+			// Update the variables with what's in the CVars.
 			String s = WeaponStorage.GetString();
 			s.Replace("@", String.Format("%c", 92));
 			MonsterKills = Dictionary.FromString(s);
@@ -261,9 +260,12 @@ class WT_MainHandler : EventHandler
 	{
 		// [Ace] Increasing the delay might increase performance. Do it only if absolutely necessary!
 		// There's no guarantee it will.
-		if (level.time % 10 == 0)
+		if (MonsterKills && level.time % 10 == 0)
 		{
-			SaveTally();
+			String s = MonsterKills.ToString();
+			s.Replace(String.Format("%c", 92), "@");
+			WeaponStorage.SetString(s);
+			ExperienceStorage.SetInt(Experience);
 
 			GetAvailableWeapons();
 
@@ -274,14 +276,6 @@ class WT_MainHandler : EventHandler
 				ReadyWeapon = plr.player.ReadyWeapon.GetClass();
 			}
 		}
-	}
-
-	private void SaveTally()
-	{
-		String s = MonsterKills.ToString();
-		s.Replace(String.Format("%c", 92), "@");
-		WeaponStorage.SetString(s);
-		ExperienceStorage.SetInt(Experience);
 	}
 
 	// --------------------------------------------------
