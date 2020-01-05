@@ -119,7 +119,6 @@ class WT_MainHandler : EventHandler
 		{
 			for (int i = 0; i < AllActorClasses.Size(); ++i)
 			{
-				// [Ace] The AvailableMonsters.Find check is here so that monsters aren't re-added by the next weapon.
 				class<Actor> a = AllActorClasses[i];
 				if (GetDefaultByType(a).bISMONSTER && a.GetClassName() == it.Key())
 				{
