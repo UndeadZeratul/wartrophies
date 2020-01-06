@@ -419,28 +419,27 @@ extend class WT_MainHandler
 	{
 		if (e.Type == InputEvent.Type_KeyDown && DrawUi)
 		{
-			// [Ace] Move weapon selection up.
-			if (e.KeyScan == InputEvent.Key_UpArrow && WeaponListSelIndex > 0)
+			switch (e.KeyScan)
 			{
-				WeaponListSelIndex--;
-			}
+				// [Ace] Move weapon selection up.
+				case InputEvent.Key_UpArrow:
+					WeaponListSelIndex = max(0, WeaponListSelIndex - 1);
+					return true;
 
-			// [Ace] Move weapon selection down.
-			if (e.KeyScan == InputEvent.Key_DownArrow && WeaponListSelIndex < AvailableWeapons.Size() - 1)
-			{
-				WeaponListSelIndex++;
-			}
+				// [Ace] Move weapon selection down.
+				case InputEvent.Key_DownArrow:
+					WeaponListSelIndex = min(WeaponListSelIndex + 1, AvailableWeapons.Size() - 1);
+					return true;
 
-			// [Ace] Move monster selection up.
-			if (e.KeyScan == InputEvent.Key_PgUp && SelMonsterPage > 0)
-			{
-				SelMonsterPage--;
-			}
+				// [Ace] Previous monster page.
+				case InputEvent.Key_PgUp:
+					SelMonsterPage = max(0, SelMonsterPage - 1);
+					return true;
 
-			// [Ace] No cap on this because it'd be a pain to get how many pages the current weapon has.
-			if (e.KeyScan == InputEvent.Key_PgDn)
-			{
-				SelMonsterPage++;
+				// [Ace] Next monster page. No cap on this because it'd be a pain to get how many monster pages the current weapon has.
+				case InputEvent.Key_PgDn:
+					SelMonsterPage++;
+					return true;
 			}
 		}
 
