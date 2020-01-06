@@ -285,7 +285,16 @@ class WT_MainHandler : EventHandler
 	private void ResetTally()
 	{
 		Initialize(true);
-		Console.Printf("Tally successfully reset!");
+		Console.Printf("All statistics successfully reset!");
+	}
+
+	private void ResetWeapon()
+	{
+		if (MonsterKills)
+		{
+			MonsterKills.Remove(ReadyWeapon.GetClassName());
+		}
+		Console.Printf("Weapon statistics successfully reset!");
 	}
 
 	// --------------------------------------------------
@@ -297,6 +306,11 @@ class WT_MainHandler : EventHandler
 		if (e.Name ~== "WT_ResetTally")
 		{
 			ResetTally();
+		}
+
+		if (e.Name ~== "WT_ResetWeapon")
+		{
+			ResetWeapon();
 		}
 
 		if (e.Name ~== "WT_ToggleUI")
