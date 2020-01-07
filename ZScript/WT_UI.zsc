@@ -222,7 +222,27 @@ extend class WT_MainHandler
 				StatusBar.DrawString(mMainFont, int(WeaponKills / double(TotalKills) * 100).."%", (223, -84), DI_TEXT_RIGHT, Font.FindFontColor("WeaponPreference"));
 
 				// Weapon icon.
-				StatusBar.DrawImage(TexMan.GetName(GetDefaultByType(WeaponListSel).SpawnState.GetSpriteTexture(0)), (40, -33), DI_CENTER);
+				string SpriteToDraw = "";
+				string Icon = TexMan.GetName(GetDefaultByType(WeaponListSel).Icon);
+				if (Icon == "ALTHUDCF")
+				{
+					State CurrState = GetDefaultByType(WeaponListSel).SpawnState;
+					while (CurrState != null)
+					{
+						string SpriteName = TexMan.GetName(CurrState.GetSpriteTexture(0));
+						if (SpriteName  != "TNT1A0")
+						{
+							SpriteToDraw = SpriteName;
+							break;
+						}
+						CurrState = CurrState.NextState;
+					}
+				}
+				else
+				{
+					SpriteToDraw = Icon;
+				}
+				StatusBar.DrawImage(SpriteToDraw, (40, -33), DI_CENTER);
 
 				// Weapon medals.
 				DrawWeaponMedals(WeaponKills, 108, -53, DI_CENTER);
