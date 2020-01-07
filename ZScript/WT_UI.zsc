@@ -22,6 +22,7 @@ extend class WT_MainHandler
 	const MedalsPerUpgrade = 5; // [Ace] This must be 2 or above!
 	const MedalsPerLine = 11;
 	const MedalTypesCount = 6;
+	private transient ui Array<class<Actor> > AvailableMonsters;
 	private transient ui int WeaponListSelIndex;
 	private transient ui int SelMonsterPage;
 	private transient ui bool AutoSelected;
@@ -228,12 +229,10 @@ extend class WT_MainHandler
 				// --------------- MONSTER LIST & STATS ---------------
 
 				// [Ace] Filter the monsters and get all the necessary data for the selected weapon.
-				Array<class<Actor> > AvailableMonsters;
 				GetMonstersForWeapon(WeaponListSel.GetClassName(), AvailableMonsters);
 
 				// [Ace] Then display them.
-				int MonsterPages = AvailableMonsters.Size() / (MonsterListEntries + 1) + 1;
-				StatusBar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..MonsterPages, (116, 12), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
+				StatusBar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..GetMonsterPages(), (116, 12), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
 
 				int StartIndex = MonsterListEntries * SelMonsterPage;
 				int row = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
@@ -325,6 +324,44 @@ extend class WT_MainHandler
 		}
 	}
 
+
+	private ui void GetMonstersForWeapon(string weapon, out Array<class<Actor> > arr)
+	{
+		arr.Clear();
+		int MFilter = IWADMonsterFilter.GetInt();
+
+		let it = DictionaryIterator.Create(Dictionary.FromString(MonsterKills.At(weapon)));
+		while (it.Next())
+		{
+			class<Actor> mon;
+			mon = it.Key();
+			if (mon)
+			{
+				int IwadType = GetIwadType(Search_Monsters, mon);
+				if (MFilter == Filter_All || MFilter == IWadType || IwadType == Filter_None)
+				{
+					arr.Push(mon);
+				}
+			}
+		}
+
+		// [Ace] Sort the darn thing while it's at it.
+		for (int i = 0; i < arr.Size() - 1; ++i)
+		{
+			for (int j = i + 1; j < arr.Size(); ++j)
+			{
+				let CurrMonster = GetDefaultByType(arr[i]);
+				let NextMonster = GetDefaultByType(arr[j]);
+				if (CurrMonster.Health >= NextMonster.Health)
+				{
+					let Swap = arr[i];
+					arr[i] = arr[j];
+					arr[j] = Swap;
+				}
+			}
+		}
+	}
+
 	// --------------------------------------------------
 	// INFORMATION
 	// --------------------------------------------------
@@ -411,35 +448,45 @@ extend class WT_MainHandler
 		return int(Monsters.At(monster).ToDouble());
 	}
 
+	private ui int GetMonsterPages() const
+	{
+		return AvailableMonsters.Size() / (MonsterListEntries + 1) + 1;
+	}
+
 	// --------------------------------------------------
 	// INPUT
 	// --------------------------------------------------
 
-	override bool InputProcess(InputEvent e)
+	override bool UiProcess(UiEvent e)
 	{
-		if (e.Type == InputEvent.Type_KeyDown && DrawUi)
+		if (e.Type == UiEvent.Type_KeyDown && DrawUi)
 		{
-			switch (e.KeyScan)
+			switch (e.KeyChar)
 			{
 				// [Ace] Move weapon selection up.
-				case InputEvent.Key_UpArrow:
+				case UiEvent.Key_Up:
 					WeaponListSelIndex = max(0, WeaponListSelIndex - 1);
-					return true;
+					break;
 
 				// [Ace] Move weapon selection down.
-				case InputEvent.Key_DownArrow:
+				case UiEvent.Key_Down:
 					WeaponListSelIndex = min(WeaponListSelIndex + 1, AvailableWeapons.Size() - 1);
-					return true;
+					break;
 
 				// [Ace] Previous monster page.
-				case InputEvent.Key_PgUp:
+				case UiEvent.Key_PgUp:
 					SelMonsterPage = max(0, SelMonsterPage - 1);
-					return true;
+					break;
 
 				// [Ace] Next monster page. No cap on this because it'd be a pain to get how many monster pages the current weapon has.
-				case InputEvent.Key_PgDn:
-					SelMonsterPage++;
-					return true;
+				case UiEvent.Key_PgDn:
+					SelMonsterPage = min(SelMonsterPage + 1, GetMonsterPages() - 1);
+					break;
+
+				// [Ace] Exit menu.
+				case UiEvent.Key_Escape:
+					SendNetworkEvent("WT_ToggleUi");
+					break;
 			}
 		}
 

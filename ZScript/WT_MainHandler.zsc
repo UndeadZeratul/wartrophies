@@ -106,42 +106,6 @@ class WT_MainHandler : EventHandler
 		SortWeaponList();
 	}
 
-	private void GetMonstersForWeapon(string weapon, out Array<class<Actor> > arr) const // [Ace] This may break someday. When that day comes, fix it.
-	{
-		int MFilter = IWADMonsterFilter.GetInt();
-
-		let it = DictionaryIterator.Create(Dictionary.FromString(MonsterKills.At(weapon)));
-		while (it.Next())
-		{
-			class<Actor> mon;
-			mon = it.Key();
-			if (mon)
-			{
-				int IwadType = GetIwadType(Search_Monsters, mon);
-				if (MFilter == Filter_All || MFilter == IWadType || IwadType == Filter_None)
-				{
-					arr.Push(mon);
-				}
-			}
-		}
-
-		// [Ace] Sort the darn thing while it's at it.
-		for (int i = 0; i < arr.Size() - 1; ++i)
-		{
-			for (int j = i + 1; j < arr.Size(); ++j)
-			{
-				let CurrMonster = GetDefaultByType(arr[i]);
-				let NextMonster = GetDefaultByType(arr[j]);
-				if (CurrMonster.Health >= NextMonster.Health)
-				{
-					let Swap = arr[i];
-					arr[i] = arr[j];
-					arr[j] = Swap;
-				}
-			}
-		}
-	}
-
 	// --------------------------------------------------
 	// DEATH STUFF
 	// --------------------------------------------------
@@ -309,6 +273,7 @@ class WT_MainHandler : EventHandler
 		if (e.Name ~== "WT_ToggleUI")
 		{
 			DrawUi = !DrawUi;
+			self.IsUiProcessor = !self.IsUiProcessor;
 		}
 	}
 }
