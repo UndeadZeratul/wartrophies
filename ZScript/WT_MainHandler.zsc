@@ -91,18 +91,14 @@ class WT_MainHandler : EventHandler
 		let it = DictionaryIterator.Create(MonsterKills);
 		while (it.Next())
 		{
-			// Weapons.
-			for (int i = 0; i < AllActorClasses.Size(); ++i)
+			class<Weapon> wpn;
+			wpn = it.Key();
+			if (wpn)
 			{
-				class<Actor> a = AllActorClasses[i];
-				if (a is "Weapon" && a.GetClassName() == it.Key())
+				int IwadType = GetIwadType(Search_Weapons, wpn);
+				if (WFilter == Filter_All || WFilter == IWadType || IwadType == Filter_None)
 				{
-					int IwadType = GetIwadType(Search_Weapons, a);
-					if (WFilter == Filter_All || WFilter == IWadType || IwadType == Filter_None)
-					{
-						AvailableWeapons.Push(a);
-						break;
-					}
+					AvailableWeapons.Push(wpn);
 				}
 			}
 		}
@@ -117,17 +113,14 @@ class WT_MainHandler : EventHandler
 		let it = DictionaryIterator.Create(Dictionary.FromString(MonsterKills.At(weapon)));
 		while (it.Next())
 		{
-			for (int i = 0; i < AllActorClasses.Size(); ++i)
+			class<Actor> mon;
+			mon = it.Key();
+			if (mon)
 			{
-				class<Actor> a = AllActorClasses[i];
-				if (GetDefaultByType(a).bISMONSTER && a.GetClassName() == it.Key())
+				int IwadType = GetIwadType(Search_Monsters, mon);
+				if (MFilter == Filter_All || MFilter == IWadType || IwadType == Filter_None)
 				{
-					int IwadType = GetIwadType(Search_Monsters, a);
-					if (MFilter == Filter_All || MFilter == IWadType || IwadType == Filter_None)
-					{
-						arr.Push(a);
-						break;
-					}
+					arr.Push(mon);
 				}
 			}
 		}
