@@ -179,8 +179,9 @@ extend class WT_MainHandler
 
 			// --------------- WEAPON LIST ---------------
 
+			int WeaponPagesTotal = AvailableWeapons.Size() / (WeaponListEntries + 1) + 1;
 			int WeaponPage = WeaponListSelIndex / WeaponListEntries;
-			StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(WeaponPage + 1, 1), (-42, 12), DI_TEXT_RIGHT, Font.FindFontColor("MiscLabels"));
+			StatusBar.DrawString(mMainFont, (WeaponPage + 1).."/"..WeaponPagesTotal, (-42, 12), DI_TEXT_RIGHT, Font.FindFontColor("MiscLabels"));
 
 			for (int i = 0; WeaponListEntries * WeaponPage + i < AvailableWeapons.Size() && i < WeaponListEntries; ++i)
 			{
@@ -226,15 +227,14 @@ extend class WT_MainHandler
 
 				// --------------- MONSTER LIST & STATS ---------------
 
-				// Monster page.
-				StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(SelMonsterPage + 1, 1, 3), (116, 12), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
-
-				// [Ace] Filter the monsters and get all the necessary data.
-
+				// [Ace] Filter the monsters and get all the necessary data for the selected weapon.
 				Array<class<Actor> > AvailableMonsters;
 				GetMonstersForWeapon(WeaponListSel.GetClassName(), AvailableMonsters);
 
 				// [Ace] Then display them.
+				int MonsterPages = AvailableMonsters.Size() / (MonsterListEntries + 1) + 1;
+				StatusBar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..MonsterPages, (116, 12), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
+
 				int StartIndex = MonsterListEntries * SelMonsterPage;
 				int row = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
 				for (int i = StartIndex; i < AvailableMonsters.Size() && row < MonsterListEntries; ++i)
