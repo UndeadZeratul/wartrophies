@@ -8,3 +8,4 @@ user bool wt_panel_blackdisplay = false;
 user int wt_showlite = 3;
 
 user int wt_killsound = 0;
+user bool wt_eventsounds = true;
