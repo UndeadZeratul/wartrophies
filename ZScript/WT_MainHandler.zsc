@@ -119,7 +119,7 @@ class WT_MainHandler : EventHandler
 		if (e.Thing && e.Thing.bISMONSTER && e.DamageSource && e.DamageSource is "PlayerPawn" && e.Thing.Health <= 0)
 		{
 			double FastMonstersMult = sv_fastmonsters || G_SkillPropertyInt(SKILLP_FastMonsters) ? 2.5 : 1;
-			int SkillNumber = (G_SkillPropertyInt(SKILLP_ACSReturn) + 1);
+			int SkillNumber = min(4, (G_SkillPropertyInt(SKILLP_ACSReturn) + 1));
 			int ExperienceGained = int(min(10000, e.Thing.GetSpawnHealth()) * 0.05 * SkillNumber * FastMonstersMult);
 
 			// [Ace] Killer is a projectile.
