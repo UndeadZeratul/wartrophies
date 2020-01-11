@@ -27,6 +27,8 @@ extend class WT_MainHandler
 	private transient ui int WeaponListSelIndex;
 	private transient ui int SelMonsterPage;
 	private transient ui bool AutoSelected;
+	private transient ui bool InSearchMode;
+	private transient ui string SearchFilter;
 	private transient bool DrawUi;
 
 	private transient ui HUDFont mMainFont;
@@ -143,7 +145,7 @@ extend class WT_MainHandler
 
 			// --------------- MISCELLANEOUS ---------------
 
-			GetAvailableWeapons();
+			if (!InSearchMode) GetAvailableWeapons();
 
 			// [Ace] Autoselect in the list your currently selected weapon in the world.
 			if (!AutoSelected)
@@ -194,7 +196,9 @@ extend class WT_MainHandler
 
 			int WeaponPagesTotal = AvailableWeapons.Size() / (WeaponListEntries + 1) + 1;
 			int WeaponPage = WeaponListSelIndex / WeaponListEntries;
-			StatusBar.DrawString(mMainFont, "All Weapons", (-174, 12), DI_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
+
+			string Title = InSearchMode ? SearchFilter.."_" : (SearchFilter != "" ? SearchFilter : "All Weapons");
+			StatusBar.DrawString(mMainFont, Title, (-174, 12), DI_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
 			StatusBar.DrawString(mMainFont, (WeaponPage + 1).."/"..WeaponPagesTotal, (-42, 12), DI_TEXT_RIGHT, Font.FindFontColor("MiscLabels"));
 
 			for (int i = 0; WeaponListEntries * WeaponPage + i < AvailableWeapons.Size() && i < WeaponListEntries; ++i)
@@ -370,7 +374,7 @@ extend class WT_MainHandler
 			if (wpn)
 			{
 				int IwadType = GetIwadType(Search_Weapons, wpn);
-				if (WFilter == Filter_All || WFilter == IWadType || IwadType == Filter_None)
+				if ((WFilter == Filter_All || WFilter == IWadType || IwadType == Filter_None) && !InSearchMode && (SearchFilter == "" || GetDefaultByType(wpn).GetTag().MakeLower().IndexOf(SearchFilter.MakeLower()) != -1))
 				{
 					AvailableWeapons.Push(wpn);
 				}
@@ -532,42 +536,78 @@ extend class WT_MainHandler
 	{
 		if (e.Type == UiEvent.Type_KeyDown && DrawUi)
 		{
-			switch (e.KeyChar)
+			if (!InSearchMode)
 			{
-				// [Ace] Move weapon selection up.
-				case UiEvent.Key_Up:
-					WeaponListSelIndex = max(0, WeaponListSelIndex - 1);
-					break;
+				switch (e.KeyChar)
+				{
+					// [Ace] Move weapon selection up.
+					case UiEvent.Key_Up:
+						WeaponListSelIndex = max(0, WeaponListSelIndex - 1);
+						break;
 
-				// [Ace] Move weapon selection down.
-				case UiEvent.Key_Down:
-					WeaponListSelIndex = min(WeaponListSelIndex + 1, AvailableWeapons.Size() - 1);
-					break;
+					// [Ace] Move weapon selection down.
+					case UiEvent.Key_Down:
+						WeaponListSelIndex = min(WeaponListSelIndex + 1, AvailableWeapons.Size() - 1);
+						break;
 
-				// [Ace] Previous monster page.
-				case UiEvent.Key_PgUp:
-					SelMonsterPage = max(0, SelMonsterPage - 1);
-					break;
+					// [Ace] Previous monster page.
+					case UiEvent.Key_PgUp:
+						SelMonsterPage = max(0, SelMonsterPage - 1);
+						break;
 
-				// [Ace] Next monster page. No cap on this because it'd be a pain to get how many monster pages the current weapon has.
-				case UiEvent.Key_PgDn:
-					SelMonsterPage = min(SelMonsterPage + 1, GetMonsterPages() - 1);
-					break;
+					// [Ace] Next monster page. No cap on this because it'd be a pain to get how many monster pages the current weapon has.
+					case UiEvent.Key_PgDn:
+						SelMonsterPage = min(SelMonsterPage + 1, GetMonsterPages() - 1);
+						break;
 
-				// [Ace] Exit menu.
-				case UiEvent.Key_Escape:
-					SendNetworkEvent("WT_ToggleUi");
-					break;
+					// [Ace] Exit menu.
+					case UiEvent.Key_Escape:
+						SendNetworkEvent("WT_ToggleUi");
+						break;
 
-				// [Ace] Upgrade prestige. Chars: 'p' or 'P'.
-				// It really bothers me that I'm doing such logic checks in the UI. I'd have to completely mess up the scoping otherwise.
-				case 80:
-				case 112:
-					if (GetPlayerRank() == XPRanks.Size() && Prestige < 3)
-					{
-						SendNetworkEvent("WT_UpgradePrestige");
-					}
-					break;
+					// [Ace] Enter search mode. Chars: Space
+					case 32:
+						SearchFilter = "";
+						InSearchMode = true;
+						break;
+
+					// [Ace] Clear filter.
+					case UiEvent.Key_Backspace:
+						SearchFilter = "";
+						break;
+
+					// [Ace] Upgrade prestige. Chars: 'p' or 'P'.
+					// It really bothers me that I'm doing such logic checks in the UI. I'd have to completely mess up the scoping otherwise.
+					case 80:
+					case 112:
+						if (GetPlayerRank() == XPRanks.Size() && Prestige < 3)
+						{
+							SendNetworkEvent("WT_UpgradePrestige");
+						}
+						break;
+				}
+			}
+			else
+			{
+				switch (e.KeyChar)
+				{
+					// [Ace] Exit search mode.
+					case UiEvent.Key_Return:
+						InSearchMode = false;
+						break;
+
+					// [Ace] Delete last character.
+					case UiEvent.Key_Backspace:
+						SearchFilter.DeleteLastCharacter();
+						break;
+
+					default:
+						if (SearchFilter.Length() < 13)
+						{
+							SearchFilter = SearchFilter..e.KeyString;
+						}
+						break;
+				}
 			}
 		}
 
