@@ -18,10 +18,10 @@ extend class WT_MainHandler
 	const WeaponListMaxStringWidth = 16;
 	const MonsterListEntries = 11;
 	const MonsterListMaxStringWidth = 15;
-	const KillsPerMedal = 5;
-	const MedalsPerUpgrade = 5; // [Ace] This must be 2 or above!
+	const KillsPerMedal = 3;
+	const MedalsPerUpgrade = 3; // [Ace] This must be 2 or above!
 	const MedalsPerLine = 11;
-	const MedalTypesCount = 6;
+	const MedalTypesCount = 9;
 	private transient ui Array<class<Actor> > AvailableMonsters;
 	private transient ui int WeaponListSelIndex;
 	private transient ui int SelMonsterPage;
