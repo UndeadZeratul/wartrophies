@@ -593,8 +593,14 @@ extend class WT_MainHandler
 			{
 				switch (e.KeyChar)
 				{
-					// [Ace] Exit search mode.
+					// [Ace] Apply filter.
 					case UiEvent.Key_Return:
+						InSearchMode = false;
+						break;
+
+					// [Ace] Exit search mode and don't apply filter.
+					case UiEvent.Key_Escape:
+						SearchFilter = "";
 						InSearchMode = false;
 						break;
 
