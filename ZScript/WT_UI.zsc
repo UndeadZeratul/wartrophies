@@ -160,7 +160,8 @@ extend class WT_MainHandler
 
 			// --------------- GRAPHIC ---------------
 			
-			StatusBar.DrawString(mMainFont, "Press 'ESC' to exit", (-135, -150), DI_TEXT_CENTER, Font.CR_GREEN);
+			StatusBar.DrawString(mMainFont, "Press 'ESC' to exit", (-232, -160), DI_TEXT_LEFT, Font.CR_GREEN);
+			StatusBar.DrawString(mMainFont, "Press 'Space' to search. 'Enter' to apply. 'Backspace' to clear.", (-232, -150), DI_TEXT_LEFT, Font.CR_GREEN);
 			StatusBar.DrawImage(BlackDisplay.GetBool() ? "WTSTATPB" : "WTSTATPN", (0, 0.5), DI_CENTER); // [Ace] 0.5 because nearest neighbour scaling is not your friend.
 
 			// --------------- MAIN STATS ---------------
@@ -562,6 +563,7 @@ extend class WT_MainHandler
 
 					// [Ace] Exit menu.
 					case UiEvent.Key_Escape:
+						SearchFilter = "";
 						SendNetworkEvent("WT_ToggleUi");
 						break;
 
