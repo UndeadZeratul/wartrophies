@@ -200,8 +200,6 @@ class WT_MainHandler : EventHandler
 	{
 		ProjectileBinds = Dictionary.Create();
 
-		// [Ace] This exists because calling ResetTally clears the CVars, but not before Dictionary.FromString can recreate the dictionary using the old CVars.
-		// This forces creation of new dictionaries instead of relying on empty strings.
 		if (reset)
 		{
 			WeaponStorage.ResetToDefault();
@@ -218,6 +216,7 @@ class WT_MainHandler : EventHandler
 			// Update the variables with what's in the CVars.
 			String s = WeaponStorage.GetString();
 			s.Replace("@", String.Format("%c", 92));
+			
 			MonsterKills = Dictionary.FromString(s);
 			Experience = ExperienceStorage.GetInt();
 			Prestige = PrestigeStorage.GetInt();
