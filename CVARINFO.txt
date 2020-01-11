@@ -1,6 +1,7 @@
 // [Ace] These are only used to store data.
 server nosave cheat string wt_stats_weapons_kills = "{}";
 server nosave cheat int wt_stats_experience = 0;
+server nosave cheat int wt_stats_prestige = 0;
 
 user int wt_filter_iwad_weapons = 5;
 user int wt_filter_iwad_monsters = 5;

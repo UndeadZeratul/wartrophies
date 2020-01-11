@@ -16,6 +16,7 @@ class WT_MainHandler : EventHandler
 
 	private transient CVar WeaponStorage;
 	private transient CVar ExperienceStorage;
+	private transient CVar PrestigeStorage;
 	private transient CVar BlackDisplay;
 	private transient CVar IWADWeaponFilter;
 	private transient CVar IWADMonsterFilter;
@@ -24,6 +25,7 @@ class WT_MainHandler : EventHandler
 
 	private transient Array<class<Weapon> > AvailableWeapons;
 	private transient int Experience;
+	private transient int Prestige;
 
 	private transient Dictionary MonsterKills; // [Ace] The value of each key is the monster dictionary's JSON. The key is the weapon.
 	private transient Dictionary ProjectileBinds; // [Ace] Key - projectile, value - weapon.
@@ -106,6 +108,13 @@ class WT_MainHandler : EventHandler
 		SortWeaponList();
 	}
 
+	private void UpgradePrestige()
+	{
+		Prestige++;
+		Experience = 0;
+		S_StartSound("WT/Prestige", CHAN_UI | CHAN_AUTO);
+	}
+
 	// --------------------------------------------------
 	// DEATH STUFF
 	// --------------------------------------------------
@@ -176,6 +185,8 @@ class WT_MainHandler : EventHandler
 	{
 		WeaponStorage = CVar.FindCVar('wt_stats_weapons_kills');
 		ExperienceStorage = CVar.FindCVar('wt_stats_experience');
+		PrestigeStorage = CVar.FindCVar('wt_stats_prestige');
+
 		BlackDisplay = CVar.FindCVar('wt_panel_blackdisplay');
 		IWADWeaponFilter = CVar.FindCVar('wt_filter_iwad_weapons');
 		IWADMonsterFilter = CVar.FindCVar('wt_filter_iwad_monsters');
@@ -195,8 +206,11 @@ class WT_MainHandler : EventHandler
 		{
 			WeaponStorage.ResetToDefault();
 			ExperienceStorage.ResetToDefault();
+			PrestigeStorage.ResetToDefault();
+
 			MonsterKills = Dictionary.Create();
 			Experience = 0;
+			Prestige = 0;
 		}
 		else
 		{
@@ -206,6 +220,7 @@ class WT_MainHandler : EventHandler
 			s.Replace("@", String.Format("%c", 92));
 			MonsterKills = Dictionary.FromString(s);
 			Experience = ExperienceStorage.GetInt();
+			Prestige = PrestigeStorage.GetInt();
 		}
 	}
 
@@ -223,6 +238,7 @@ class WT_MainHandler : EventHandler
 			s.Replace(String.Format("%c", 92), "@");
 			WeaponStorage.SetString(s);
 			ExperienceStorage.SetInt(Experience);
+			PrestigeStorage.SetInt(Prestige);
 
 			GetAvailableWeapons();
 
@@ -274,6 +290,11 @@ class WT_MainHandler : EventHandler
 		{
 			DrawUi = !DrawUi;
 			self.IsUiProcessor = !self.IsUiProcessor;
+		}
+
+		if (e.Name ~== "WT_UpgradePrestige")
+		{
+			UpgradePrestige();
 		}
 	}
 }

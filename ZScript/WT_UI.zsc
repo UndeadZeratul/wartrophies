@@ -75,10 +75,14 @@ extend class WT_MainHandler
 				// Genocide rank.
 				StatusBar.DrawString(mMainFont, GetGenocideRank(TotalKills), (2, 12), DI_TL_TEXT_LEFT, Font.FindFontColor("GenocideRank"));
 
-				// Player rank.
+				// Player rank & prestige.
 				int PlayerRank; string PlayerRankString;
 				[PlayerRank, PlayerRankString] = GetPlayerRank();
-				StatusBar.DrawString(mMainFont, PlayerRankString, (2, 26), DI_TL_TEXT_LEFT, Font.FindFontColor("PlayerRank"));
+				if (Prestige > 0)
+				{
+					StatusBar.DrawImage("PRSTIGE"..Prestige, (2, 21), DI_TL);
+				}
+				StatusBar.DrawString(mMainFont, PlayerRankString, (Prestige > 0 ? 14 : 2, 26), DI_TL_TEXT_LEFT, Font.FindFontColor("PlayerRank"));
 
 				// Player experience.
 				StatusBar.DrawString(mMainFont, "XP:", (2, 36), DI_TL_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
@@ -169,11 +173,14 @@ extend class WT_MainHandler
 			[PlayerRank, PlayerRankString] = GetPlayerRank();
 			StatusBar.DrawString(mMainFont, PlayerRankString, (-223, -36), DI_TEXT_LEFT, Font.FindFontColor("PlayerRank"));
 
+			// Player prestige.
+			StatusBar.DrawImage("PRSTIGE"..Prestige, (-45, -32.5), DI_CENTER);
+
 			// Player experience.
 			StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(Experience, 1, 7), (-139, -12), DI_TEXT_RIGHT, Font.FindFontColor("PlayerRank"));
 
 			// Player experience for next level.
-			string NextPlayerRankExp = PlayerRank < XPReq.Size() ? StatusBar.FormatNumber(XPReq[PlayerRank + 1], 1, 7) : "-";
+			string NextPlayerRankExp = PlayerRank < XPReq.Size() ? StatusBar.FormatNumber(XPReq[PlayerRank], 1, 7) : "-";
 			StatusBar.DrawString(mMainFont, NextPlayerRankExp, (-42, -12), DI_TEXT_RIGHT, Font.FindFontColor("PlayerRank"));
 
 			// Player medal.
@@ -507,6 +514,16 @@ extend class WT_MainHandler
 				// [Ace] Exit menu.
 				case UiEvent.Key_Escape:
 					SendNetworkEvent("WT_ToggleUi");
+					break;
+
+				// [Ace] Upgrade prestige. Chars: 'p' or 'P'.
+				// It really bothers me that I'm doing such logic checks in the UI. I'd have to completely mess up the scoping otherwise.
+				case 80:
+				case 112:
+					if (GetPlayerRank() == XPRanks.Size() && Prestige < 3)
+					{
+						SendNetworkEvent("WT_UpgradePrestige");
+					}
 					break;
 			}
 		}
