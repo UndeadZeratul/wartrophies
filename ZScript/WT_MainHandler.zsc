@@ -111,7 +111,8 @@ class WT_MainHandler : EventHandler
 	private void UpgradePrestige()
 	{
 		Prestige++;
-		Experience = 0;
+		int ExtraExperience = Experience - XPReq[XPReq.Size() - 1];
+		Experience = ExtraExperience;
 		S_StartSound("WT/Prestige", CHAN_UI | CHAN_AUTO);
 	}
 
