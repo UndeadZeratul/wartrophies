@@ -12,7 +12,7 @@ extend class WT_MainHandler
 	static const string WeapRanks[] = { "Uninteresting", "Barely Threatening", "Slightly Scary", "Unfriendly", "Not Too Rough", "Plenty Hurtful", "Perfectly Ordinary", "Face-Gibbing", "Agitating", "Map-clearing", "Barbaric", "Megawad-purging", "Ultraviolent", "Absolutely Barbaric", "Nightmare-inducing", "Epic", "Legendary", "American", "id Select", "Hall's Custom", "Carmack's Prized", "Romero's Own" };
 
 	static const int GenocideReqs[] = { 50, 100, 250, 500, 1000, 1500, 2500, 3500, 4500, 6000, 7500, 9000, 11111, 13333, 16666, 20000, 25000, 30000, 35000, 50000, 70000, 99999, 125000, 175000, 250000, 350000, 500000, 750000, 100000 };
-	static const string GenocideRanks[]= { "Innocent", "Craven", "Unbloodied", "Gun-shy", "Rank-and-file", "Basic Grunt", "Diablophobe", "Grave Digger", "Butcher", "Spree Killer", "Bounty Hunter", "Master Gunman", "Elite Warrior", "Mass Assassin", "Basically Mor'Ladim", "Ludicrous", "The Cleaner", "Psychopath", "Warlord", "Bloodthirsty", "Anti-Army Weapon", "Okuplok", "Unstoppable Force", "Carnage Elemental", "Grim Reaper", "Icon of Slay", "Death Incarnate", "Doomslayer", "Origin Exstinctum" };
+	static const string GenocideRanks[] = { "Innocent", "Craven", "Unbloodied", "Gun-shy", "Rank-and-file", "Basic Grunt", "Diablophobe", "Grave Digger", "Butcher", "Spree Killer", "Bounty Hunter", "Master Gunman", "Elite Warrior", "Mass Assassin", "Basically Mor'Ladim", "Ludicrous", "The Cleaner", "Psychopath", "Warlord", "Bloodthirsty", "Anti-Army Weapon", "Okuplok", "Unstoppable Force", "Carnage Elemental", "Grim Reaper", "Icon of Slay", "Death Incarnate", "Doomslayer", "Origin Exstinctum" };
 
 	const WeaponListEntries = 11;
 	const WeaponListMaxStringWidth = 16;
@@ -22,9 +22,11 @@ extend class WT_MainHandler
 	const MedalsPerUpgrade = 3; // [Ace] This must be 2 or above!
 	const MedalsPerLine = 11;
 	const MedalTypesCount = 9;
+	private transient ui Array<class<Weapon> > AvailableWeapons;
 	private transient ui Array<class<Actor> > AvailableMonsters;
 	private transient ui int WeaponListSelIndex;
 	private transient ui int SelMonsterPage;
+	private transient ui int SelectedCategory;
 	private transient ui bool AutoSelected;
 	private transient bool DrawUi;
 
@@ -56,6 +58,7 @@ extend class WT_MainHandler
 
 			// --------------- MISCELLANEOUS ---------------
 
+			GetAvailableWeapons();
 			AutoSelectCurrentWeapon();
 
 			// --------------- SHARED ---------------
@@ -141,6 +144,8 @@ extend class WT_MainHandler
 
 			// --------------- MISCELLANEOUS ---------------
 
+			GetAvailableWeapons();
+
 			// [Ace] Autoselect in the list your currently selected weapon in the world.
 			if (!AutoSelected)
 			{
@@ -190,6 +195,7 @@ extend class WT_MainHandler
 
 			int WeaponPagesTotal = AvailableWeapons.Size() / (WeaponListEntries + 1) + 1;
 			int WeaponPage = WeaponListSelIndex / WeaponListEntries;
+			StatusBar.DrawString(mMainFont, "< "..AvailableCategories[SelectedCategory].." >", (-174, 12), DI_TEXT_LEFT, Font.FindFontColor("MiscLabels"));
 			StatusBar.DrawString(mMainFont, (WeaponPage + 1).."/"..WeaponPagesTotal, (-42, 12), DI_TEXT_RIGHT, Font.FindFontColor("MiscLabels"));
 
 			for (int i = 0; WeaponListEntries * WeaponPage + i < AvailableWeapons.Size() && i < WeaponListEntries; ++i)
@@ -197,7 +203,8 @@ extend class WT_MainHandler
 				let CurrWeapon = GetDefaultByType(AvailableWeapons[WeaponListEntries * WeaponPage + i]);
 				
 				// [Ace] Truncate name if it's too long.
-				string WeaponName = CurrWeapon.GetTag();
+				string CustomTag = WeaponCustomTags.At(CurrWeapon.GetClassName());
+				string WeaponName = CustomTag != "" ? CustomTag : CurrWeapon.GetTag();
 				if (WeaponName.Length() > WeaponListMaxStringWidth)
 				{
 					WeaponName = WeaponName.Mid(0, WeaponListMaxStringWidth).."...";
@@ -210,7 +217,9 @@ extend class WT_MainHandler
 			if (WeaponListSel)
 			{
 				// Weapon name.
-				StatusBar.DrawString(mMainFont, GetDefaultByType(WeaponListSel).GetTag(), (-7, -132), DI_TEXT_LEFT, Font.FindFontColor("WeaponName"));
+				string CustomTag = WeaponCustomTags.At(WeaponListSel.GetClassName());
+				string WeaponName = CustomTag != "" ? CustomTag : GetDefaultByType(WeaponListSel).GetTag();
+				StatusBar.DrawString(mMainFont, WeaponName, (-7, -132), DI_TEXT_LEFT, Font.FindFontColor("WeaponName"));
 
 				// Weapon rank.
 				int WeaponRank; string WeaponRankString;
@@ -263,8 +272,8 @@ extend class WT_MainHandler
 				StatusBar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..GetMonsterPages(), (116, 12), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
 
 				int StartIndex = MonsterListEntries * SelMonsterPage;
-				int row = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
-				for (int i = StartIndex; i < AvailableMonsters.Size() && row < MonsterListEntries; ++i)
+				int mRow = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
+				for (int i = StartIndex; i < AvailableMonsters.Size() && mRow < MonsterListEntries; ++i)
 				{
 					let Monster = GetDefaultByType(AvailableMonsters[i]);
 
@@ -274,15 +283,15 @@ extend class WT_MainHandler
 					{
 						MonsterName = MonsterName.Mid(0, MonsterListMaxStringWidth).."...";
 					}
-					StatusBar.DrawString(mMainFont, MonsterName, (-7, 36 + 9 * row), DI_TEXT_LEFT, Font.FindFontColor("MonsterStats"));
+					StatusBar.DrawString(mMainFont, MonsterName, (-7, 36 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor("MonsterStats"));
 
 					// Kills.
 					int Kills = GetKillsForMonster(WeaponListSel.GetClassName(), Monster.GetClassName());
-					StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(Kills, 1, 5), (180, 36 + 9 * row), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
+					StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(Kills, 1, 5), (180, 36 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
 
 					// Percentage compared to other kills.
-					StatusBar.DrawString(mMainFont, int((Kills / double(WeaponKills)) * 100).."%", (224, 36 + 9 * row), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
-					row++;
+					StatusBar.DrawString(mMainFont, int((Kills / double(WeaponKills)) * 100).."%", (224, 36 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor("MonsterStats"));
+					mRow++;
 				}
 			}
 		}
@@ -352,6 +361,46 @@ extend class WT_MainHandler
 		}
 	}
 
+	private ui void GetAvailableWeapons()
+	{
+		AvailableWeapons.Clear();
+		int WFilter = IWADWeaponFilter.GetInt();
+		
+		let it = DictionaryIterator.Create(MonsterKills);
+		while (it.Next())
+		{
+			class<Weapon> wpn;
+			wpn = it.Key();
+			if (wpn)
+			{
+				int IwadType = GetIwadType(Search_Weapons, wpn);
+				string ClsName = wpn.GetClassName();
+				string Category = WeaponCategories.At(ClsName.MakeLower());
+				if ((WFilter == Filter_All || WFilter == IWadType || IwadType == Filter_None) && (SelectedCategory == 0 || Category ~== AvailableCategories[SelectedCategory]))
+				{
+					AvailableWeapons.Push(wpn);
+				}
+			}
+		}
+
+		// [Ace] Sort it.
+		for (int i = 0; i < AvailableWeapons.Size() - 1; ++i)
+		{
+			for (int j = i + 1; j < AvailableWeapons.Size(); ++j)
+			{
+				let CurrWeapon = GetDefaultByType(AvailableWeapons[i]);
+				let NextWeapon = GetDefaultByType(AvailableWeapons[j]);
+
+				// [Ace] Sort by numbers first, then by first letter if the numbers match.
+				if (CurrWeapon.SlotNumber >= NextWeapon.SlotNumber || (CurrWeapon.SlotNumber == NextWeapon.SlotNumber && String.Format("%s", CurrWeapon.GetClassName()).ByteAt(0) >= String.Format("%s", NextWeapon.GetClassName()).ByteAt(0)))
+				{
+					let Swap = AvailableWeapons[i];
+					AvailableWeapons[i] = AvailableWeapons[j];
+					AvailableWeapons[j] = Swap;
+				}
+			}
+		}
+	}
 
 	private ui void GetMonstersForWeapon(string weapon, out Array<class<Actor> > arr)
 	{
@@ -499,6 +548,18 @@ extend class WT_MainHandler
 				// [Ace] Move weapon selection down.
 				case UiEvent.Key_Down:
 					WeaponListSelIndex = min(WeaponListSelIndex + 1, AvailableWeapons.Size() - 1);
+					break;
+
+				// [Ace] Move category selection right.
+				case UiEvent.Key_Right:
+					SelectedCategory++;
+					if (SelectedCategory == AvailableCategories.Size()) SelectedCategory = 0;
+					break;
+
+				// [Ace] Move category selection left.
+				case UiEvent.Key_Left:
+					SelectedCategory--;
+					if (SelectedCategory < 0) SelectedCategory = AvailableCategories.Size() - 1;
 					break;
 
 				// [Ace] Previous monster page.

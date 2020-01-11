@@ -23,7 +23,6 @@ class WT_MainHandler : EventHandler
 	private transient CVar KillSoundType;
 	private transient CVar LiteHUDType;
 
-	private transient Array<class<Weapon> > AvailableWeapons;
 	private transient int Experience;
 	private transient int Prestige;
 
@@ -63,49 +62,6 @@ class WT_MainHandler : EventHandler
 	private void PlayKillSound()
 	{
 		S_StartSound("WT/KillSound"..KillSoundType.GetInt(), CHANF_UI, CHAN_AUTO | CHAN_UI);
-	}
-
-	private void SortWeaponList()
-	{
-		for (int i = 0; i < AvailableWeapons.Size() - 1; ++i)
-		{
-			for (int j = i + 1; j < AvailableWeapons.Size(); ++j)
-			{
-				let CurrWeapon = GetDefaultByType(AvailableWeapons[i]);
-				let NextWeapon = GetDefaultByType(AvailableWeapons[j]);
-
-				// [Ace] Sort by numbers first, then by first letter if the numbers match.
-				if (CurrWeapon.SlotNumber >= NextWeapon.SlotNumber || (CurrWeapon.SlotNumber == NextWeapon.SlotNumber && String.Format("%s", CurrWeapon.GetClassName()).ByteAt(0) >= String.Format("%s", NextWeapon.GetClassName()).ByteAt(0)))
-				{
-					let Swap = AvailableWeapons[i];
-					AvailableWeapons[i] = AvailableWeapons[j];
-					AvailableWeapons[j] = Swap;
-				}
-			}
-		}
-	}
-
-	private void GetAvailableWeapons()
-	{
-		AvailableWeapons.Clear();
-		int WFilter = IWADWeaponFilter.GetInt();
-		
-		let it = DictionaryIterator.Create(MonsterKills);
-		while (it.Next())
-		{
-			class<Weapon> wpn;
-			wpn = it.Key();
-			if (wpn)
-			{
-				int IwadType = GetIwadType(Search_Weapons, wpn);
-				if (WFilter == Filter_All || WFilter == IWadType || IwadType == Filter_None)
-				{
-					AvailableWeapons.Push(wpn);
-				}
-			}
-		}
-
-		SortWeaponList();
 	}
 
 	private void UpgradePrestige()
@@ -200,6 +156,7 @@ class WT_MainHandler : EventHandler
 	void Initialize(bool reset)
 	{
 		ProjectileBinds = Dictionary.Create();
+		ParseLibraryLump();
 
 		if (reset)
 		{
@@ -239,8 +196,6 @@ class WT_MainHandler : EventHandler
 			WeaponStorage.SetString(s);
 			ExperienceStorage.SetInt(Experience);
 			PrestigeStorage.SetInt(Prestige);
-
-			GetAvailableWeapons();
 
 			// [Ace] This will desync. You have been warned. I have been warned.
 			let plr = PlayerPawn(players[consoleplayer].mo);

@@ -12,3 +12,17 @@ Download the zip and load it into GZDoom. No need to change its extension to .pk
 ---
 - Add a Tag property to your weapons/monsters.  
 *The mod will work without it, but raw class names will be displayed instead and it won't look good unless your class names are sensible.*
+
+### Library
+---
+The mod allows defining of custom categories and tags for weapons. To use this feature, create a lump called WTLBRARY and use the following syntax:  
+`<weapon class name>,<category>,[custom tag]`
+
+**Examples:** `SuperShotgun,Shotguns,Bearkiller`, `Shotgun,None,Hunter`, `BFG9000,Energy,Doomsday Cannon`
+
+**NOTES:**
+- One definition per line.
+- Do not use spaces after the commas!
+- Comments are also parsed, so don't bother adding them.
+- Tags are optional. They override the real weapon tags, if any.
+- Support for this feature is limited. Don't expect me to extend it much.
