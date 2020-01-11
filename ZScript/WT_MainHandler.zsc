@@ -156,7 +156,6 @@ class WT_MainHandler : EventHandler
 	void Initialize(bool reset)
 	{
 		ProjectileBinds = Dictionary.Create();
-		ParseLibraryLump();
 
 		if (reset)
 		{
