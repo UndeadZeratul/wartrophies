@@ -1,5 +1,5 @@
 // [Ace] These are only used to store data.
-server nosave cheat string wt_stats_weapons_kills = ""; // [Ace] Naming of this is due to compatibility.
+server nosave cheat string wt_stats_weapons_kills_1 = "";
 server nosave cheat string wt_stats_weapons_kills_2 = "";
 server nosave cheat string wt_stats_weapons_kills_3 = "";
 server nosave cheat string wt_stats_weapons_kills_4 = "";

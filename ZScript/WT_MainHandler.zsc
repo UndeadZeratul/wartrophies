@@ -142,8 +142,7 @@ class WT_MainHandler : EventHandler
 	{
 		for (int i = 0; i < WeaponStorage.Size(); ++i)
 		{
-			string Suffix = i > 0 ? "_"..(i + 1) : "";
-			WeaponStorage[i] = CVar.FindCVar("wt_stats_weapons_kills"..Suffix);
+			WeaponStorage[i] = CVar.FindCVar("wt_stats_weapons_kills".."_"..(i + 1));
 		}
 		ExperienceStorage = CVar.FindCVar('wt_stats_experience');
 		PrestigeStorage = CVar.FindCVar('wt_stats_prestige');
@@ -181,16 +180,26 @@ class WT_MainHandler : EventHandler
 			// Couldn't put JSON together again.
 
 			string FullText;
-			for (int i = 0; i < WeaponStorage.Size(); ++i)
+			CVar OldWeaponStorage = CVar.FindCVar('wt_stats_weapons_kills'); // [Ace] Migrate the old CVar to the new ones for consistency's sake. Remove this after a while. Say, a year.
+			if (OldWeaponStorage)
 			{
-				// [Ace] Glorious m8f hax. At least they actually work.
-				// IMPORTANT: This is kept for compatibility reasons. The write-to-CVar portion of the hack has been removed, but if I were to remove this, people would need to manually fix the strings in the ini.
-				// This is only here so that CVars from before the fix can be read properly and progress is not lost. Once enough time has passed, I will likely remove this read portion as well,
-				// because by then the correct strings will have been written in the config.
-				String s = WeaponStorage[i].GetString();
-				s.Replace("@", String.Format("%c", 92));
+				FullText = OldWeaponStorage.GetString();
+				OldWeaponStorage.ResetToDefault();
+			}
+			else
+			{
+				for (int i = 0; i < WeaponStorage.Size(); ++i)
+				{
+					// [Ace] Glorious m8f hax. At least they actually work.
+					// IMPORTANT: This is kept for compatibility reasons. The write-to-CVar portion of the hack has been removed, but if I were to remove this, people would need to manually fix the strings in the ini.
+					// This is only here so that CVars from before the fix can be read properly and progress is not lost. Once enough time has passed, I will likely remove this read portion as well,
+					// because by then the correct strings will have been written in the config.
+					
+					String s = WeaponStorage[i].GetString();
+					s.Replace("@", String.Format("%c", 92));
 
-				FullText = FullText..s;
+					FullText = FullText..s;
+				}
 			}
 			
 			MonsterKills = Dictionary.FromString(FullText);
