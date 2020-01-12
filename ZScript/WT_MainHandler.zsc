@@ -14,7 +14,7 @@ class WT_MainHandler : EventHandler
 	// CVARS & GLOBAL VARS
 	// --------------------------------------------------
 
-	private transient CVar WeaponStorage;
+	private transient CVar WeaponStorage[20];
 	private transient CVar ExperienceStorage;
 	private transient CVar PrestigeStorage;
 	private transient CVar BlackDisplay;
@@ -140,7 +140,11 @@ class WT_MainHandler : EventHandler
 	// [Ace] OnRegister is called when save games are loaded.
 	override void OnRegister()
 	{
-		WeaponStorage = CVar.FindCVar('wt_stats_weapons_kills');
+		for (int i = 0; i < WeaponStorage.Size(); ++i)
+		{
+			string Suffix = i > 0 ? "_"..(i + 1) : "";
+			WeaponStorage[i] = CVar.FindCVar("wt_stats_weapons_kills"..Suffix);
+		}
 		ExperienceStorage = CVar.FindCVar('wt_stats_experience');
 		PrestigeStorage = CVar.FindCVar('wt_stats_prestige');
 
@@ -159,7 +163,10 @@ class WT_MainHandler : EventHandler
 
 		if (reset)
 		{
-			WeaponStorage.ResetToDefault();
+			for (int i = 0; i < WeaponStorage.Size(); ++i)
+			{
+				WeaponStorage[i].ResetToDefault();
+			}
 			ExperienceStorage.ResetToDefault();
 			PrestigeStorage.ResetToDefault();
 
@@ -169,15 +176,24 @@ class WT_MainHandler : EventHandler
 		}
 		else
 		{
-			// [Ace] Glorious m8f hax. At least they actually work.
-			// Update the variables with what's in the CVars.
-			// IMPORTANT: This is kept for compatibility reasons. The write-to-CVar portion of the hack has been removed, but if I were to remove this, people would need to manually fix the strings in the ini after this update.
-			// This is only here so that CVars prior to this fix can be read properly and progress is not lost. Once enough time has passed, I will likely remove this read portion as well,
-			// because by then the correct strings will have been written in the config.
-			String s = WeaponStorage.GetString();
-			s.Replace("@", String.Format("%c", 92));
+			// [Ace]
+			// All the king's horses and all the King's men
+			// Couldn't put JSON together again.
+
+			string FullText;
+			for (int i = 0; i < WeaponStorage.Size(); ++i)
+			{
+				// [Ace] Glorious m8f hax. At least they actually work.
+				// IMPORTANT: This is kept for compatibility reasons. The write-to-CVar portion of the hack has been removed, but if I were to remove this, people would need to manually fix the strings in the ini.
+				// This is only here so that CVars from before the fix can be read properly and progress is not lost. Once enough time has passed, I will likely remove this read portion as well,
+				// because by then the correct strings will have been written in the config.
+				String s = WeaponStorage[i].GetString();
+				s.Replace("@", String.Format("%c", 92));
+
+				FullText = FullText..s;
+			}
 			
-			MonsterKills = Dictionary.FromString(s);
+			MonsterKills = Dictionary.FromString(FullText);
 			Experience = ExperienceStorage.GetInt();
 			Prestige = PrestigeStorage.GetInt();
 		}
@@ -189,10 +205,10 @@ class WT_MainHandler : EventHandler
 
 	override void WorldTick()
 	{
-		// [Ace] 3 seconds should be enough so that SetString doesn't shit the bed.
-		if (MonsterKills && level.time % 105 == 0)
+		// [Ace] 1 second should be enough so that SetString doesn't shit the bed.
+		if (MonsterKills && level.time % 35 == 0)
 		{
-			WeaponStorage.SetString(MonsterKills.ToString());
+			SaveKillDictionary(MonsterKills.ToString());
 			ExperienceStorage.SetInt(Experience);
 			PrestigeStorage.SetInt(Prestige);
 		}
@@ -206,6 +222,19 @@ class WT_MainHandler : EventHandler
 			{
 				ReadyWeapon = plr.player.ReadyWeapon.GetClass();
 			}
+		}
+	}
+
+	// [Ace] Split JSON into separate strings, 5000 chars each.
+	private void SaveKillDictionary(string fullText)
+	{
+		for (int i = 0; i < WeaponStorage.Size(); ++i)
+		{
+			int StartIndex = 5000 * i;
+			if (StartIndex > fullText.Length()) break;
+			
+			string s = fullText.Mid(StartIndex, 5000);
+			WeaponStorage[i].SetString(s);
 		}
 	}
 
