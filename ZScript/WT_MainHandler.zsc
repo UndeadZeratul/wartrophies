@@ -171,6 +171,9 @@ class WT_MainHandler : EventHandler
 		{
 			// [Ace] Glorious m8f hax. At least they actually work.
 			// Update the variables with what's in the CVars.
+			// IMPORTANT: This is kept for compatibility reasons. The write-to-CVar portion of the hack has been removed, but if I were to remove this, people would need to manually fix the strings in the ini after this update.
+			// This is only here so that CVars prior to this fix can be read properly and progress is not lost. Once enough time has passed, I will likely remove this read portion as well,
+			// because by then the correct strings will have been written in the config.
 			String s = WeaponStorage.GetString();
 			s.Replace("@", String.Format("%c", 92));
 			
@@ -190,9 +193,7 @@ class WT_MainHandler : EventHandler
 		// There's no guarantee it will.
 		if (MonsterKills && level.time % 10 == 0)
 		{
-			String s = MonsterKills.ToString();
-			s.Replace(String.Format("%c", 92), "@");
-			WeaponStorage.SetString(s);
+			WeaponStorage.SetString(MonsterKills.ToString());
 			ExperienceStorage.SetInt(Experience);
 			PrestigeStorage.SetInt(Prestige);
 
