@@ -189,14 +189,17 @@ class WT_MainHandler : EventHandler
 
 	override void WorldTick()
 	{
-		// [Ace] Increasing the delay might increase performance. Do it only if absolutely necessary!
-		// There's no guarantee it will.
-		if (MonsterKills && level.time % 10 == 0)
+		// [Ace] 3 seconds should be enough so that SetString doesn't shit the bed.
+		if (MonsterKills && level.time % 105 == 0)
 		{
 			WeaponStorage.SetString(MonsterKills.ToString());
 			ExperienceStorage.SetInt(Experience);
 			PrestigeStorage.SetInt(Prestige);
+		}
 
+		// [Ace] Update weapon.
+		if (level.time % 5 == 0)
+		{
 			// [Ace] This will desync. You have been warned. I have been warned.
 			let plr = PlayerPawn(players[consoleplayer].mo);
 			if (plr && plr.player && plr.player.ReadyWeapon)
