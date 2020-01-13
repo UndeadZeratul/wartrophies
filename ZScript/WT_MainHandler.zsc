@@ -181,7 +181,7 @@ class WT_MainHandler : EventHandler
 
 			string FullText;
 			CVar OldWeaponStorage = CVar.FindCVar('wt_stats_weapons_kills'); // [Ace] Migrate the old CVar to the new ones for consistency's sake. Remove this after a while. Say, a year.
-			if (OldWeaponStorage)
+			if (OldWeaponStorage && OldWeaponStorage.GetString() != "")
 			{
 				FullText = OldWeaponStorage.GetString();
 				OldWeaponStorage.ResetToDefault();
