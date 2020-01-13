@@ -14,6 +14,7 @@ class WT_MainHandler : EventHandler
 	// CVARS & GLOBAL VARS
 	// --------------------------------------------------
 
+	private transient int SaveIndex;
 	private transient CVar WeaponStorage[20];
 	private transient CVar ExperienceStorage;
 	private transient CVar PrestigeStorage;
@@ -190,15 +191,7 @@ class WT_MainHandler : EventHandler
 			{
 				for (int i = 0; i < WeaponStorage.Size(); ++i)
 				{
-					// [Ace] Glorious m8f hax. At least they actually work.
-					// IMPORTANT: This is kept for compatibility reasons. The write-to-CVar portion of the hack has been removed, but if I were to remove this, people would need to manually fix the strings in the ini.
-					// This is only here so that CVars from before the fix can be read properly and progress is not lost. Once enough time has passed, I will likely remove this read portion as well,
-					// because by then the correct strings will have been written in the config.
-					
-					String s = WeaponStorage[i].GetString();
-					s.Replace("@", String.Format("%c", 92));
-
-					FullText = FullText..s;
+					FullText = FullText..WeaponStorage[i].GetString();;
 				}
 			}
 			
@@ -214,10 +207,18 @@ class WT_MainHandler : EventHandler
 
 	override void WorldTick()
 	{
-		// [Ace] 1 second should be enough so that SetString doesn't shit the bed.
+		// [Ace] 10 tics should be enough so that SetString doesn't shit the bed.
 		if (MonsterKills && level.time % 35 == 0)
 		{
-			SaveKillDictionary(MonsterKills.ToString());
+			string FullText = MonsterKills.ToString();
+			int StartIndex = 5000 * SaveIndex;
+			if (StartIndex <= FullText.Length())
+			{
+				string s = FullText.Mid(StartIndex, 5000);
+				WeaponStorage[SaveIndex].SetString(s);
+				++SaveIndex %= WeaponStorage.Size();
+			}
+
 			ExperienceStorage.SetInt(Experience);
 			PrestigeStorage.SetInt(Prestige);
 		}
@@ -231,19 +232,6 @@ class WT_MainHandler : EventHandler
 			{
 				ReadyWeapon = plr.player.ReadyWeapon.GetClass();
 			}
-		}
-	}
-
-	// [Ace] Split JSON into separate strings, 5000 chars each.
-	private void SaveKillDictionary(string fullText)
-	{
-		for (int i = 0; i < WeaponStorage.Size(); ++i)
-		{
-			int StartIndex = 5000 * i;
-			if (StartIndex > fullText.Length()) break;
-			
-			string s = fullText.Mid(StartIndex, 5000);
-			WeaponStorage[i].SetString(s);
 		}
 	}
 
