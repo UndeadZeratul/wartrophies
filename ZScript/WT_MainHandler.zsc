@@ -143,7 +143,7 @@ class WT_MainHandler : EventHandler
 	{
 		for (int i = 0; i < WeaponStorage.Size(); ++i)
 		{
-			WeaponStorage[i] = CVar.FindCVar("wt_stats_weapons_kills".."_"..(i + 1));
+			WeaponStorage[i] = CVar.FindCVar("wt_stats_weapons_kills_"..(i + 1));
 		}
 		ExperienceStorage = CVar.FindCVar('wt_stats_experience');
 		PrestigeStorage = CVar.FindCVar('wt_stats_prestige');
@@ -208,7 +208,7 @@ class WT_MainHandler : EventHandler
 	override void WorldTick()
 	{
 		// [Ace] 10 tics should be enough so that SetString doesn't shit the bed.
-		if (MonsterKills && level.time % 35 == 0)
+		if (MonsterKills && level.time % 10 == 0)
 		{
 			string FullText = MonsterKills.ToString();
 			int StartIndex = 5000 * SaveIndex;
@@ -217,6 +217,10 @@ class WT_MainHandler : EventHandler
 				string s = FullText.Mid(StartIndex, 5000);
 				WeaponStorage[SaveIndex].SetString(s);
 				++SaveIndex %= WeaponStorage.Size();
+			}
+			else
+			{
+				SaveIndex = 0;
 			}
 
 			ExperienceStorage.SetInt(Experience);
