@@ -49,10 +49,10 @@ extend class WT_MainHandler
 			int DI_TL_CENTER_TEXT_CENTER = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
 			int DI_TL_CENTER_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
 
-			int DI_TR = BaseStatusBar.DI_SCREEN_RIGHT_TOP | BaseStatusBar.DI_ITEM_RIGHT_TOP;
-			int DI_TR_TEXT_LEFT = BaseStatusBar.DI_SCREEN_RIGHT_TOP | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
-			int DI_TR_TEXT_CENTER = BaseStatusBar.DI_SCREEN_RIGHT_TOP | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
-			int DI_TR_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_RIGHT_TOP | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
+			// int DI_TR = BaseStatusBar.DI_SCREEN_RIGHT_TOP | BaseStatusBar.DI_ITEM_RIGHT_TOP;
+			// int DI_TR_TEXT_LEFT = BaseStatusBar.DI_SCREEN_RIGHT_TOP | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
+			// int DI_TR_TEXT_CENTER = BaseStatusBar.DI_SCREEN_RIGHT_TOP | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
+			// int DI_TR_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_RIGHT_TOP | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
 
 			// [Ace] Mmmm, code injections!
 			StatusBar.BeginHUD();
@@ -77,7 +77,12 @@ extend class WT_MainHandler
 				StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(TotalKills, 1, 10), (47, 2), DI_TL_TEXT_LEFT, Font.FindFontColor("WeaponKills"));
 
 				// Genocide rank.
-				StatusBar.DrawString(mMainFont, GetGenocideRank(TotalKills), (2, 12), DI_TL_TEXT_LEFT, Font.FindFontColor("GenocideRank"));
+				int GenocideRank; string GenocideRankString;
+				[GenocideRank, GenocideRankString] = GetGenocideRank(TotalKills);
+				StatusBar.DrawString(mMainFont, GenocideRankString, (2, 12), DI_TL_TEXT_LEFT, Font.FindFontColor("GenocideRank"));
+
+				// Genocide medal.
+				StatusBar.DrawImage("GRANK"..GenocideRank, (46, 58), DI_TL);
 
 				// Player rank & prestige.
 				int PlayerRank; string PlayerRankString;
@@ -98,7 +103,7 @@ extend class WT_MainHandler
 				StatusBar.DrawString(mMainFont, NextPlayerRankExp, (24, 46), DI_TL_TEXT_LEFT, Font.FindFontColor("PlayerRank"));
 
 				// Player medal.
-				StatusBar.DrawImage("RANK"..PlayerRank, (4, 58), DI_TL);
+				StatusBar.DrawImage("RANK"..(PlayerRank + 1), (4, 58), DI_TL);
 			}
 
 			// --------------- WEAPON STATS ---------------
@@ -173,7 +178,12 @@ extend class WT_MainHandler
 			StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(TotalKills, 1, 10), (-42, -84), DI_TEXT_RIGHT, Font.FindFontColor("WeaponKills"));
 
 			// Genocide rank.
-			StatusBar.DrawString(mMainFont, GetGenocideRank(TotalKills), (-223, -60), DI_TEXT_LEFT, Font.FindFontColor("GenocideRank"));
+			int GenocideRank; string GenocideRankString;
+			[GenocideRank, GenocideRankString] = GetGenocideRank(TotalKills);
+			StatusBar.DrawString(mMainFont, GenocideRankString, (-223, -60), DI_TEXT_LEFT, Font.FindFontColor("GenocideRank"));
+
+			// Genocide medal.
+			StatusBar.DrawImage("GRANK"..GenocideRank, (-206, 77), DI_CENTER);
 
 			// Player rank.
 			int PlayerRank; string PlayerRankString;
@@ -191,7 +201,7 @@ extend class WT_MainHandler
 			StatusBar.DrawString(mMainFont, NextPlayerRankExp, (-42, -12), DI_TEXT_RIGHT, Font.FindFontColor("PlayerRank"));
 
 			// Player medal.
-			StatusBar.DrawImage("RANK"..PlayerRank, (-206, 28), DI_CENTER);
+			StatusBar.DrawImage("RANK"..(PlayerRank + 1), (-206, 28), DI_CENTER);
 
 			// --------------- WEAPON LIST ---------------
 
@@ -442,18 +452,20 @@ extend class WT_MainHandler
 	// INFORMATION
 	// --------------------------------------------------
 
-	private ui string GetGenocideRank(int kills) const
+	private ui int, string GetGenocideRank(int kills) const
 	{
-		string GenRank = "Pacifist";
+		int GenRank = 0;
+		string GenRankString = "Pacifist";
 		for (int i = 0; i < GenocideReqs.Size(); ++i)
 		{
 			if (kills >= GenocideReqs[i])
 			{
-				GenRank = GenocideRanks[i];
+				GenRank = i + 1;
+				GenRankString = GenocideRanks[i];
 			}
 		}
 
-		return GenRank;
+		return GenRank, GenRankString;
 	}
 
 	private ui int, string GetPlayerRank() const

@@ -4,10 +4,12 @@ Accensus
 
 Tapwave
  - FragTrak, which inspired me to make a universal version.
+ - Various feature suggestions and misc support, such as picking the genocide medals and overhauling the progression numbers.
 
 m8f
  - Adding Dictionary to GZDoom. None of this would have been possible without it. Thank you!
  - Adding the "nosave" CVARINFO type, which is (ironically) used to save progress between save games.
+ - Constant support for the newly added features and quick bugfixing.
  - Coding help and helpful hax. :P
 
 phantombeta
@@ -20,4 +22,7 @@ Dave Barr at http://www.foreverbroken.org/
  - Rank icons
 
 Ultimate Simpsons Doom
-- Prestige "jingle"
+ - Prestige "jingle"
+
+ARSENAL by Daniel
+ - Kill confirm sound(s).

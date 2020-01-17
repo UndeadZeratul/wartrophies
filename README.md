@@ -4,9 +4,8 @@ Download the zip and load it into GZDoom. No need to change its extension to .pk
 
 ### Important
 ---
-- The mod is not multiplayer compatible!
-- Requires at least GZDoom 4.3.2!  
-***DO NOT PLAY THIS WITH GZDOOM 4.3.1! YOU WILL LOSE ALL PROGRESS ON EXIT! YOU HAVE BEEN WARNED!*** This is because the "nosave" CVARINFO keyword does not do what it's supposed to do in that version!
+- The mod may not be multiplayer compatible! Not tested.
+- Requires at least GZDoom 4.3.3! Playing it on anything lower that that won't work right and you may lose progress. You have been warned.
 
 ### Do this if you want addon support
 ---
