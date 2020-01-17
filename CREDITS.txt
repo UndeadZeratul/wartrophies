@@ -7,7 +7,7 @@ Tapwave
 
 m8f
  - Adding Dictionary to GZDoom. None of this would have been possible without it. Thank you!
- - Adding the "nosave" CVARINFO keyword, which is (ironically) used to save progress between save games.
+ - Adding the "nosave" CVARINFO type, which is (ironically) used to save progress between save games.
  - Coding help and helpful hax. :P
 
 phantombeta

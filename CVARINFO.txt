@@ -1,27 +1,7 @@
 // [Ace] These are only used to store data.
-server nosave cheat string wt_stats_weapons_kills_1 = "";
-server nosave cheat string wt_stats_weapons_kills_2 = "";
-server nosave cheat string wt_stats_weapons_kills_3 = "";
-server nosave cheat string wt_stats_weapons_kills_4 = "";
-server nosave cheat string wt_stats_weapons_kills_5 = "";
-server nosave cheat string wt_stats_weapons_kills_6 = "";
-server nosave cheat string wt_stats_weapons_kills_7 = "";
-server nosave cheat string wt_stats_weapons_kills_8 = "";
-server nosave cheat string wt_stats_weapons_kills_9 = "";
-server nosave cheat string wt_stats_weapons_kills_10 = "";
-server nosave cheat string wt_stats_weapons_kills_11 = "";
-server nosave cheat string wt_stats_weapons_kills_12 = "";
-server nosave cheat string wt_stats_weapons_kills_13 = "";
-server nosave cheat string wt_stats_weapons_kills_14 = "";
-server nosave cheat string wt_stats_weapons_kills_15 = "";
-server nosave cheat string wt_stats_weapons_kills_16 = "";
-server nosave cheat string wt_stats_weapons_kills_17 = "";
-server nosave cheat string wt_stats_weapons_kills_18 = "";
-server nosave cheat string wt_stats_weapons_kills_19 = "";
-server nosave cheat string wt_stats_weapons_kills_20 = "";
-
-server nosave cheat int wt_stats_experience = 0;
-server nosave cheat int wt_stats_prestige = 0;
+nosave string wt_stats_weapons_kills = "";
+nosave int wt_stats_experience = 0;
+nosave int wt_stats_prestige = 0;
 
 user int wt_filter_iwad_weapons = 5;
 user int wt_filter_iwad_monsters = 5;

@@ -14,8 +14,7 @@ class WT_MainHandler : EventHandler
 	// CVARS & GLOBAL VARS
 	// --------------------------------------------------
 
-	private transient int SaveIndex;
-	private transient CVar WeaponStorage[20];
+	private transient CVar WeaponStorage;
 	private transient CVar ExperienceStorage;
 	private transient CVar PrestigeStorage;
 	private transient CVar BlackDisplay;
@@ -141,10 +140,7 @@ class WT_MainHandler : EventHandler
 	// [Ace] OnRegister is called when save games are loaded.
 	override void OnRegister()
 	{
-		for (int i = 0; i < WeaponStorage.Size(); ++i)
-		{
-			WeaponStorage[i] = CVar.FindCVar("wt_stats_weapons_kills_"..(i + 1));
-		}
+		WeaponStorage = CVar.FindCVar("wt_stats_weapons_kills");
 		ExperienceStorage = CVar.FindCVar('wt_stats_experience');
 		PrestigeStorage = CVar.FindCVar('wt_stats_prestige');
 
@@ -163,10 +159,7 @@ class WT_MainHandler : EventHandler
 
 		if (reset)
 		{
-			for (int i = 0; i < WeaponStorage.Size(); ++i)
-			{
-				WeaponStorage[i].ResetToDefault();
-			}
+			WeaponStorage.ResetToDefault();
 			ExperienceStorage.ResetToDefault();
 			PrestigeStorage.ResetToDefault();
 
@@ -176,26 +169,7 @@ class WT_MainHandler : EventHandler
 		}
 		else
 		{
-			// [Ace]
-			// All the king's horses and all the King's men
-			// Couldn't put JSON together again.
-
-			string FullText;
-			CVar OldWeaponStorage = CVar.FindCVar('wt_stats_weapons_kills'); // [Ace] Migrate the old CVar to the new ones for consistency's sake. Remove this after a while. Say, a year.
-			if (OldWeaponStorage && OldWeaponStorage.GetString() != "")
-			{
-				FullText = OldWeaponStorage.GetString();
-				OldWeaponStorage.ResetToDefault();
-			}
-			else
-			{
-				for (int i = 0; i < WeaponStorage.Size(); ++i)
-				{
-					FullText = FullText..WeaponStorage[i].GetString();;
-				}
-			}
-			
-			MonsterKills = Dictionary.FromString(FullText);
+			MonsterKills = Dictionary.FromString(WeaponStorage.GetString());
 			Experience = ExperienceStorage.GetInt();
 			Prestige = PrestigeStorage.GetInt();
 		}
@@ -210,19 +184,7 @@ class WT_MainHandler : EventHandler
 		// [Ace] 10 tics should be enough so that SetString doesn't shit the bed.
 		if (MonsterKills && level.time % 10 == 0)
 		{
-			string FullText = MonsterKills.ToString();
-			int StartIndex = 5000 * SaveIndex;
-			if (StartIndex <= FullText.Length())
-			{
-				string s = FullText.Mid(StartIndex, 5000);
-				WeaponStorage[SaveIndex].SetString(s);
-				++SaveIndex %= WeaponStorage.Size();
-			}
-			else
-			{
-				SaveIndex = 0;
-			}
-
+			WeaponStorage.SetString(MonsterKills.ToString());
 			ExperienceStorage.SetInt(Experience);
 			PrestigeStorage.SetInt(Prestige);
 		}
