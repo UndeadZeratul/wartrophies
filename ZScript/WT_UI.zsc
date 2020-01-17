@@ -4,8 +4,8 @@ extend class WT_MainHandler
 	// MAIN
 	// --------------------------------------------------
 
-	static const int XPReq[] = { 2500, 5000, 8000, 12500, 16000, 22000, 30000, 40000, 55000, 67500, 82000, 100000, 125000, 175000, 250000, 400000, 600000, 900000, 1150000, 1400000, 1900000, 2350000, 2850000, 3450000, 4000000, 5000000, 6500000, 8000000};
-	static const string XPRanks[] = { "Private", "Private 1st Class", "Specialist", "Corporal", "Sergeant", "Staff Sergeant", "Sergeant 1st Class", "Master Sergeant", "First Sergeant", "Sergeant Major", "Cmd. Sergeant Major", "Master Chief Sergeant", "2nd Lieutenant", "1st Lieutenant", "Captain", "Major", "Lieutenant Colonel", "Colonel", "Brigadier General", "Major General", "Lieutenant General", "General", "General of the Army", "Field Marshal", "Force Of Freedom", "Savior of Humanity", "Immortal Demonslayer", "Heavenly Demiurge" };
+	static const int XPReq[] = { 5000, 8500, 12500, 16000, 20000, 25000, 31000, 37000, 45000, 60000, 85000, 100000, 125000, 175000, 250000, 400000, 600000, 900000, 1150000, 1400000, 1900000, 2850000, 4000000, 5000000 };
+	static const string XPRanks[] = { "Private 1st Class", "Corporal", "Sergeant", "Staff Sergeant", "Sergeant 1st Class", "Master Sergeant", "First Sergeant", "Sergeant Major", "Cmd. Sergeant Major", "Master Chief Sergeant", "2nd Lieutenant", "1st Lieutenant", "Captain", "Major", "Lieutenant Colonel", "Colonel", "Brigadier General", "Major General", "Lieutenant General", "General", "General of the Army", "Field Marshal", "Force Of Freedom", "Savior of Humanity" };
 	const RankImagesPrefix = "RANK";
 
 	static const int WeapKillReq[] = { 50, 100, 250, 400, 550, 700, 900, 1000, 1300, 1650, 2000, 2500, 3000, 4000, 5000, 6500, 8000, 10000, 12500, 15000, 20000, 25000 };
