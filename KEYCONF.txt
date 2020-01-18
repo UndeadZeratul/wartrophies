@@ -1,0 +1,2 @@
+AddKeySection "War Trophies" WarTrophiesKeybinds
+AddMenuKey "Open/Close Stats Panel" "netevent wt_toggleui"

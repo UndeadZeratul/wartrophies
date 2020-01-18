@@ -167,7 +167,6 @@ extend class WT_MainHandler
 
 			// --------------- GRAPHIC ---------------
 			
-			StatusBar.DrawString(mMainFont, "Press 'ESC' to exit", (-232, -150), DI_TEXT_LEFT, Font.CR_GREEN);
 			StatusBar.DrawImage(BlackDisplay.GetBool() ? "WTSTATPB" : "WTSTATPN", (0, 0.5), DI_CENTER); // [Ace] 0.5 because nearest neighbour scaling is not your friend.
 
 			// --------------- MAIN STATS ---------------
