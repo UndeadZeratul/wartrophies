@@ -3,6 +3,8 @@ OptionMenu "WarTrophies"
 	Title "War Trophies Options"
 	
 	StaticText "----- Scorecard -----", "Teal"
+	Submenu "Scorecard Keys", "ScorecardKeysMenu"
+	StaticText ""
 	Control "Toggle Stats Panel", "netevent wt_toggleui"
 	Option "Use Darker Displays", "wt_panel_blackdisplay", "YesNo"
 	StaticText ""
@@ -20,10 +22,22 @@ OptionMenu "WarTrophies"
 	StaticText ""
 	SafeCommand "Reset all statistics", "netevent wt_resettally"
 	SafeCommand "Reset stats for equipped weapon", "netevent wt_resetweapon"
+}
+
+OptionMenu "ScorecardKeysMenu"
+{
+	Title "Scorecard Keys"
+
+	StaticText "Escape - Exit scorecard.", "White"
+	StaticText "Arrow Keys - Navigate weapon list.", "White"
+	StaticText "Page Up/Down - Navigate monster list.", "White"
+	StaticText "Space - Search weapons. Use 'Enter' to apply filter.", "White"
+	StaticText "Backspace - Clear search.", "White"
+	StaticText "P - Gain prestige if at max player rank and reset XP.", "White"
 	StaticText ""
-	StaticText "---------- MANUAL ----------", "Teal"
-	StaticText "Use the arrow keys to navigate the weapons list.", "White"
-	StaticText "Use the page up/down keys to navigate the monster list.", "White"
+	StaticText "F12 - Screenshot.", "White"
+	StaticText "NOTE: In order for F12 to work, you must have enabled the following option:", "Fire"
+	Option "$MISCMNU_ENABLESCRIPTSCREENSHOTS", "enablescriptscreenshot", "OnOff"
 }
 
 AddOptionMenu "OptionsMenu"

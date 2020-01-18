@@ -167,8 +167,7 @@ extend class WT_MainHandler
 
 			// --------------- GRAPHIC ---------------
 			
-			StatusBar.DrawString(mMainFont, "Press 'ESC' to exit", (-232, -160), DI_TEXT_LEFT, Font.CR_GREEN);
-			StatusBar.DrawString(mMainFont, "Press 'Space' to search. 'Enter' to apply. 'Backspace' to clear.", (-232, -150), DI_TEXT_LEFT, Font.CR_GREEN);
+			StatusBar.DrawString(mMainFont, "Press 'ESC' to exit", (-232, -150), DI_TEXT_LEFT, Font.CR_GREEN);
 			StatusBar.DrawImage(BlackDisplay.GetBool() ? "WTSTATPB" : "WTSTATPN", (0, 0.5), DI_CENTER); // [Ace] 0.5 because nearest neighbour scaling is not your friend.
 
 			// --------------- MAIN STATS ---------------
@@ -600,6 +599,11 @@ extend class WT_MainHandler
 						{
 							SendNetworkEvent("WT_UpgradePrestige");
 						}
+						break;
+
+					// [Ace] Take screenshot.
+					case UiEvent.Key_F12:
+						LevelLocals.MakeScreenShot();
 						break;
 				}
 			}
