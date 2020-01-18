@@ -6,6 +6,8 @@ nosave int wt_stats_prestige = 0;
 user int wt_filter_iwad_weapons = 5;
 user int wt_filter_iwad_monsters = 5;
 user bool wt_panel_blackdisplay = false;
+
 user int wt_showlite = 3;
+user int wt_lite_offset_y = 0;
 
 user int wt_killsound = 0;

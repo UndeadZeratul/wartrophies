@@ -2,9 +2,15 @@ OptionMenu "WarTrophies"
 {
 	Title "War Trophies Options"
 	
+	StaticText "----- Scorecard -----", "Teal"
 	Control "Toggle Stats Panel", "netevent wt_toggleui"
 	Option "Use Darker Displays", "wt_panel_blackdisplay", "YesNo"
+	StaticText ""
+	StaticText "----- Lite HUD -----", "Teal"
 	Option "Lite HUD", "wt_showlite", "LiteHUDType"
+	Slider "Offset Y", "wt_lite_offset_y", 0, 20, 1, 0
+	StaticText ""
+	StaticText "----- Miscellaneous -----", "Teal"
 	Option "Kill Sound Type", "wt_killsound", "KillSoundType"
 	StaticText ""
 	Option "Filter Weapons To IWAD", "wt_filter_iwad_weapons", "IWADFilterMode"

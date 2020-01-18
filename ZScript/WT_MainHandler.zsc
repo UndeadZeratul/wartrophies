@@ -22,6 +22,7 @@ class WT_MainHandler : EventHandler
 	private transient CVar IWADMonsterFilter;
 	private transient CVar KillSoundType;
 	private transient CVar LiteHUDType;
+	private transient CVar LiteOffsetY;
 
 	private transient int Experience;
 	private transient int Prestige;
@@ -149,6 +150,7 @@ class WT_MainHandler : EventHandler
 		IWADMonsterFilter = CVar.FindCVar('wt_filter_iwad_monsters');
 		KillSoundType = CVar.FindCVar('wt_killsound');
 		LiteHUDType = CVar.FindCVar('wt_showlite');
+		LiteOffsetY = CVar.FindCVar('wt_lite_offset_y');
 
 		Initialize(false);
 	}
