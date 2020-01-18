@@ -205,7 +205,7 @@ extend class WT_MainHandler
 
 			// --------------- WEAPON LIST ---------------
 
-			int WeaponPagesTotal = max(1, ceil(AvailableWeapons.Size() / double(WeaponListEntries)));
+			int WeaponPagesTotal = max(1, int(ceil(AvailableWeapons.Size() / double(WeaponListEntries))));
 			int WeaponPage = WeaponListSelIndex / WeaponListEntries;
 
 			string Title = InSearchMode ? SearchFilter.."_" : (SearchFilter != "" ? SearchFilter : "All Weapons");
@@ -540,7 +540,7 @@ extend class WT_MainHandler
 
 	private ui int GetMonsterPages() const
 	{
-		return max(1, ceil(AvailableMonsters.Size() / double(MonsterListEntries)));
+		return max(1, int(ceil(AvailableMonsters.Size() / double(MonsterListEntries))));
 	}
 
 	// --------------------------------------------------
