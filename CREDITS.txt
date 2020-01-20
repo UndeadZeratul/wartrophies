@@ -27,8 +27,8 @@ Tetris: The Grand Master 3 - Terror-Instinct
 Dave Barr at http://www.foreverbroken.org/
  - Rank icons
 
-Ultimate Simpsons Doom
- - Prestige "jingle"
+Blood (Monolith Productions)
+ - Prestige "That's Right"
 
 ARSENAL by Daniel
  - Kill confirm sound(s).
