@@ -6,7 +6,8 @@ Download the zip and load it into GZDoom. No need to change its extension to .pk
 ---
 - Requires at least GZDoom 4.3.3! Playing it on anything lower that that won't work right and you may lose progress. You have been warned.
 - The mod may not be multiplayer compatible! Not tested.
-- Due to the way data is saved, mod may cause ini bloat if played with too many mods for a long time. The data is at the bottom of your config file in a separate section. If ini bloat really bothers you, this mod probably isn't for you. At the moment there is no other way to store data globally.
+- Due to the way data is saved, mod may cause ini bloat if played with too many mods for a long time. The data is at the bottom of your config file in a separate section. If ini bloat really bothers you, this mod probably isn't for you. At the moment there is no other way to store data between saves.
+- Stats do not persist between IWADs. Due to how CVars are stored in the ini file, there is no workaround for this at the moment.
 
 ### Do this if you want addon support
 ---
