@@ -38,8 +38,8 @@ Graphic "GRANK7", 20, 24
 
 Graphic "GRANK8", 34, 36
 {
-	XScale 1.200
-	YScale 1.200
+	XScale 1.400
+	YScale 1.400
 	Patch "GRNK8", 0, 0
 }
 
