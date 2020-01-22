@@ -23,7 +23,9 @@ Certain mods don't play too well with War Trophies. They will work, but not alwa
 - Kriegsland/Death Incarnate: Dual-wielded weapons are separate weapons, meaning their stats are tracked separately from their single variants.
 - Hideous Destructor: It's possible to attribute kills from a weapon to a different weapon that cannot physically kill anything. For example, throwing a grenade and switching to bandaging will attribute kills to the latter. Normally this isn't an issue, but HD handles things... differently.
 
-### Do this if you want addon support
+### Do this if you want (proper) addon support
 ---
 - Add a Tag property to your weapons/monsters.  
 *The mod will work without it, but raw class names will be displayed instead and it won't look good unless your class names are sensible.*
+- Add an Icon property to your weapons.  
+*Again, will work without it, but sometimes Ready state sprites may be used and it'd look bad.*
