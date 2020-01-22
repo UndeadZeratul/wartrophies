@@ -5,9 +5,9 @@ Download the zip and load it into GZDoom. No need to change its extension to .pk
 ### Important
 ---
 - Requires at least GZDoom 4.3.3! Playing it on anything lower that that won't work right and you may lose progress. You have been warned.
-- The mod may not be multiplayer compatible! Not tested.
+- The mod is likely not multiplayer compatible! Not tested.
 - Due to the way data is saved, mod may cause ini bloat if played with too many mods for a long time. The data is at the bottom of your config file in a separate section. If ini bloat really bothers you, this mod probably isn't for you. At the moment there is no other way to store data between saves.
-- Stats do not persist between IWADs. Due to how CVars are stored in the ini file, there is no workaround for this at the moment.
+- Stats do not persist between IWADs. Due to how CVars are stored in the ini file, the only workaround is to use JPL's [WadSmoosh](https://forum.zdoom.org/viewtopic.php?f=232&t=52757) and use Doom_Complete as an IWAD.
 ---
 - If you have played a version of this mod prior to v1.0.0, you *may* encounter the following error message: `Dictionary is expected to be a JSON object`.  
 To fix this, you have four options, three of which require config editing:
