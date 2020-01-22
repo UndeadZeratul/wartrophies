@@ -1,0 +1,6 @@
+[default]
+KILLSOUND_CUSTOM_1 = "Custom 1";
+KILLSOUND_CUSTOM_2 = "Custom 2";
+KILLSOUND_CUSTOM_3 = "Custom 3";
+KILLSOUND_CUSTOM_4 = "Custom 4";
+KILLSOUND_CUSTOM_5 = "Custom 5";
