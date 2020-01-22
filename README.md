@@ -10,10 +10,11 @@ Download the zip and load it into GZDoom. No need to change its extension to .pk
 - Stats do not persist between IWADs. Due to how CVars are stored in the ini file, there is no workaround for this at the moment.
 ---
 - If you have played a version of this mod prior to v1.0.0, you *may* encounter the following error message: `Dictionary is expected to be a JSON object`.  
-To fix this, you have three options, all of which require config editing:
+To fix this, you have four options, three of which require config editing:
 1. If the data is split into several CVars, i.e. `wt_stats_weapons_kills_x`, where x is a number from 1-20, combine the value of all CVars starting from `*_1` until you run out of text, and put it in the `wt_stats_weapons_kills` CVar at the bottom of the config under the section `ConfigOnlyVariables`.
 2. If the data is in one CVar called `wt_stats_weapons_kills` but has lots of `@` in the string, replace all `@` with `\`, and replace the one with the same name at the bottom of the config under the section `ConfigOnlyVariables` with that.
 3. Erase all encounters of `wt_stats_*` and let the mod generate those again. This will result in progress loss.
+4. Delete the config and let GZDoom generate it again. Will result in progress loss. Obviously this is the least convenient solution, but it's guaranteed to work.
 
 ### Do this if you want addon support
 ---
