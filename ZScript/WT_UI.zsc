@@ -271,7 +271,13 @@ extend class WT_MainHandler
 				{
 					SpriteToDraw = Icon;
 				}
-				StatusBar.DrawImage(SpriteToDraw, (40, -33), DI_CENTER);
+
+				// [Ace] Scale down sprites if they're too large to fit in the display.
+				TextureID Img = TexMan.CheckForTexture(SpriteToDraw, TexMan.Type_Any);
+				vector2 ImgSize;
+				[ImgSize.x, ImgSize.y] = TexMan.GetSize(Img);
+				vector2 Box = (ImgSize.X > 100 ? 100 : -1, ImgSize.Y > 63 ? 63 : -1);
+				StatusBar.DrawImage(SpriteToDraw, (40, -33), DI_CENTER, 1.0, Box);
 
 				// Weapon medals.
 				DrawWeaponMedals(WeaponKills, 108, -53, DI_CENTER);
