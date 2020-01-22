@@ -1,49 +1,71 @@
-MiscLabels
-{
-	#131313 #B3904C 0 128
-}
+// [Ace] The colors are defined as seen on a hue strip. Keep it that way.
 
-TotalKills
-{
-	#131313 #FF0000 0 128
-}
-
-GenocideRank
-{
-	#131313 #C93935 0 128
-}
-
-PlayerRank
-{
-	#131313 #5EB34C 0 128
-}
-
-SelectedWeapon
-{
-	#131313 #D4452A 0 128
-}
-
-WeaponName
+WT_White
 {
 	#131313 #DDDDDD 0 128
 }
 
-WeaponRank
-{
-	#131313 #D4B62A 0 128
-}
-
-WeaponKills
-{
-	#131313 #FF0000 0 128
-}
-
-WeaponPreference
+WT_Grey
 {
 	#131313 #999999 0 128
 }
 
-MonsterStats
+WT_Red
+{
+	#131313 #FF0000 0 128
+}
+
+WT_FadedRed
+{
+	#131313 #C93935 0 128
+}
+
+WT_OrangeRed
+{
+	#131313 #D4452A 0 128
+}
+
+WT_FadedBrown
+{
+	#131313 #B3904C 0 128
+}
+
+WT_Gold
+{
+	#131313 #D4B62A 0 128
+}
+
+WT_Green
+{
+	#131313 #00EE00 0 128
+}
+
+WT_DarkGreen
+{
+	#131313 #5EB34C 0 128
+}
+
+WT_Cyan
+{
+	#131313 #00B7EE 0 128
+}
+
+WT_DeepBlue
+{
+	#131313 #6666FF 0 128
+}
+
+WT_FadedBlue
 {
 	#131313 #6B9BAD 0 128
-} 
+}
+
+WT_Purple
+{
+	#131313 #9E00FF 0 128
+}
+
+WT_FadedPurple
+{
+	#131313 #C46BFF 0 128
+}

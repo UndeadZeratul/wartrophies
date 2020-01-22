@@ -4,3 +4,19 @@ KILLSOUND_CUSTOM_2 = "Custom 2";
 KILLSOUND_CUSTOM_3 = "Custom 3";
 KILLSOUND_CUSTOM_4 = "Custom 4";
 KILLSOUND_CUSTOM_5 = "Custom 5";
+
+// [Ace] Keep the ordering consistent or I'll haunt you!
+HUD_COLOR_1 = "WT_White";			HUD_PRETTY_COLOR_1 = "\c[WT_White]White";
+HUD_COLOR_2 = "WT_Grey";			HUD_PRETTY_COLOR_2 = "\c[WT_Grey]Grey";
+HUD_COLOR_3 = "WT_Red";				HUD_PRETTY_COLOR_3 = "\c[WT_Red]Red";
+HUD_COLOR_4 = "WT_FadedRed";		HUD_PRETTY_COLOR_4 = "\c[WT_FadedRed]Faded Red";
+HUD_COLOR_5 = "WT_OrangeRed";		HUD_PRETTY_COLOR_5 = "\c[WT_OrangeRed]Orange Red";
+HUD_COLOR_6 = "WT_FadedBrown";		HUD_PRETTY_COLOR_6 = "\c[WT_FadedBrown]Faded Brown";
+HUD_COLOR_7 = "WT_Gold";			HUD_PRETTY_COLOR_7 = "\c[WT_Gold]Gold";
+HUD_COLOR_8 = "WT_Green";			HUD_PRETTY_COLOR_8 = "\c[WT_Green]Green";
+HUD_COLOR_9 = "WT_DarkGreen";		HUD_PRETTY_COLOR_9 = "\c[WT_DarkGreen]Dark Green";
+HUD_COLOR_10 = "WT_Cyan";			HUD_PRETTY_COLOR_10 = "\c[WT_Cyan]Cyan";
+HUD_COLOR_11 = "WT_DeepBlue";		HUD_PRETTY_COLOR_11 = "\c[WT_DeepBlue]Deep Blue";
+HUD_COLOR_12 = "WT_FadedBlue";		HUD_PRETTY_COLOR_12 = "\c[WT_FadedBlue]Faded Blue";
+HUD_COLOR_13 = "WT_Purple";			HUD_PRETTY_COLOR_13 = "\c[WT_Purple]Purple";
+HUD_COLOR_14 = "WT_FadedPurple";	HUD_PRETTY_COLOR_14 = "\c[WT_FadedPurple]Faded Purple";

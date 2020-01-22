@@ -9,5 +9,12 @@ user bool wt_panel_blackdisplay = false;
 
 user int wt_showlite = 3;
 user int wt_lite_offset_y = 0;
+user int wt_lite_color_labels = 0;
+user int wt_lite_color_totalkills = 0;
+user int wt_lite_color_genociderank = 0;
+user int wt_lite_color_playerrank = 0;
+user int wt_lite_color_weaponname = 0;
+user int wt_lite_color_weaponrank = 0;
+user int wt_lite_color_weaponkills = 0;
 
 user int wt_killsound = 0;

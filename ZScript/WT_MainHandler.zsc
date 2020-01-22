@@ -23,6 +23,7 @@ class WT_MainHandler : EventHandler
 	private transient CVar KillSoundType;
 	private transient CVar LiteHUDType;
 	private transient CVar LiteOffsetY;
+	private transient CVar LiteHudColors[7];
 
 	private transient int Experience;
 	private transient int Prestige;
@@ -149,8 +150,16 @@ class WT_MainHandler : EventHandler
 		IWADWeaponFilter = CVar.FindCVar('wt_filter_iwad_weapons');
 		IWADMonsterFilter = CVar.FindCVar('wt_filter_iwad_monsters');
 		KillSoundType = CVar.FindCVar('wt_killsound');
+
 		LiteHUDType = CVar.FindCVar('wt_showlite');
 		LiteOffsetY = CVar.FindCVar('wt_lite_offset_y');
+		LiteHudColors[Elem_Labels] = CVar.FindCVar('wt_lite_color_labels');
+		LiteHudColors[Elem_TotalKills] = CVar.FindCVar('wt_lite_color_totalkills');
+		LiteHudColors[Elem_GenocideRank] = CVar.FindCVar('wt_lite_color_genociderank');
+		LiteHudColors[Elem_PlayerRank] = CVar.FindCVar('wt_lite_color_playerrank');
+		LiteHudColors[Elem_WeaponName] = CVar.FindCVar('wt_lite_color_weaponname');
+		LiteHudColors[Elem_WeaponRank] = CVar.FindCVar('wt_lite_color_weaponrank');
+		LiteHudColors[Elem_WeaponKills] = CVar.FindCVar('wt_lite_color_weaponkills');
 
 		Initialize(false);
 	}
