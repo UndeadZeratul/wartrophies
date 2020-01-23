@@ -22,6 +22,7 @@ Certain mods don't play too well with War Trophies. They will work, but not alwa
 - **Combined Arms (and probably lots of other mods):** Some weapons don't have icons or pickup sprites, so the weapon icon in the scorecard would instead be the first frame from the Ready state. It's only a visual "bug".
 - **Kriegsland/Death Incarnate:** Dual-wielded weapons are separate weapons, meaning their stats are tracked separately from their single variants.
 - **Hideous Destructor:** It's possible to attribute kills from a weapon to a different weapon that cannot physically kill anything. For example, throwing a grenade and switching to bandaging will attribute kills to the latter. Normally this isn't an issue in other mods, but HD handles things... differently.
+- **Bullet-Eye**: Due to how weapons in Bullet-Eye function under the hood, i.e. a having separate weapon class for each slot, the only workaround is to enable the folders option for the Lite HUD. Mind you the same weapon will still show up multiple times in the scorecard. This is impossible to fix without refactoring how weapons work in Bullet-Eye.
 
 ### Do this if you want (proper) addon support
 ---

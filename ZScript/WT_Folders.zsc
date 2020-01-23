@@ -7,6 +7,75 @@ extend class WT_MainHandler
 	{
 		FolderBindings = Dictionary.Create();
 
+		// -------------------- BULLET-EYE --------------------
+
+		FolderBindings.Insert("FrostSnapValnos", "Frost Snap");
+		FolderBindings.Insert("FrostSnapValnosS2", "Frost Snap");
+		FolderBindings.Insert("FrostSnapValnosS3", "Frost Snap");
+		FolderBindings.Insert("FrostSnapValnosS4", "Frost Snap");
+		FolderBindings.Insert("SpitfireWeapon", "Spitfire");
+		FolderBindings.Insert("SpitfireWeaponS2", "Spitfire");
+		FolderBindings.Insert("SpitfireWeaponS3", "Spitfire");
+		FolderBindings.Insert("SpreadShotWeapon", "Spread Shot");
+		FolderBindings.Insert("SpreadShotWeaponS2", "Spread Shot");
+		FolderBindings.Insert("SpreadShotWeaponS3", "Spread Shot");
+		FolderBindings.Insert("BusterWeapon", "Buster");
+		FolderBindings.Insert("BusterWeaponS2", "Buster");
+		FolderBindings.Insert("BusterWeaponS3", "Buster");
+		FolderBindings.Insert("BlazeStreamWeapon", "Blaze Stream");
+		FolderBindings.Insert("BlazeStreamWeaponS2", "Blaze Stream");
+		FolderBindings.Insert("BlazeStreamWeaponS3", "Blaze Stream");
+		FolderBindings.Insert("ChaserMissileWeapon", "Chaser Missile");
+		FolderBindings.Insert("ChaserMissileWeaponS2", "Chaser Missile");
+		FolderBindings.Insert("ChaserMissileWeaponS3", "Chaser Missile");
+		FolderBindings.Insert("CrushBlastWeapon", "Crush Blast");
+		FolderBindings.Insert("CrushBlastWeaponS2", "Crush Blast");
+		FolderBindings.Insert("CrushBlastWeaponS3", "Crush Blast");
+		FolderBindings.Insert("ScrapLauncherWeapon", "Scrap Launcher");
+		FolderBindings.Insert("ScrapLauncherWeaponS2", "Scrap Launcher");
+		FolderBindings.Insert("ScrapLauncherWeaponS3", "Scrap Launcher");
+		FolderBindings.Insert("QuickStrikeWeapon", "Quick Strike");
+		FolderBindings.Insert("QuickStrikeWeaponS2", "Quick Strike");
+		FolderBindings.Insert("QuickStrikeWeaponS3", "Quick Strike");
+		FolderBindings.Insert("HuntingLaserWeapon", "Hunting Laser");
+		FolderBindings.Insert("HuntingLaserWeaponS2", "Hunting Laser");
+		FolderBindings.Insert("HuntingLaserWeaponS3", "Hunting Laser");
+		FolderBindings.Insert("RapidVulcanWeapon", "Assassin Vulcan");
+		FolderBindings.Insert("RapidVulcanWeaponS2", "Assassin Vulcan");
+		FolderBindings.Insert("RapidVulcanWeaponS3", "Assassin Vulcan");
+		FolderBindings.Insert("StormGrenadeWeapon", "Storm Mine");
+		FolderBindings.Insert("StormGrenadeWeaponS2", "Storm Mine");
+		FolderBindings.Insert("StormGrenadeWeaponS3", "Storm Mine");
+		FolderBindings.Insert("VolleyShotWeapon", "Volley Shot");
+		FolderBindings.Insert("VolleyShotWeaponS2", "Volley Shot");
+		FolderBindings.Insert("VolleyShotWeaponS3", "Volley Shot");
+		FolderBindings.Insert("ViperWaveWeapon", "Viper Wave");
+		FolderBindings.Insert("ViperWaveWeaponS2", "Viper Wave");
+		FolderBindings.Insert("ViperWaveWeaponS3", "Viper Wave");
+		FolderBindings.Insert("RepeaterWeapon", "Repeaters");
+		FolderBindings.Insert("RepeaterWeaponS2", "Repeaters");
+		FolderBindings.Insert("RepeaterWeaponS3", "Repeaters");
+		FolderBindings.Insert("TripleWyvernWeapon", "Triple Wyvern");
+		FolderBindings.Insert("TripleWyvernWeaponS2", "Triple Wyvern");
+		FolderBindings.Insert("TripleWyvernWeaponS3", "Triple Wyvern");
+		FolderBindings.Insert("WingedReaverWeapon", "Winged Reaver");
+		FolderBindings.Insert("WingedReaverWeaponS2", "Winged Reaver");
+		FolderBindings.Insert("WingedReaverWeaponS3", "Winged Reaver");
+		FolderBindings.Insert("ShotwaveWeapon", "Shotwave");
+		FolderBindings.Insert("ShotwaveWeaponS2", "Shotwave");
+		FolderBindings.Insert("ShotwaveWeaponS3", "Shotwave");
+		FolderBindings.Insert("GrindHalberdWeapon", "Grind Halberd");
+		FolderBindings.Insert("GrindHalberdWeaponS2", "Grind Halberd");
+		FolderBindings.Insert("GrindHalberdWeaponS3", "Grind Halberd");
+		FolderBindings.Insert("VampiricGauntletsWeapon", "Vampiric Gauntlets");
+		FolderBindings.Insert("VampiricGauntletsWeaponS2", "Vampiric Gauntlets");
+		FolderBindings.Insert("VampiricGauntletsWeaponS3", "Vampiric Gauntlets");
+		FolderBindings.Insert("SniperCannonWeapon", "Sniper Cannon");
+		FolderBindings.Insert("SniperCannonWeaponS2", "Sniper Cannon");
+		FolderBindings.Insert("SniperCannonWeaponS3", "Sniper Cannon");
+		FolderBindings.Insert("MetalMonstrosityWeapon", "Metal Monstrosity");
+		FolderBindings.Insert("MetalMonstrosityWeaponS2", "Metal Monstrosity");
+		FolderBindings.Insert("MetalMonstrosityWeaponS3", "Metal Monstrosity");
 	}
 
 	private ui void GetWeaponsInFolder(string folder, out Array<class<Weapon> > arr)
