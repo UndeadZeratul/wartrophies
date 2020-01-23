@@ -15,6 +15,11 @@ extend class WT_MainHandler
 	// MAIN
 	// --------------------------------------------------
 
+	private transient CVar BlackDisplay;
+	private transient CVar LiteHUDType;
+	private transient CVar LiteOffsetY;
+	private transient CVar LiteHudColors[7];
+
 	const DefcolMiscLabel = "WT_FadedBrown";
 	const DefcolSelectedWeapon = "WT_OrangeRed";
 	const DefcolTotalKills = "WT_Red";
@@ -47,6 +52,7 @@ extend class WT_MainHandler
 	private transient ui Array<class<Weapon> > AvailableWeapons;
 	private transient ui Array<class<Actor> > AvailableMonsters;
 	private transient ui int WeaponListSelIndex;
+	private transient ui int FolderListSelIndex;
 	private transient ui int SelMonsterPage;
 	private transient ui bool AutoSelected;
 	private transient ui bool InSearchMode;
@@ -58,6 +64,7 @@ extend class WT_MainHandler
 	override void RenderOverlay(RenderEvent e)
 	{
 		int LiteHUD = LiteHUDType.GetInt();
+		bool UseFolderView = LiteFolderView.GetInt();
 		mMainFont = HUDFont.Create("STRPFNT");
 
 		// ------------------------------------------------
@@ -81,13 +88,13 @@ extend class WT_MainHandler
 
 			// --------------- MISCELLANEOUS ---------------
 
-			GetAvailableWeapons();
+			GetAvailableWeapons(AvailableWeapons);
 			AutoSelectCurrentWeapon();
 
 			// --------------- SHARED ---------------
 
 			class<Weapon> WeaponListSel = GetSelectedWeaponInList();
-			int WeaponKills = WeaponListSel ? GetKillsForWeapon(GetDefaultByType(WeaponListSel).GetClassName()) : 0;
+			int WeaponKills = WeaponListSel ? GetKillsForWeapon(GetDefaultByType(WeaponListSel).GetClassName(), UseFolderView) : 0;
 			int TotalKills = GetTotalKillsForAllWeapons();
 
 			int GlobalOffsetY = 10 * LiteOffsetY.GetInt();
@@ -137,7 +144,7 @@ extend class WT_MainHandler
 			if (LiteHUD > 1 && WeaponListSel && WeaponListSel == ReadyWeapon)
 			{
 				// Weapon name.
-				StatusBar.DrawString(mMainFont, GetDefaultByType(WeaponListSel).GetTag(), (2, 100 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponName)));
+				StatusBar.DrawString(mMainFont, GetWeaponName(WeaponListSel, UseFolderView), (2, 100 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponName)));
 
 				// Weapon rank.
 				int WeaponRank; string WeaponRankString;
@@ -174,7 +181,7 @@ extend class WT_MainHandler
 
 			// --------------- MISCELLANEOUS ---------------
 
-			if (!InSearchMode) GetAvailableWeapons();
+			if (!InSearchMode) GetAvailableWeapons(AvailableWeapons);
 
 			// [Ace] Autoselect in the list your currently selected weapon in the world.
 			if (!AutoSelected)
@@ -193,7 +200,7 @@ extend class WT_MainHandler
 
 			// --------------- MAIN STATS ---------------
 
-			int WeaponKills = WeaponListSel ? GetKillsForWeapon(GetDefaultByType(WeaponListSel).GetClassName()) : 0;
+			int WeaponKills = WeaponListSel ? GetKillsForWeapon(GetDefaultByType(WeaponListSel).GetClassName(), false) : 0;
 			int TotalKills = GetTotalKillsForAllWeapons();
 
 			// Total kills.
@@ -402,9 +409,9 @@ extend class WT_MainHandler
 		}
 	}
 
-	private ui void GetAvailableWeapons()
+	private ui void GetAvailableWeapons(out Array<class<Weapon> > arr)
 	{
-		AvailableWeapons.Clear();
+		arr.Clear();
 		int WFilter = IWADWeaponFilter.GetInt();
 		
 		let it = DictionaryIterator.Create(MonsterKills);
@@ -417,25 +424,25 @@ extend class WT_MainHandler
 				int IwadType = GetIwadType(Search_Weapons, wpn);
 				if ((WFilter == Filter_All || WFilter == IWadType || IwadType == Filter_None) && !InSearchMode && (SearchFilter == "" || GetDefaultByType(wpn).GetTag().MakeLower().IndexOf(SearchFilter.MakeLower()) != -1))
 				{
-					AvailableWeapons.Push(wpn);
+					arr.Push(wpn);
 				}
 			}
 		}
 
 		// [Ace] Sort it.
-		for (int i = 0; i < AvailableWeapons.Size() - 1; ++i)
+		for (int i = 0; i < arr.Size() - 1; ++i)
 		{
-			for (int j = i + 1; j < AvailableWeapons.Size(); ++j)
+			for (int j = i + 1; j < arr.Size(); ++j)
 			{
-				let CurrWeapon = GetDefaultByType(AvailableWeapons[i]);
-				let NextWeapon = GetDefaultByType(AvailableWeapons[j]);
+				let CurrWeapon = GetDefaultByType(arr[i]);
+				let NextWeapon = GetDefaultByType(arr[j]);
 
 				// [Ace] Sort by numbers first, then by first letter if the numbers match.
 				if (CurrWeapon.SlotNumber >= NextWeapon.SlotNumber || (CurrWeapon.SlotNumber == NextWeapon.SlotNumber && String.Format("%s", CurrWeapon.GetClassName()).ByteAt(0) >= String.Format("%s", NextWeapon.GetClassName()).ByteAt(0)))
 				{
-					let Swap = AvailableWeapons[i];
-					AvailableWeapons[i] = AvailableWeapons[j];
-					AvailableWeapons[j] = Swap;
+					let Swap = arr[i];
+					arr[i] = arr[j];
+					arr[j] = Swap;
 				}
 			}
 		}
@@ -514,6 +521,13 @@ extend class WT_MainHandler
 		return PlayerRank, PlayerRankString;
 	}
 
+	private ui string GetWeaponName(class<Weapon> wpn, bool useFolder)
+	{
+		string WpnName = wpn.GetClassName();
+		string WeaponFolder = FolderBindings.At(WpnName.MakeLower());
+		return useFolder && WeaponFolder != "" ? WeaponFolder : GetDefaultByType(wpn).GetTag();
+	}
+
 	private ui int, string GetWeaponRank(int kills) const
 	{
 		int WeaponRank = 0;
@@ -530,17 +544,32 @@ extend class WT_MainHandler
 		return WeaponRank, WeaponRankString;
 	}
 
-
-	private ui int GetKillsForWeapon(string weapon) const
+	private ui int GetKillsForWeapon(string weapon, bool useFolder) const
 	{
 		int TotalKills = 0;
-		string Kills = MonsterKills.At(weapon);
-		if (Kills != "")
+
+		// [Ace] The folder the weapon belongs to.
+		string WeaponFolder = FolderBindings.At(weapon);
+		if (useFolder && WeaponFolder != "")
 		{
-			let it = DictionaryIterator.Create(Dictionary.FromString(Kills)); 
-			while(it.Next())
+			Array<class<Weapon> > WeaponsInFolder;
+			GetWeaponsInFolder(WeaponFolder, WeaponsInFolder);
+
+			for (int i = 0; i < WeaponsInFolder.Size(); ++i)
 			{
-				TotalKills += int(it.Value().ToDouble());
+				TotalKills += GetKillsForWeapon(WeaponsInFolder[i].GetClassName(), false);
+			}
+		}
+		else
+		{
+			string Kills = MonsterKills.At(weapon);
+			if (Kills != "")
+			{
+				let it = DictionaryIterator.Create(Dictionary.FromString(Kills)); 
+				while(it.Next())
+				{
+					TotalKills += int(it.Value().ToDouble());
+				}
 			}
 		}
 
@@ -554,7 +583,7 @@ extend class WT_MainHandler
 		{
 			while (it.Next())
 			{
-				TotalKills += GetKillsForWeapon(it.Key());
+				TotalKills += GetKillsForWeapon(it.Key(), false);
 			}
 		}
 		return TotalKills;

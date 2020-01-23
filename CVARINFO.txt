@@ -9,6 +9,7 @@ user bool wt_panel_blackdisplay = false;
 
 user int wt_showlite = 3;
 user int wt_lite_offset_y = 0;
+user bool wt_lite_usefolders = false;
 user int wt_lite_color_labels = 0;
 user int wt_lite_color_totalkills = 0;
 user int wt_lite_color_genociderank = 0;

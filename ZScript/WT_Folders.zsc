@@ -1,0 +1,29 @@
+extend class WT_MainHandler
+{
+	private transient CVar LiteFolderView;
+	private transient Dictionary FolderBindings;
+
+	private void FolderInit()
+	{
+		FolderBindings = Dictionary.Create();
+
+	}
+
+	private ui void GetWeaponsInFolder(string folder, out Array<class<Weapon> > arr)
+	{
+		arr.Clear();
+
+		let it = DictionaryIterator.Create(FolderBindings);
+		while (it.Next())
+		{
+			if (it.Value() != folder) continue;
+
+			class<Weapon> wpn;
+			wpn = it.Key();
+			if (wpn && AvailableWeapons.Find(wpn) != AvailableWeapons.Size())
+			{
+				arr.Push(wpn);
+			}
+		}
+	}
+}

@@ -1,5 +1,8 @@
 extend class WT_MainHandler
 {
+	private transient CVar IWADWeaponFilter;
+	private transient CVar IWADMonsterFilter;
+
 	enum SearchType
 	{
 		Search_Weapons,

@@ -17,13 +17,7 @@ class WT_MainHandler : EventHandler
 	private transient CVar WeaponStorage;
 	private transient CVar ExperienceStorage;
 	private transient CVar PrestigeStorage;
-	private transient CVar BlackDisplay;
-	private transient CVar IWADWeaponFilter;
-	private transient CVar IWADMonsterFilter;
 	private transient CVar KillSoundType;
-	private transient CVar LiteHUDType;
-	private transient CVar LiteOffsetY;
-	private transient CVar LiteHudColors[7];
 
 	private transient int Experience;
 	private transient int Prestige;
@@ -153,6 +147,7 @@ class WT_MainHandler : EventHandler
 
 		LiteHUDType = CVar.FindCVar('wt_showlite');
 		LiteOffsetY = CVar.FindCVar('wt_lite_offset_y');
+		LiteFolderView = CVar.FindCVar('wt_lite_usefolders');
 		LiteHudColors[Elem_Labels] = CVar.FindCVar('wt_lite_color_labels');
 		LiteHudColors[Elem_TotalKills] = CVar.FindCVar('wt_lite_color_totalkills');
 		LiteHudColors[Elem_GenocideRank] = CVar.FindCVar('wt_lite_color_genociderank');
@@ -166,6 +161,7 @@ class WT_MainHandler : EventHandler
 
 	void Initialize(bool reset)
 	{
+		FolderInit();
 		ProjectileBinds = Dictionary.Create();
 
 		if (reset)
