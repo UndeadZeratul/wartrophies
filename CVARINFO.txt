@@ -3,12 +3,15 @@ nosave string wt_stats_weapons_kills = "";
 nosave int wt_stats_experience = 0;
 nosave int wt_stats_prestige = 0;
 
+// [Ace] Scorecard stuff.
 user int wt_filter_iwad_weapons = 5;
 user int wt_filter_iwad_monsters = 5;
 user bool wt_panel_blackdisplay = false;
 
+// [Ace] Lite HUD stuff.
 user int wt_showlite = 3;
 user int wt_lite_offset_y = 0;
+user float wt_lite_alpha = 1.0;
 user bool wt_lite_usefolders = false;
 user int wt_lite_color_labels = 0;
 user int wt_lite_color_totalkills = 0;
@@ -18,4 +21,5 @@ user int wt_lite_color_weaponname = 0;
 user int wt_lite_color_weaponrank = 0;
 user int wt_lite_color_weaponkills = 0;
 
+// [Ace] Misc.
 user int wt_killsound = 0;

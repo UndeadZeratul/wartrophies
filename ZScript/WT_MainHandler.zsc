@@ -145,8 +145,9 @@ class WT_MainHandler : EventHandler
 		IWADMonsterFilter = CVar.FindCVar('wt_filter_iwad_monsters');
 		KillSoundType = CVar.FindCVar('wt_killsound');
 
-		LiteHUDType = CVar.FindCVar('wt_showlite');
-		LiteOffsetY = CVar.FindCVar('wt_lite_offset_y');
+		LiteHudType = CVar.FindCVar('wt_showlite');
+		LiteHudOffsetY = CVar.FindCVar('wt_lite_offset_y');
+		LiteHudAlpha = CVar.FindCVar('wt_lite_alpha');
 		LiteFolderView = CVar.FindCVar('wt_lite_usefolders');
 		LiteHudColors[Elem_Labels] = CVar.FindCVar('wt_lite_color_labels');
 		LiteHudColors[Elem_TotalKills] = CVar.FindCVar('wt_lite_color_totalkills');
