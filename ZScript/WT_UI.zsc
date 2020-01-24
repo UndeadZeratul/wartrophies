@@ -553,7 +553,7 @@ extend class WT_MainHandler
 		int TotalKills = 0;
 
 		// [Ace] The folder the weapon belongs to.
-		string WeaponFolder = FolderBindings.At(weapon);
+		string WeaponFolder = FolderBindings.At(weapon.MakeLower());
 		if (useFolder && WeaponFolder != "")
 		{
 			Array<class<Weapon> > WeaponsInFolder;
