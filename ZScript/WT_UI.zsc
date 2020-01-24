@@ -50,7 +50,8 @@ extend class WT_MainHandler
 	const MedalsPerUpgrade = 3; // [Ace] This must be 2 or above!
 	const MedalsPerLine = 11;
 	const MedalTypesCount = 9;
-	const LiteHudMaxStringWidth = 25;
+	const LiteHudMaxStringWidth = 200; // [Ace] Size in pixels.
+	const FontName = "STRPFNT";
 	private transient ui Array<class<Weapon> > AvailableWeapons;
 	private transient ui Array<class<Actor> > AvailableMonsters;
 	private transient ui int WeaponListSelIndex;
@@ -67,7 +68,7 @@ extend class WT_MainHandler
 	{
 		int LiteHUD = LiteHudType.GetInt();
 		
-		mMainFont = HUDFont.Create("STRPFNT");
+		mMainFont = HUDFont.Create(FontName);
 
 		// ------------------------------------------------
 		// LITE HUD
@@ -149,8 +150,14 @@ extend class WT_MainHandler
 			if (LiteHUD > 1 && WeaponListSel && WeaponListSel == ReadyWeapon)
 			{
 				// Weapon name.
-				StatusBar.DrawString(mMainFont, GetTruncatedName(GetWeaponName(WeaponListSel, UseFolderView), LiteHudMaxStringWidth), (2, 100 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponName)), Alpha);
-
+				Font fnt = FontName;
+				BrokenLines MultilineName = fnt.BreakLines(GetWeaponName(WeaponListSel, UseFolderView), LiteHudMaxStringWidth);
+				for (int i = 0; i < MultilineName.Count(); ++i)
+				{
+					WStatsOffsetY += 10 * i;
+					StatusBar.DrawString(mMainFont, MultilineName.StringAt(i), (2, 100 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponName)), Alpha);
+				}
+				
 				// Weapon rank.
 				int WeaponRank; string WeaponRankString;
 				[WeaponRank, WeaponRankString] = GetWeaponRank(WeaponKills);
