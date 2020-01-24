@@ -50,6 +50,7 @@ extend class WT_MainHandler
 	const MedalsPerUpgrade = 3; // [Ace] This must be 2 or above!
 	const MedalsPerLine = 11;
 	const MedalTypesCount = 9;
+	const LiteHudMaxStringWidth = 25;
 	private transient ui Array<class<Weapon> > AvailableWeapons;
 	private transient ui Array<class<Actor> > AvailableMonsters;
 	private transient ui int WeaponListSelIndex;
@@ -148,7 +149,7 @@ extend class WT_MainHandler
 			if (LiteHUD > 1 && WeaponListSel && WeaponListSel == ReadyWeapon)
 			{
 				// Weapon name.
-				StatusBar.DrawString(mMainFont, GetWeaponName(WeaponListSel, UseFolderView), (2, 100 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponName)), Alpha);
+				StatusBar.DrawString(mMainFont, GetTruncatedName(GetWeaponName(WeaponListSel, UseFolderView), LiteHudMaxStringWidth), (2, 100 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponName)), Alpha);
 
 				// Weapon rank.
 				int WeaponRank; string WeaponRankString;
@@ -249,13 +250,7 @@ extend class WT_MainHandler
 			{
 				let CurrWeapon = GetDefaultByType(AvailableWeapons[WeaponListEntries * WeaponPage + i]);
 				
-				// [Ace] Truncate name if it's too long.
-				string WeaponName = CurrWeapon.GetTag();
-				if (WeaponName.Length() > WeaponListMaxStringWidth)
-				{
-					WeaponName = WeaponName.Mid(0, WeaponListMaxStringWidth).."...";
-				}
-				StatusBar.DrawString(mMainFont, WeaponName, (-174, 36 + 9 * i), DI_TEXT_LEFT, WeaponListSel == CurrWeapon.GetClass() ? Font.FindFontColor(DefcolSelectedWeapon) : Font.FindFontColor(DefcolMiscLabel));
+				StatusBar.DrawString(mMainFont, GetTruncatedName(CurrWeapon.GetTag(), WeaponListMaxStringWidth), (-174, 36 + 9 * i), DI_TEXT_LEFT, WeaponListSel == CurrWeapon.GetClass() ? Font.FindFontColor(DefcolSelectedWeapon) : Font.FindFontColor(DefcolMiscLabel));
 			}
 
 			// --------------- WEAPON STATS ---------------
@@ -622,6 +617,21 @@ extend class WT_MainHandler
 		}
 
 		return StringTable.Localize("$HUD_COLOR_"..CvarValue); // [Ace] Should show up as black.
+	}
+
+	private ui string GetTruncatedName(string weaponName, int length)
+	{
+		if (weaponName.Length() > length)
+		{
+			string TruncatedName = weaponName.Mid(0, length);
+			if (TruncatedName.ByteAt(TruncatedName.Length() - 1) == 32)
+			{
+				TruncatedName.DeleteLastCharacter();
+			}
+			weaponName = TruncatedName.."...";
+		}
+
+		return weaponName;
 	}
 
 	// --------------------------------------------------
