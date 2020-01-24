@@ -44,6 +44,7 @@ extend class WT_MainHandler
 
 	const WeaponListEntries = 11;
 	const WeaponListMaxStringWidth = 16;
+	const WeaponNameMaxStringWidth = 30; // [Ace] For the scorecard.
 	const MonsterListEntries = 11;
 	const MonsterListMaxStringWidth = 15;
 	const KillsPerMedal = 3;
@@ -62,6 +63,7 @@ extend class WT_MainHandler
 	private transient ui string SearchFilter;
 	private transient bool DrawUi;
 
+	// [Ace] Misc crap.
 	private transient ui HUDFont mMainFont;
 
 	override void RenderOverlay(RenderEvent e)
@@ -257,7 +259,7 @@ extend class WT_MainHandler
 			{
 				let CurrWeapon = GetDefaultByType(AvailableWeapons[WeaponListEntries * WeaponPage + i]);
 				
-				StatusBar.DrawString(mMainFont, GetTruncatedName(CurrWeapon.GetTag(), WeaponListMaxStringWidth), (-174, 36 + 9 * i), DI_TEXT_LEFT, WeaponListSel == CurrWeapon.GetClass() ? Font.FindFontColor(DefcolSelectedWeapon) : Font.FindFontColor(DefcolMiscLabel));
+				StatusBar.DrawString(mMainFont, GetTruncatedText(CurrWeapon.GetTag(), WeaponListMaxStringWidth), (-174, 36 + 9 * i), DI_TEXT_LEFT, WeaponListSel == CurrWeapon.GetClass() ? Font.FindFontColor(DefcolSelectedWeapon) : Font.FindFontColor(DefcolMiscLabel));
 			}
 
 			// --------------- WEAPON STATS ---------------
@@ -265,7 +267,7 @@ extend class WT_MainHandler
 			if (WeaponListSel)
 			{
 				// Weapon name.
-				StatusBar.DrawString(mMainFont, GetDefaultByType(WeaponListSel).GetTag(), (-7, -132), DI_TEXT_LEFT, Font.FindFontColor(DefcolWeaponName));
+				StatusBar.DrawString(mMainFont, GetTruncatedText(GetDefaultByType(WeaponListSel).GetTag(), WeaponNameMaxStringWidth), (-7, -132), DI_TEXT_LEFT, Font.FindFontColor(DefcolWeaponName));
 
 				// Weapon rank.
 				int WeaponRank; string WeaponRankString;
@@ -626,19 +628,19 @@ extend class WT_MainHandler
 		return StringTable.Localize("$HUD_COLOR_"..CvarValue); // [Ace] Should show up as black.
 	}
 
-	private ui string GetTruncatedName(string weaponName, int length)
+	private ui string GetTruncatedText(string text, int length)
 	{
-		if (weaponName.Length() > length)
+		if (text.Length() > length)
 		{
-			string TruncatedName = weaponName.Mid(0, length);
+			string TruncatedName = text.Mid(0, length);
 			if (TruncatedName.ByteAt(TruncatedName.Length() - 1) == 32)
 			{
 				TruncatedName.DeleteLastCharacter();
 			}
-			weaponName = TruncatedName.."...";
+			text = TruncatedName.."...";
 		}
 
-		return weaponName;
+		return text;
 	}
 
 	// --------------------------------------------------
