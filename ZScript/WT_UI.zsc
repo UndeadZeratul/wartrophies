@@ -313,7 +313,7 @@ extend class WT_MainHandler
 				TextureID Img = TexMan.CheckForTexture(SpriteToDraw, TexMan.Type_Any);
 				vector2 ImgSize;
 				[ImgSize.x, ImgSize.y] = TexMan.GetSize(Img);
-				vector2 Box = (ImgSize.X > 100 ? 100 : -1, ImgSize.Y > 63 ? 63 : -1);
+				vector2 Box = (ImgSize.X > 90 ? 90 : -1, ImgSize.Y > 56 ? 56 : -1);
 				StatusBar.DrawImage(SpriteToDraw, (40, -33), DI_CENTER, 1.0, Box);
 
 				// Weapon medals.
