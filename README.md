@@ -16,16 +16,29 @@ To fix this, you have four options, three of which require config editing:
 3. Erase all encounters of `wt_stats_*` and let the mod generate those again. This will result in progress loss.
 4. Delete the config and let GZDoom generate it again. Will result in progress loss. Obviously this is the least convenient solution, but it's guaranteed to work.
 
+### First time playing? Read this.
+---
+- At first you won't see any weapons or monsters. The list is populated as you use them to kill monsters.
+- The IWAD filters are enabled by default, meaning you will always see vanilla Doom/Heretic/Hexen/Strife weapons. If playing with mods that add custom weapons, set the weapon filter to "None". If the mod adds monsters, do the same for the monster filter.
+
+### Mods with 'Folder' support.
+---
+Compatibility with certain mods has been extended to allow them to make use of the 'Folder' feature for the Lite HUD. This combines the kills from all weapons in the same folder and displays them as one weapon.  
+*NOTE: Weapons will still be separate in the scorecard!*
+- Final Doomer
+- Bullet-Eye
+
 ### (In)Compatibility
 ---
 Certain mods don't play too well with War Trophies. They will work, but not always the way you'd expect them to. A few examples:
 - **Combined Arms (and probably lots of other mods):** Some weapons don't have icons or pickup sprites, so the weapon icon in the scorecard would instead be the first frame from the Ready state. It's only a visual "bug".
-- **Kriegsland/Death Incarnate:** Dual-wielded weapons are separate weapons, meaning their stats are tracked separately from their single variants.
+- **Kriegsland/Doom Incarnate:** Dual-wielded weapons are separate weapons, meaning their stats are tracked separately from their single variants. This can be fixed if anyone is willing to make folders for those weapons so they count as one. PRs are welcome.
 - **Hideous Destructor:** It's possible to attribute kills from a weapon to a different weapon that cannot physically kill anything. For example, throwing a grenade and switching to bandaging will attribute kills to the latter. Normally this isn't an issue in other mods, but HD handles things... differently.
+- **Bullet-Eye**: Due to how weapons in Bullet-Eye function under the hood, i.e. a having separate weapon class for each slot, the only workaround is to enable the folders option for the Lite HUD.
 
 ### Do this if you want (proper) addon support
 ---
 - Add a Tag property to your weapons/monsters.  
 *The mod will work without it, but raw class names will be displayed instead and it won't look good unless your class names are sensible.*
-- Add an Icon property to your weapons.  
+- Add an Icon property to your weapons or define a Spawn state sprite.  
 *Again, will work without it, but sometimes Ready state sprites may be used and it'd look bad.*

@@ -15,6 +15,12 @@ extend class WT_MainHandler
 	// MAIN
 	// --------------------------------------------------
 
+	private transient CVar BlackDisplay;
+	private transient CVar LiteHudType;
+	private transient CVar LiteHudOffsetY;
+	private transient CVar LiteHudColors[7];
+	private transient CVar LiteHudAlpha;
+
 	const DefcolMiscLabel = "WT_FadedBrown";
 	const DefcolSelectedWeapon = "WT_OrangeRed";
 	const DefcolTotalKills = "WT_Red";
@@ -38,27 +44,33 @@ extend class WT_MainHandler
 
 	const WeaponListEntries = 11;
 	const WeaponListMaxStringWidth = 16;
+	const WeaponNameMaxStringWidth = 30; // [Ace] For the scorecard.
 	const MonsterListEntries = 11;
 	const MonsterListMaxStringWidth = 15;
 	const KillsPerMedal = 3;
 	const MedalsPerUpgrade = 3; // [Ace] This must be 2 or above!
 	const MedalsPerLine = 11;
 	const MedalTypesCount = 9;
+	const LiteHudMaxStringWidth = 200; // [Ace] Size in pixels.
+	const FontName = "STRPFNT";
 	private transient ui Array<class<Weapon> > AvailableWeapons;
 	private transient ui Array<class<Actor> > AvailableMonsters;
 	private transient ui int WeaponListSelIndex;
+	private transient ui int FolderListSelIndex;
 	private transient ui int SelMonsterPage;
 	private transient ui bool AutoSelected;
 	private transient ui bool InSearchMode;
 	private transient ui string SearchFilter;
 	private transient bool DrawUi;
 
+	// [Ace] Misc crap.
 	private transient ui HUDFont mMainFont;
 
 	override void RenderOverlay(RenderEvent e)
 	{
-		int LiteHUD = LiteHUDType.GetInt();
-		mMainFont = HUDFont.Create("STRPFNT");
+		int LiteHUD = LiteHudType.GetInt();
+		
+		mMainFont = HUDFont.Create(FontName);
 
 		// ------------------------------------------------
 		// LITE HUD
@@ -66,6 +78,9 @@ extend class WT_MainHandler
 
 		if (LiteHUD > 0 && !DrawUi && !AutomapActive && GameState == GS_LEVEL)
 		{
+			bool UseFolderView = LiteFolderView.GetBool();
+			double Alpha = LiteHudAlpha.GetFloat();
+
 			int DI_TL = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_ITEM_LEFT_TOP;
 			int DI_TL_TEXT_LEFT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
 			int DI_TL_CENTER_TEXT_CENTER = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
@@ -81,53 +96,53 @@ extend class WT_MainHandler
 
 			// --------------- MISCELLANEOUS ---------------
 
-			GetAvailableWeapons();
+			GetAvailableWeapons(AvailableWeapons);
 			AutoSelectCurrentWeapon();
 
 			// --------------- SHARED ---------------
 
 			class<Weapon> WeaponListSel = GetSelectedWeaponInList();
-			int WeaponKills = WeaponListSel ? GetKillsForWeapon(GetDefaultByType(WeaponListSel).GetClassName()) : 0;
+			int WeaponKills = WeaponListSel ? GetKillsForWeapon(GetDefaultByType(WeaponListSel).GetClassName(), UseFolderView) : 0;
 			int TotalKills = GetTotalKillsForAllWeapons();
 
-			int GlobalOffsetY = 10 * LiteOffsetY.GetInt();
+			int GlobalOffsetY = 10 * LiteHudOffsetY.GetInt();
 
 			// --------------- MAIN STATS ---------------
 
 			if (LiteHUD == 1 || LiteHUD == 3)
 			{
 				// Total kills.
-				StatusBar.DrawString(mMainFont, "Total:", (2, 2 + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_Labels)));
-				StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(TotalKills, 1, 10), (47, 2 + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_TotalKills)));
+				StatusBar.DrawString(mMainFont, "Total:", (2, 2 + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_Labels)), Alpha);
+				StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(TotalKills, 1, 10), (47, 2 + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_TotalKills)), Alpha);
 
 				// Genocide rank.
 				int GenocideRank; string GenocideRankString;
 				[GenocideRank, GenocideRankString] = GetGenocideRank(TotalKills);
-				StatusBar.DrawString(mMainFont, GenocideRankString, (2, 12 + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_GenocideRank)));
+				StatusBar.DrawString(mMainFont, GenocideRankString, (2, 12 + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_GenocideRank)), Alpha);
 
 				// Genocide medal.
-				StatusBar.DrawImage("GRANK"..GenocideRank, (46, 58 + GlobalOffsetY), DI_TL);
+				StatusBar.DrawImage("GRANK"..GenocideRank, (46, 58 + GlobalOffsetY), DI_TL, Alpha);
 
 				// Player rank & prestige.
 				int PlayerRank; string PlayerRankString;
 				[PlayerRank, PlayerRankString] = GetPlayerRank();
 				if (Prestige > 0)
 				{
-					StatusBar.DrawImage("PRSTIGE"..Prestige, (2, 21 + GlobalOffsetY), DI_TL);
+					StatusBar.DrawImage("PRSTIGE"..Prestige, (2, 21 + GlobalOffsetY), DI_TL, Alpha);
 				}
-				StatusBar.DrawString(mMainFont, PlayerRankString, (Prestige > 0 ? 14 : 2, 26 + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_PlayerRank)));
+				StatusBar.DrawString(mMainFont, PlayerRankString, (Prestige > 0 ? 14 : 2, 26 + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_PlayerRank)), Alpha);
 
 				// Player experience.
-				StatusBar.DrawString(mMainFont, "XP:", (2, 36 + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_Labels)));
-				StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(Experience, 1, 7), (24, 36 + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_PlayerRank)));
+				StatusBar.DrawString(mMainFont, "XP:", (2, 36 + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_Labels)), Alpha);
+				StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(Experience, 1, 7), (24, 36 + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_PlayerRank)), Alpha);
 
 				// Player experience for next level.
 				string NextPlayerRankExp = PlayerRank < XPReq.Size() ? StatusBar.FormatNumber(XPReq[PlayerRank], 1, 7) : "-";
-				StatusBar.DrawString(mMainFont, "NX:", (2, 46 + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_Labels)));
-				StatusBar.DrawString(mMainFont, NextPlayerRankExp, (24, 46 + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_PlayerRank)));
+				StatusBar.DrawString(mMainFont, "NX:", (2, 46 + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_Labels)), Alpha);
+				StatusBar.DrawString(mMainFont, NextPlayerRankExp, (24, 46 + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_PlayerRank)), Alpha);
 
 				// Player medal.
-				StatusBar.DrawImage("RANK"..(PlayerRank + 1), (4, 58 + GlobalOffsetY), DI_TL);
+				StatusBar.DrawImage("RANK"..(PlayerRank + 1), (4, 58 + GlobalOffsetY), DI_TL, Alpha);
 			}
 
 			// --------------- WEAPON STATS ---------------
@@ -137,25 +152,31 @@ extend class WT_MainHandler
 			if (LiteHUD > 1 && WeaponListSel && WeaponListSel == ReadyWeapon)
 			{
 				// Weapon name.
-				StatusBar.DrawString(mMainFont, GetDefaultByType(WeaponListSel).GetTag(), (2, 100 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponName)));
-
+				Font fnt = FontName;
+				BrokenLines MultilineName = fnt.BreakLines(GetWeaponName(WeaponListSel, UseFolderView), LiteHudMaxStringWidth);
+				for (int i = 0; i < MultilineName.Count(); ++i)
+				{
+					WStatsOffsetY += 10 * i;
+					StatusBar.DrawString(mMainFont, MultilineName.StringAt(i), (2, 100 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponName)), Alpha);
+				}
+				
 				// Weapon rank.
 				int WeaponRank; string WeaponRankString;
 				[WeaponRank, WeaponRankString] = GetWeaponRank(WeaponKills);
-				StatusBar.DrawString(mMainFont, WeaponRankString, (2, 114 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponRank)));
-				StatusBar.DrawString(mMainFont, WeaponRank.."/"..WeapRanks.Size(), (2, 124 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponRank)));
+				StatusBar.DrawString(mMainFont, WeaponRankString, (2, 114 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponRank)), Alpha);
+				StatusBar.DrawString(mMainFont, WeaponRank.."/"..WeapRanks.Size(), (2, 124 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponRank)), Alpha);
 
 				// Weapon kills.
-				StatusBar.DrawString(mMainFont, "K:", (2, 138 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_Labels)));
-				StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(WeaponKills, 1, 6), (16, 138 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponKills)));
+				StatusBar.DrawString(mMainFont, "K:", (2, 138 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_Labels)), Alpha);
+				StatusBar.DrawString(mMainFont, StatusBar.FormatNumber(WeaponKills, 1, 6), (16, 138 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponKills)), Alpha);
 
 				// Weapon kills for next level.
 				string NextWeaponRankKills = WeaponRank < WeapKillReq.Size() ? StatusBar.FormatNumber(WeapKillReq[WeaponRank], 1, 6) : "-";
-				StatusBar.DrawString(mMainFont, "NX:", (2, 148 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_Labels)));
-				StatusBar.DrawString(mMainFont, NextWeaponRankKills, (26, 148 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponRank)));
+				StatusBar.DrawString(mMainFont, "NX:", (2, 148 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_Labels)), Alpha);
+				StatusBar.DrawString(mMainFont, NextWeaponRankKills, (26, 148 + WStatsOffsetY + GlobalOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponRank)), Alpha);
 
 				// Weapon medals.
-				DrawWeaponMedals(WeaponKills, 2, 162 + WStatsOffsetY + GlobalOffsetY, DI_TL);
+				DrawWeaponMedals(WeaponKills, 2, 162 + WStatsOffsetY + GlobalOffsetY, DI_TL, Alpha);
 			}
 		}
 
@@ -174,7 +195,7 @@ extend class WT_MainHandler
 
 			// --------------- MISCELLANEOUS ---------------
 
-			if (!InSearchMode) GetAvailableWeapons();
+			if (!InSearchMode) GetAvailableWeapons(AvailableWeapons);
 
 			// [Ace] Autoselect in the list your currently selected weapon in the world.
 			if (!AutoSelected)
@@ -193,7 +214,7 @@ extend class WT_MainHandler
 
 			// --------------- MAIN STATS ---------------
 
-			int WeaponKills = WeaponListSel ? GetKillsForWeapon(GetDefaultByType(WeaponListSel).GetClassName()) : 0;
+			int WeaponKills = WeaponListSel ? GetKillsForWeapon(GetDefaultByType(WeaponListSel).GetClassName(), false) : 0;
 			int TotalKills = GetTotalKillsForAllWeapons();
 
 			// Total kills.
@@ -238,13 +259,7 @@ extend class WT_MainHandler
 			{
 				let CurrWeapon = GetDefaultByType(AvailableWeapons[WeaponListEntries * WeaponPage + i]);
 				
-				// [Ace] Truncate name if it's too long.
-				string WeaponName = CurrWeapon.GetTag();
-				if (WeaponName.Length() > WeaponListMaxStringWidth)
-				{
-					WeaponName = WeaponName.Mid(0, WeaponListMaxStringWidth).."...";
-				}
-				StatusBar.DrawString(mMainFont, WeaponName, (-174, 36 + 9 * i), DI_TEXT_LEFT, WeaponListSel == CurrWeapon.GetClass() ? Font.FindFontColor(DefcolSelectedWeapon) : Font.FindFontColor(DefcolMiscLabel));
+				StatusBar.DrawString(mMainFont, GetTruncatedText(CurrWeapon.GetTag(), WeaponListMaxStringWidth), (-174, 36 + 9 * i), DI_TEXT_LEFT, WeaponListSel == CurrWeapon.GetClass() ? Font.FindFontColor(DefcolSelectedWeapon) : Font.FindFontColor(DefcolMiscLabel));
 			}
 
 			// --------------- WEAPON STATS ---------------
@@ -252,7 +267,7 @@ extend class WT_MainHandler
 			if (WeaponListSel)
 			{
 				// Weapon name.
-				StatusBar.DrawString(mMainFont, GetDefaultByType(WeaponListSel).GetTag(), (-7, -132), DI_TEXT_LEFT, Font.FindFontColor(DefcolWeaponName));
+				StatusBar.DrawString(mMainFont, GetTruncatedText(GetDefaultByType(WeaponListSel).GetTag(), WeaponNameMaxStringWidth), (-7, -132), DI_TEXT_LEFT, Font.FindFontColor(DefcolWeaponName));
 
 				// Weapon rank.
 				int WeaponRank; string WeaponRankString;
@@ -298,11 +313,11 @@ extend class WT_MainHandler
 				TextureID Img = TexMan.CheckForTexture(SpriteToDraw, TexMan.Type_Any);
 				vector2 ImgSize;
 				[ImgSize.x, ImgSize.y] = TexMan.GetSize(Img);
-				vector2 Box = (ImgSize.X > 100 ? 100 : -1, ImgSize.Y > 63 ? 63 : -1);
+				vector2 Box = (ImgSize.X > 90 ? 90 : -1, ImgSize.Y > 56 ? 56 : -1);
 				StatusBar.DrawImage(SpriteToDraw, (40, -33), DI_CENTER, 1.0, Box);
 
 				// Weapon medals.
-				DrawWeaponMedals(WeaponKills, 108, -53, DI_CENTER);
+				DrawWeaponMedals(WeaponKills, 108, -53, DI_CENTER, 1.0);
 
 				// --------------- MONSTER LIST & STATS ---------------
 
@@ -374,7 +389,7 @@ extend class WT_MainHandler
 		return null;
 	}
 
-	private ui void DrawWeaponMedals(int kills, int x, int y, int flags)
+	private ui void DrawWeaponMedals(int kills, int x, int y, int flags, double alpha)
 	{
 		int MedalCount[MedalTypesCount]; // [Ace] Each integer denotes how many medals of a given type there should be, starting at the highest type.
 		int TotalNumberOfMedals = kills / KillsPerMedal; // [Ace] More precisely, total number of tier 1 medals.
@@ -397,14 +412,14 @@ extend class WT_MainHandler
 				int XOffset = (j + (MedalsShown - MedalCount[i]));
 				int TotalXOffset = 11 * (XOffset % (MedalsPerLine));
 				int WStatsOffsetY = 15 * (XOffset / MedalsPerLine);
-				StatusBar.DrawImage("WMEDAL"..(MedalTypesCount - i), (x + TotalXOffset, y + WStatsOffsetY), flags);
+				StatusBar.DrawImage("WMEDAL"..(MedalTypesCount - i), (x + TotalXOffset, y + WStatsOffsetY), flags, alpha);
 			}
 		}
 	}
 
-	private ui void GetAvailableWeapons()
+	private ui void GetAvailableWeapons(out Array<class<Weapon> > arr)
 	{
-		AvailableWeapons.Clear();
+		arr.Clear();
 		int WFilter = IWADWeaponFilter.GetInt();
 		
 		let it = DictionaryIterator.Create(MonsterKills);
@@ -417,25 +432,25 @@ extend class WT_MainHandler
 				int IwadType = GetIwadType(Search_Weapons, wpn);
 				if ((WFilter == Filter_All || WFilter == IWadType || IwadType == Filter_None) && !InSearchMode && (SearchFilter == "" || GetDefaultByType(wpn).GetTag().MakeLower().IndexOf(SearchFilter.MakeLower()) != -1))
 				{
-					AvailableWeapons.Push(wpn);
+					arr.Push(wpn);
 				}
 			}
 		}
 
 		// [Ace] Sort it.
-		for (int i = 0; i < AvailableWeapons.Size() - 1; ++i)
+		for (int i = 0; i < arr.Size() - 1; ++i)
 		{
-			for (int j = i + 1; j < AvailableWeapons.Size(); ++j)
+			for (int j = i + 1; j < arr.Size(); ++j)
 			{
-				let CurrWeapon = GetDefaultByType(AvailableWeapons[i]);
-				let NextWeapon = GetDefaultByType(AvailableWeapons[j]);
+				let CurrWeapon = GetDefaultByType(arr[i]);
+				let NextWeapon = GetDefaultByType(arr[j]);
 
 				// [Ace] Sort by numbers first, then by first letter if the numbers match.
 				if (CurrWeapon.SlotNumber >= NextWeapon.SlotNumber || (CurrWeapon.SlotNumber == NextWeapon.SlotNumber && String.Format("%s", CurrWeapon.GetClassName()).ByteAt(0) >= String.Format("%s", NextWeapon.GetClassName()).ByteAt(0)))
 				{
-					let Swap = AvailableWeapons[i];
-					AvailableWeapons[i] = AvailableWeapons[j];
-					AvailableWeapons[j] = Swap;
+					let Swap = arr[i];
+					arr[i] = arr[j];
+					arr[j] = Swap;
 				}
 			}
 		}
@@ -514,6 +529,13 @@ extend class WT_MainHandler
 		return PlayerRank, PlayerRankString;
 	}
 
+	private ui string GetWeaponName(class<Weapon> wpn, bool useFolder)
+	{
+		string WpnName = wpn.GetClassName();
+		string WeaponFolder = FolderBindings.At(WpnName.MakeLower());
+		return useFolder && WeaponFolder != "" ? WeaponFolder : GetDefaultByType(wpn).GetTag();
+	}
+
 	private ui int, string GetWeaponRank(int kills) const
 	{
 		int WeaponRank = 0;
@@ -530,17 +552,32 @@ extend class WT_MainHandler
 		return WeaponRank, WeaponRankString;
 	}
 
-
-	private ui int GetKillsForWeapon(string weapon) const
+	private ui int GetKillsForWeapon(string weapon, bool useFolder) const
 	{
 		int TotalKills = 0;
-		string Kills = MonsterKills.At(weapon);
-		if (Kills != "")
+
+		// [Ace] The folder the weapon belongs to.
+		string WeaponFolder = FolderBindings.At(weapon.MakeLower());
+		if (useFolder && WeaponFolder != "")
 		{
-			let it = DictionaryIterator.Create(Dictionary.FromString(Kills)); 
-			while(it.Next())
+			Array<class<Weapon> > WeaponsInFolder;
+			GetWeaponsInFolder(WeaponFolder, WeaponsInFolder);
+
+			for (int i = 0; i < WeaponsInFolder.Size(); ++i)
 			{
-				TotalKills += int(it.Value().ToDouble());
+				TotalKills += GetKillsForWeapon(WeaponsInFolder[i].GetClassName(), false);
+			}
+		}
+		else
+		{
+			string Kills = MonsterKills.At(weapon);
+			if (Kills != "")
+			{
+				let it = DictionaryIterator.Create(Dictionary.FromString(Kills)); 
+				while(it.Next())
+				{
+					TotalKills += int(it.Value().ToDouble());
+				}
 			}
 		}
 
@@ -554,7 +591,7 @@ extend class WT_MainHandler
 		{
 			while (it.Next())
 			{
-				TotalKills += GetKillsForWeapon(it.Key());
+				TotalKills += GetKillsForWeapon(it.Key(), false);
 			}
 		}
 		return TotalKills;
@@ -589,6 +626,21 @@ extend class WT_MainHandler
 		}
 
 		return StringTable.Localize("$HUD_COLOR_"..CvarValue); // [Ace] Should show up as black.
+	}
+
+	private ui string GetTruncatedText(string text, int length)
+	{
+		if (text.Length() > length)
+		{
+			string TruncatedName = text.Mid(0, length);
+			if (TruncatedName.ByteAt(TruncatedName.Length() - 1) == 32)
+			{
+				TruncatedName.DeleteLastCharacter();
+			}
+			text = TruncatedName.."...";
+		}
+
+		return text;
 	}
 
 	// --------------------------------------------------

@@ -1,0 +1,207 @@
+extend class WT_MainHandler
+{
+	private transient CVar LiteFolderView;
+	private transient Dictionary FolderBindings;
+
+	static const string DictionaryDefs[] =
+	{
+		// -------------------- BULLET-EYE --------------------
+
+		"frostsnapvalnos", "Frost Snap",
+		"frostsnapvalnoss2", "Frost Snap",
+		"frostsnapvalnoss3", "Frost Snap",
+		"frostsnapvalnoss4", "Frost Snap",
+		"spitfireweapon", "Spitfire",
+		"spitfireweapons2", "Spitfire",
+		"spitfireweapons3", "Spitfire",
+		"spreadshotweapon", "Spread Shot",
+		"spreadshotweapons2", "Spread Shot",
+		"spreadshotweapons3", "Spread Shot",
+		"busterweapon", "Buster",
+		"busterweapons2", "Buster",
+		"busterweapons3", "Buster",
+		"blazestreamweapon", "Blaze Stream",
+		"blazestreamweapons2", "Blaze Stream",
+		"blazestreamweapons3", "Blaze Stream",
+		"chasermissileweapon", "Chaser Missile",
+		"chasermissileweapons2", "Chaser Missile",
+		"chasermissileweapons3", "Chaser Missile",
+		"crushblastweapon", "Crush Blast",
+		"crushblastweapons2", "Crush Blast",
+		"crushblastweapons3", "Crush Blast",
+		"scraplauncherweapon", "Scrap Launcher",
+		"scraplauncherweapons2", "Scrap Launcher",
+		"scraplauncherweapons3", "Scrap Launcher",
+		"quickstrikeweapon", "Quick Strike",
+		"quickstrikeweapons2", "Quick Strike",
+		"quickstrikeweapons3", "Quick Strike",
+		"huntinglaserweapon", "Hunting Laser",
+		"huntinglaserweapons2", "Hunting Laser",
+		"huntinglaserweapons3", "Hunting Laser",
+		"rapidvulcanweapon", "Assassin Vulcan",
+		"rapidvulcanweapons2", "Assassin Vulcan",
+		"rapidvulcanweapons3", "Assassin Vulcan",
+		"stormgrenadeweapon", "Storm Mine",
+		"stormgrenadeweapons2", "Storm Mine",
+		"stormgrenadeweapons3", "Storm Mine",
+		"volleyshotweapon", "Volley Shot",
+		"volleyshotweapons2", "Volley Shot",
+		"volleyshotweapons3", "Volley Shot",
+		"viperwaveweapon", "Viper Wave",
+		"viperwaveweapons2", "Viper Wave",
+		"viperwaveweapons3", "Viper Wave",
+		"repeaterweapon", "Repeaters",
+		"repeaterweapons2", "Repeaters",
+		"repeaterweapons3", "Repeaters",
+		"triplewyvernweapon", "Triple Wyvern",
+		"triplewyvernweapons2", "Triple Wyvern",
+		"triplewyvernweapons3", "Triple Wyvern",
+		"wingedreaverweapon", "Winged Reaver",
+		"wingedreaverweapons2", "Winged Reaver",
+		"wingedreaverweapons3", "Winged Reaver",
+		"shotwaveweapon", "Shotwave",
+		"shotwaveweapons2", "Shotwave",
+		"shotwaveweapons3", "Shotwave",
+		"grindhalberdweapon", "Grind Halberd",
+		"grindhalberdweapons2", "Grind Halberd",
+		"grindhalberdweapons3", "Grind Halberd",
+		"vampiricgauntletsweapon", "Vampiric Gauntlets",
+		"vampiricgauntletsweapons2", "Vampiric Gauntlets",
+		"vampiricgauntletsweapons3", "Vampiric Gauntlets",
+		"snipercannonweapon", "Sniper Cannon",
+		"snipercannonweapons2", "Sniper Cannon",
+		"snipercannonweapons3", "Sniper Cannon",
+		"metalmonstrosityweapon", "Metal Monstrosity",
+		"metalmonstrosityweapons2", "Metal Monstrosity",
+		"metalmonstrosityweapons3", "Metal Monstrosity",
+
+		// -------------------- FINAL DOOMER --------------------
+
+		// Fist
+		"fddoom2fist", "Melee",
+		"fdplutfist", "Melee",
+		"fdtntfist", "Melee",
+		"fdaliensfist", "Melee",
+		"fdjpcpfist", "Melee",
+		"fdbtsxfist", "Melee",
+		"fdhellboundfist", "Melee",
+		"fdalienvendettafist", "Melee",
+		"fdwhitemarefist", "Melee",
+
+		// Chainsaw
+		"fddoom2chainsaw", "Chainsaw",
+		"fdplutchainsaw", "Chainsaw",
+		"fdtntchainsaw", "Utility",
+		"fdalienschainsaw", "Utility",
+		"fdjpcpchainsaw", "Chainsaw",
+		"fdbtsxchainsaw", "Chainsaw",
+		"fdhellboundchainsaw", "Chainsaw",
+		"fdalienvendettachainsaw", "Chainsaw",
+		"fdwhitemarechainsaw", "Utility",
+
+		// Pistol
+		"fddoom2pistol", "Handgun",
+		"fdplutpistol", "Handgun",
+		"fdtntpistol", "Handgun",
+		"fdalienspistol", "Handgun",
+		"fdjpcppistol", "Handgun",
+		"fdbtsxpistol", "Handgun",
+		"fdhellboundpistol", "Handgun",
+		"fdalienvendettapistol", "Handgun",
+		"fdwhitemarepistol", "Handgun",
+
+		// Shotgun
+		"fddoom2shotgun", "Shotgun",
+		"fdplutshotgun", "Shotgun",
+		"fdtntshotgun", "Shotgun",
+		"fdaliensshotgun", "Shotgun",
+		"fdjpcpshotgun", "Shotgun",
+		"fdbtsxshotgun", "Shotgun",
+		"fdhellboundshotgun", "Shotgun",
+		"fdalienvendettashotgun", "Shotgun",
+		"fdwhitemareshotgun", "Shotgun",
+
+		// Super Shotgun
+		"fddoom2supershotgun", "Heavy Shotgun",
+		"fdplutsupershotgun", "Heavy Shotgun",
+		"fdtntsupershotgun", "Heavy Shotgun",
+		"fdalienssupershotgun", "Heavy Shotgun",
+		"fdjpcpsupershotgun", "Heavy Shotgun",
+		"fdbtsxsupershotgun", "Heavy Shotgun",
+		"fdhellboundsupershotgun", "Heavy Shotgun",
+		"fdalienvendettasupershotgun", "Heavy Shotgun",
+		"fdwhitemaresupershotgun", "Heavy Shotgun",
+
+		// Chaingun
+		"fddoom2chaingun", "Machine Gun",
+		"fdplutchaingun", "Machine Gun",
+		"fdtntchaingun", "Machine Gun",
+		"fdalienschaingun", "Machine Gun",
+		"fdjpcpchaingun", "Machine Gun",
+		"fdbtsxchaingun", "Machine Gun",
+		"fdhellboundchaingun", "Machine Gun",
+		"fdalienvendettachaingun", "Machine Gun",
+		"fdwhitemarechaingun", "Machine Gun",
+
+		// Rocket Launcher
+		"fddoom2rocketlauncher", "Launcher",
+		"fdplutrocketlauncher", "Launcher",
+		"fdtntrocketlauncher", "Launcher",
+		"fdaliensrocketlauncher", "Launcher",
+		"fdjpcprocketlauncher", "Launcher",
+		"fdbtsxrocketlauncher", "Launcher",
+		"fdhellboundrocketlauncher", "Launcher",
+		"fdalienvendettarocketlauncher", "Launcher",
+		"fdwhitemarerocketlauncher", "Launcher",
+
+		// Plasma Rifle
+		"fddoom2plasmarifle", "Energy Rifle",
+		"fdplutplasmarifle", "Energy Rifle",
+		"fdtntplasmarifle", "Energy Rifle",
+		"fdaliensplasmarifle", "Energy Rifle",
+		"fdjpcpplasmarifle", "Energy Rifle",
+		"fdbtsxplasmarifle", "Energy Rifle",
+		"fdhellboundplasmarifle", "Energy Rifle",
+		"fdalienvendettaplasmarifle", "Energy Rifle",
+		"fdwhitemareplasmarifle", "Energy Rifle",
+
+		// BFG9000
+		"fddoom2bfg9000", "BFG",
+		"fdplutbfg9000", "BFG",
+		"fdtntbfg9000", "BFG",
+		"fdaliensbfg9000", "BFG",
+		"fdjpcpbfg9000", "BFG",
+		"fdbtsxbfg9000", "BFG",
+		"fdhellboundbfg9000", "BFG",
+		"fdalienvendettabfg9000", "BFG",
+		"fdwhitemarebfg9000", "BFG"
+	};
+
+	private void FolderInit()
+	{
+		FolderBindings = Dictionary.Create();
+
+		for (int i = 0; i < DictionaryDefs.Size(); i += 2)
+		{
+			FolderBindings.Insert(DictionaryDefs[i], DictionaryDefs[i + 1]);
+		}
+	}
+
+	private ui void GetWeaponsInFolder(string folder, out Array<class<Weapon> > arr)
+	{
+		arr.Clear();
+
+		let it = DictionaryIterator.Create(FolderBindings);
+		while (it.Next())
+		{
+			if (it.Value() != folder) continue;
+
+			class<Weapon> wpn;
+			wpn = it.Key();
+			if (wpn && AvailableWeapons.Find(wpn) != AvailableWeapons.Size())
+			{
+				arr.Push(wpn);
+			}
+		}
+	}
+}
