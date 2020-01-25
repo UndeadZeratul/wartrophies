@@ -20,6 +20,7 @@ To fix this, you have four options, three of which require config editing:
 ---
 - At first you won't see any weapons or monsters. The list is populated as you use them to kill monsters.
 - The IWAD filters are enabled by default, meaning you will always see vanilla Doom/Heretic/Hexen/Strife weapons. If playing with mods that add custom weapons, set the weapon filter to "None". If the mod adds monsters, do the same for the monster filter.
+- Check out the "Scorecard Keys" submenu in the options. It will give useful information.
 
 ### Mods with 'Folder' support.
 ---
