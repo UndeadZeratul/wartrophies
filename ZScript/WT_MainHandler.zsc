@@ -209,6 +209,12 @@ class WT_MainHandler : EventHandler
 		}
 	}
 
+	override void WorldUnloaded(WorldEvent e)
+	{
+		IsUiProcessor = false;
+		DrawUi = false;
+	}
+
 	// --------------------------------------------------
 	// PROGRESS ERASING
 	// --------------------------------------------------
