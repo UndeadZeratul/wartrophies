@@ -23,6 +23,7 @@ extend class WT_MainHandler
 
 	private transient CVar BlackDisplay;
 	private transient CVar LiteHudType;
+	private transient CVar LiteHudOrientation;
 	private transient CVar LiteHudOffsetX;
 	private transient CVar LiteHudOffsetY;
 	private transient CVar LiteHudColors[7];
@@ -104,7 +105,20 @@ extend class WT_MainHandler
 
 				if (WeaponListSel && WeaponListSel == ReadyWeapon)
 				{
-					DrawLiteHudWeaponStats(StatusBar, WeaponListSel, 2, 100 + (LiteHUD == 2 ? -98 : 0) + GlobalOffsetY, Alpha);
+					int PosX = 2;
+					int PosY = 2;
+
+					// [Ace] Anything except "Weapon Stats"
+					if (LiteHud != 2)
+					{
+						switch(LiteHudOrientation.GetInt())
+						{
+							case 0: PosY += 100; break;
+							case 1: PosX += 120; break;
+						}
+					}
+
+					DrawLiteHudWeaponStats(StatusBar, WeaponListSel, PosX + GlobalOffsetX, PosY + GlobalOffsetY, Alpha);
 				}
 			}
 		}

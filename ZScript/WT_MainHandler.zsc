@@ -147,6 +147,7 @@ class WT_MainHandler : EventHandler
 		KillSoundType = CVar.FindCVar('wt_killsound');
 
 		LiteHudType = CVar.FindCVar('wt_showlite');
+		LiteHudOrientation = CVar.FindCVar('wt_lite_orientation');
 		LiteHudOffsetX = CVar.FindCVar('wt_lite_offset_x');
 		LiteHudOffsetY = CVar.FindCVar('wt_lite_offset_y');
 		LiteHudAlpha = CVar.FindCVar('wt_lite_alpha');
