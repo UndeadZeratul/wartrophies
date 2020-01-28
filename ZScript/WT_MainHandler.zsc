@@ -22,7 +22,7 @@ class WT_MainHandler : EventHandler
 	private transient int Experience;
 	private transient int Prestige;
 
-	private transient Dictionary MonsterKills; // [Ace] The value of each key is the monster dictionary's JSON. The key is the weapon.
+	private transient Dictionary WeaponStats; // [Ace] The value of each key is the monster dictionary's JSON. The key is the weapon.
 	private transient Dictionary ProjectileBinds; // [Ace] Key - projectile, value - weapon.
 
 	private transient class<Weapon> ReadyWeapon;
@@ -34,7 +34,7 @@ class WT_MainHandler : EventHandler
 	void UpdateTallyFor(string weapon, string victim)
 	{
 		// [Ace] If weapon exists, update info.
-		string CurrWeaponKills = MonsterKills.At(weapon);
+		string CurrWeaponKills = WeaponStats.At(weapon);
 		if (CurrWeaponKills != "")
 		{
 			Dictionary KillStats = Dictionary.FromString(CurrWeaponKills);
@@ -42,7 +42,7 @@ class WT_MainHandler : EventHandler
 			string Kills = KillStats.At(victim);
 			KillStats.Insert(victim, Kills != "" ? String.Format("%i", int(Kills.ToDouble()) + 1) : "1");
 
-			MonsterKills.Insert(weapon, KillStats.ToString());
+			WeaponStats.Insert(weapon, KillStats.ToString());
 		}
 
 		// [Ace] Otherwise, create it and update info.
@@ -51,7 +51,7 @@ class WT_MainHandler : EventHandler
 			Dictionary KillStats = Dictionary.Create();
 			KillStats.Insert(victim, "1");
 
-			MonsterKills.Insert(weapon, KillStats.ToString());
+			WeaponStats.Insert(weapon, KillStats.ToString());
 		}
 	}
 
@@ -172,13 +172,13 @@ class WT_MainHandler : EventHandler
 			ExperienceStorage.ResetToDefault();
 			PrestigeStorage.ResetToDefault();
 
-			MonsterKills = Dictionary.Create();
+			WeaponStats = Dictionary.Create();
 			Experience = 0;
 			Prestige = 0;
 		}
 		else
 		{
-			MonsterKills = Dictionary.FromString(WeaponStorage.GetString());
+			WeaponStats = Dictionary.FromString(WeaponStorage.GetString());
 			Experience = ExperienceStorage.GetInt();
 			Prestige = PrestigeStorage.GetInt();
 		}
@@ -191,9 +191,9 @@ class WT_MainHandler : EventHandler
 	override void WorldTick()
 	{
 		// [Ace] 10 tics should be enough so that SetString doesn't shit the bed.
-		if (MonsterKills && level.time % 10 == 0)
+		if (WeaponStats && level.time % 10 == 0)
 		{
-			WeaponStorage.SetString(MonsterKills.ToString());
+			WeaponStorage.SetString(WeaponStats.ToString());
 			ExperienceStorage.SetInt(Experience);
 			PrestigeStorage.SetInt(Prestige);
 		}
@@ -228,9 +228,9 @@ class WT_MainHandler : EventHandler
 
 	private void ResetWeapon()
 	{
-		if (MonsterKills)
+		if (WeaponStats)
 		{
-			MonsterKills.Remove(ReadyWeapon.GetClassName());
+			WeaponStats.Remove(ReadyWeapon.GetClassName());
 		}
 		Console.Printf("Weapon statistics successfully reset!");
 	}

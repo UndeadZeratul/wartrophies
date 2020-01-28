@@ -11,6 +11,12 @@ extend class WT_MainHandler
 		Elem_WeaponKills
 	}
 
+	enum WT_ScorecardPages
+	{
+		Page_Main,
+		Page_Monsters
+	}
+
 	// --------------------------------------------------
 	// MAIN
 	// --------------------------------------------------
@@ -46,7 +52,9 @@ extend class WT_MainHandler
 	const WeaponNameListMaxLength = 16;
 	const WeaponNameMaxLength = 30; // [Ace] For the scorecard.
 	const MonsterListEntries = 11;
+	const MonsterListEntriesLong = 27;
 	const MonsterNameMaxLength = 25;
+	const MonsterNameMaxLengthLong = 25; // [Ace] Timmy Turner, my name is DougsDaleDimmaDaleDimmaDimmsDomeDoDiDomeDimmsDimmaDimmaDome, Owner of the DougDimmsDimmaDaleDimmsDomeDoDiDimmaDimmsDaleDimmaDimmsDaleDimmaDome.
 	const KillsPerMedal = 3;
 	const MedalsPerUpgrade = 3; // [Ace] This must be 2 or above!
 	const MedalsPerLine = 11;
@@ -72,9 +80,7 @@ extend class WT_MainHandler
 		mMainFont = HUDFont.Create(FontName);
 		int LiteHUD = LiteHudType.GetInt();
 
-		// ------------------------------------------------
-		// LITE HUD
-		// ------------------------------------------------
+		// ---------- LITE HUD ----------
 
 		if (LiteHUD > 0 && !DrawUi && !AutomapActive && GameState == GS_LEVEL)
 		{
@@ -87,26 +93,27 @@ extend class WT_MainHandler
 				DrawLiteHudPlayerStats(StatusBar, 2, 2 + GlobalOffsetY, Alpha);
 			}
 
-			// [Ace] Weapon Stats or All.
-			GetAvailableWeapons(AvailableWeapons);
-			AutoSelectCurrentWeapon();
-			class<Weapon> WeaponListSel = GetSelectedWeaponInList();
-
-			if (LiteHUD >= 2 && WeaponListSel && WeaponListSel == ReadyWeapon)
+			// [Ace] Weapon Stats or All. Don't update available weapons if the weapon stats aren't visible. It'd be a waste of VM time.
+			if (LiteHUD >= 2)
 			{
-				DrawLiteHudWeaponStats(StatusBar, WeaponListSel, 2, 100 + (LiteHUD == 2 ? -98 : 0) + GlobalOffsetY, Alpha);
+				GetAvailableWeapons(AvailableWeapons);
+				AutoSelectCurrentWeapon();
+				class<Weapon> WeaponListSel = GetSelectedWeaponInList();
+
+				if (WeaponListSel && WeaponListSel == ReadyWeapon)
+				{
+					DrawLiteHudWeaponStats(StatusBar, WeaponListSel, 2, 100 + (LiteHUD == 2 ? -98 : 0) + GlobalOffsetY, Alpha);
+				}
 			}
 		}
 
-		// ------------------------------------------------
-		// SCORECARD
-		// ------------------------------------------------
-
+		// ---------- SCORECARD ----------
 		else if (DrawUi)
 		{
 			switch (SelectedPage)
 			{
-				case 0: DrawMainScorecard(StatusBar); break;
+				case 0: DrawScorecardMain(StatusBar); break;
+				case 1: DrawScorecardMonsters(StatusBar); break;
 			}
 		}
 		else
@@ -114,6 +121,10 @@ extend class WT_MainHandler
 			AutoSelected = false;
 		}
 	}
+
+	// --------------------------------------------------------------
+	// LITE HUD - PLAYER
+	// --------------------------------------------------------------
 
 	private ui void DrawLiteHudPlayerStats(BaseStatusBar sbar, int x, int y, double alpha)
 	{
@@ -160,6 +171,10 @@ extend class WT_MainHandler
 		sbar.DrawImage("RANK"..(PlayerRank + 1), (x + 2, y + 56), DI_TL, alpha);
 	}
 
+	// --------------------------------------------------------------
+	// LITE HUD - WEAPON
+	// --------------------------------------------------------------
+
 	private ui void DrawLiteHudWeaponStats(BaseStatusBar sbar, class<Weapon> wpn, int x, int y, double alpha)
 	{
 		sbar.BeginHUD();
@@ -200,7 +215,11 @@ extend class WT_MainHandler
 		DrawWeaponMedals(WeaponKills, x, y + 60, DI_TL, alpha);
 	}
 
-	private ui void DrawMainScorecard(BaseStatusBar sbar)
+	// --------------------------------------------------------------
+	// SCORECARD - MAIN
+	// --------------------------------------------------------------
+
+	private ui void DrawScorecardMain(BaseStatusBar sbar)
 	{
 		sbar.BeginHUD();
 
@@ -341,7 +360,7 @@ extend class WT_MainHandler
 			GetMonstersForWeapon(WeaponListSel.GetClassName(), AvailableMonsters);
 
 			// [Ace] Then display them.
-			sbar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..GetMonsterPages(), (160, 12), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
+			sbar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..GetMonsterPages(MonsterListEntries), (160, 12), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
 
 			int StartIndex = MonsterListEntries * SelMonsterPage;
 			int mRow = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
@@ -349,6 +368,7 @@ extend class WT_MainHandler
 			{
 				let Monster = GetDefaultByType(AvailableMonsters[i]);
 
+				// Name.
 				sbar.DrawString(mMainFont, GetTruncatedText(Monster.GetTag(), MonsterNameMaxLength), (-7, 36 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(DefcolMonsterInfo));
 
 				// Kills.
@@ -359,6 +379,52 @@ extend class WT_MainHandler
 			}
 		}
 	}
+
+	// --------------------------------------------------------------
+	// SCORECARD - MONSTERS
+	// --------------------------------------------------------------
+
+	private ui void DrawScorecardMonsters(BaseStatusBar sbar)
+	{
+		sbar.BeginHUD();
+
+		int DI_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_ITEM_CENTER;
+		int DI_TEXT_LEFT = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
+		int DI_TEXT_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
+		int DI_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
+
+		// --------------- MISCELLANEOUS ---------------
+
+		GetAvailableWeapons(AvailableWeapons);
+
+		// --------------- GRAPHIC ---------------
+		
+		sbar.DrawImage(BlackDisplay.GetBool() ? "WTSTATMB" : "WTSTATMN", (0, 0.5), DI_CENTER);
+
+		// --------------- MONSTER LIST & STATS ---------------
+
+		// [Ace] Filter the monsters and get all of them for all filtered weapons.
+		GetAllMonsters(AvailableWeapons, AvailableMonsters);
+
+		// [Ace] Then display them.
+		sbar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..GetMonsterPages(MonsterListEntriesLong), (70, -132), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
+
+		int StartIndex = MonsterListEntriesLong * SelMonsterPage;
+		int mRow = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
+		for (int i = StartIndex; i < AvailableMonsters.Size() && mRow < MonsterListEntriesLong; ++i)
+		{
+			let Monster = GetDefaultByType(AvailableMonsters[i]);
+
+			// Name.
+			sbar.DrawString(mMainFont, GetTruncatedText(Monster.GetTag(), MonsterNameMaxLengthLong), (-133, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(DefcolMonsterInfo));
+
+			// Kills.
+			sbar.DrawString(mMainFont, sbar.FormatNumber(GetTotalKillsForMonster(AvailableWeapons, Monster.GetClassName()), 1, 5), (134, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
+
+			mRow++;
+		}
+	}
+
 
 	// --------------------------------------------------
 	// SHARED
@@ -425,7 +491,7 @@ extend class WT_MainHandler
 		arr.Clear();
 		int WFilter = IWADWeaponFilter.GetInt();
 		
-		let it = DictionaryIterator.Create(MonsterKills);
+		let it = DictionaryIterator.Create(WeaponStats);
 		while (it.Next())
 		{
 			class<Weapon> wpn;
@@ -464,7 +530,7 @@ extend class WT_MainHandler
 		arr.Clear();
 		int MFilter = IWADMonsterFilter.GetInt();
 
-		let it = DictionaryIterator.Create(Dictionary.FromString(MonsterKills.At(weapon)));
+		let it = DictionaryIterator.Create(Dictionary.FromString(WeaponStats.At(weapon)));
 		while (it.Next())
 		{
 			class<Actor> mon;
@@ -479,18 +545,49 @@ extend class WT_MainHandler
 			}
 		}
 
-		// [Ace] Sort the darn thing while it's at it.
-		for (int i = 0; i < arr.Size() - 1; ++i)
+		SortMonsterArray(arr);
+	}
+
+	private ui void GetAllMonsters(Array<class<Weapon> > wArr, out Array<class<Actor> > mArr)
+	{
+		mArr.Clear();
+		int MFilter = IWADMonsterFilter.GetInt();
+
+		for (int i = 0; i < wArr.Size(); ++i)
 		{
-			for (int j = i + 1; j < arr.Size(); ++j)
+			let it = DictionaryIterator.Create(Dictionary.FromString(WeaponStats.At(wArr[i].GetClassName())));
+			while (it.Next())
 			{
-				let CurrMonster = GetDefaultByType(arr[i]);
-				let NextMonster = GetDefaultByType(arr[j]);
+				class<Actor> mon;
+				mon = it.Key();
+				if (mon && mArr.Find(mon) == mArr.Size())
+				{
+					int IwadType = GetIwadType(Search_Monsters, mon);
+					if (MFilter == Filter_All || MFilter == IWadType || IwadType == Filter_None)
+					{
+						mArr.Push(mon);
+					}
+				}
+			}
+		}
+
+		SortMonsterArray(mArr);
+	}
+
+	private ui void SortMonsterArray(out Array<class<Actor> > mArr)
+	{
+		// [Ace] Yes. Bubble sort again.
+		for (int i = 0; i < mArr.Size() - 1; ++i)
+		{
+			for (int j = i + 1; j < mArr.Size(); ++j)
+			{
+				let CurrMonster = GetDefaultByType(mArr[i]);
+				let NextMonster = GetDefaultByType(mArr[j]);
 				if (CurrMonster.Health >= NextMonster.Health)
 				{
-					let Swap = arr[i];
-					arr[i] = arr[j];
-					arr[j] = Swap;
+					let Swap = mArr[i];
+					mArr[i] = mArr[j];
+					mArr[j] = Swap;
 				}
 			}
 		}
@@ -573,7 +670,7 @@ extend class WT_MainHandler
 		}
 		else
 		{
-			string Kills = MonsterKills.At(weapon);
+			string Kills = WeaponStats.At(weapon);
 			if (Kills != "")
 			{
 				let it = DictionaryIterator.Create(Dictionary.FromString(Kills)); 
@@ -590,7 +687,7 @@ extend class WT_MainHandler
 	private ui int GetTotalKillsForAllWeapons() const
 	{
 		int TotalKills = 0;
-		let it = DictionaryIterator.Create(MonsterKills);
+		let it = DictionaryIterator.Create(WeaponStats);
 		{
 			while (it.Next())
 			{
@@ -602,13 +699,26 @@ extend class WT_MainHandler
 
 	private ui int GetKillsForMonster(string weapon, string monster) const
 	{
-		let Monsters = Dictionary.FromString(MonsterKills.At(weapon));
+		let Monsters = Dictionary.FromString(WeaponStats.At(weapon));
 		return int(Monsters.At(monster).ToDouble());
 	}
 
-	private ui int GetMonsterPages() const
+	private ui int GetTotalKillsForMonster(Array<class<Weapon> > wArr, string monster) const
 	{
-		return max(1, int(ceil(AvailableMonsters.Size() / double(MonsterListEntries))));
+		int TotalKills = 0;
+
+		for (int i = 0; i < wArr.Size(); ++i)
+		{
+			Dictionary MonstersForWeapon = Dictionary.FromString(WeaponStats.At(wArr[i].GetClassName()));
+			TotalKills += int(MonstersForWeapon.At(monster).ToDouble());
+		}
+
+		return TotalKills;
+	}
+
+	private ui int GetMonsterPages(int maxEntries) const
+	{
+		return max(1, int(ceil(AvailableMonsters.Size() / double(maxEntries))));
 	}
 
 	private ui string GetColorForElement(WT_HudElementType element)
@@ -658,13 +768,28 @@ extend class WT_MainHandler
 			{
 				switch (e.KeyChar)
 				{
+					// [Ace] Cycle pages left.
+					case UiEvent.Key_Left:
+						--SelectedPage %= Page_Monsters + 1;
+						SelectedPage = abs(SelectedPage);
+						SelMonsterPage = 0;
+						break;
+
+					// [Ace] Cycle pages right.
+					case UiEvent.Key_Right:
+						++SelectedPage %= Page_Monsters + 1;
+						SelMonsterPage = 0;
+						break;
+
 					// [Ace] Move weapon selection up.
 					case UiEvent.Key_Up:
+						if (SelectedPage != Page_Main) break;
 						WeaponListSelIndex = max(0, WeaponListSelIndex - 1);
 						break;
 
 					// [Ace] Move weapon selection down.
 					case UiEvent.Key_Down:
+						if (SelectedPage != Page_Main) break;
 						WeaponListSelIndex = min(WeaponListSelIndex + 1, AvailableWeapons.Size() - 1);
 						break;
 
@@ -675,7 +800,7 @@ extend class WT_MainHandler
 
 					// [Ace] Next monster page. No cap on this because it'd be a pain to get how many monster pages the current weapon has.
 					case UiEvent.Key_PgDn:
-						SelMonsterPage = min(SelMonsterPage + 1, GetMonsterPages() - 1);
+						SelMonsterPage = min(SelMonsterPage + 1, GetMonsterPages(MonsterListEntries) - 1);
 						break;
 
 					// [Ace] Exit menu.
@@ -686,6 +811,7 @@ extend class WT_MainHandler
 
 					// [Ace] Enter search mode. Chars: Space
 					case 32:
+						if (SelectedPage != Page_Main) break;
 						SearchFilter = "";
 						InSearchMode = true;
 						break;
