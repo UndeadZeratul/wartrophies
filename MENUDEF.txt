@@ -2,40 +2,25 @@ OptionMenu "WarTrophies"
 {
 	Title "War Trophies Options"
 	
-	StaticText "----- Scorecard -----", "Teal"
-	Submenu "Scorecard Keys", "ScorecardKeysMenu"
-	StaticText ""
-	Control "Toggle Scorecard", "netevent wt_toggleui"
-	Option "Use Darker Displays", "wt_panel_blackdisplay", "YesNo"
-	StaticText ""
-	StaticText "----- Lite HUD -----", "Teal"
-	Option "Lite HUD", "wt_showlite", "LiteHudType"
-	Slider "Offset X", "wt_lite_offset_x", 0, 30, 1, 0
-	Slider "Offset Y", "wt_lite_offset_y", 0, 30, 1, 0
-	Slider "Alpha", "wt_lite_alpha", 0.1, 1.0, 0.05, 2
-	StaticText ""
-	Option "Use Folders", "wt_lite_usefolders", "YesNo"
-	StaticText "Merge multiple weapons under a common namespace into a single entity.", "White"
-	StaticText "This only works for the Lite HUD.", "White"
-	StaticText ""
-	Option "Color - Labels", "wt_lite_color_labels", "LiteHUDColor"
-	Option "Color - Total Kills", "wt_lite_color_totalkills", "LiteHUDColor"
-	Option "Color - Genocide Rank", "wt_lite_color_genociderank", "LiteHUDColor"
-	Option "Color - Player Rank", "wt_lite_color_playerrank", "LiteHUDColor"
-	Option "Color - Weapon Name", "wt_lite_color_weaponname", "LiteHUDColor"
-	Option "Color - Weapon Rank", "wt_lite_color_weaponrank", "LiteHUDColor"
-	Option "Color - Weapon Kills", "wt_lite_color_weaponkills", "LiteHUDColor"
+	SubMenu "Scorecard", "ScorecardMenu"
+	Submenu "Lite HUD", "LiteHudMenu"
+	SubMenu "Filters", "FiltersMenu"
 	StaticText ""
 	StaticText "----- Miscellaneous -----", "Teal"
 	Option "Kill Sound Type", "wt_killsound", "KillSoundType"
 	StaticText ""
-	Option "Filter Weapons To IWAD", "wt_filter_iwad_weapons", "IWADFilterMode"
-	Option "Filter Monsters To IWAD", "wt_filter_iwad_monsters", "IWADFilterMode"
-	StaticText "Use the filters to only show classes from a specific IWAD.", "White"
-	StaticText "Mod classes will always appear, regardless of this setting.", "White"
-	StaticText ""
 	SafeCommand "Reset all statistics", "netevent wt_resettally"
 	SafeCommand "Reset stats for equipped weapon", "netevent wt_resetweapon"
+}
+
+OptionMenu "ScorecardMenu"
+{
+	Title "Scorecard Options"
+
+	Submenu "Scorecard Keys", "ScorecardKeysMenu"
+	StaticText ""
+	Control "Toggle Scorecard", "netevent wt_toggleui"
+	Option "Use Darker Displays", "wt_panel_blackdisplay", "YesNo"
 }
 
 OptionMenu "ScorecardKeysMenu"
@@ -50,11 +35,62 @@ OptionMenu "ScorecardKeysMenu"
 	StaticText "Enter (Search mode) - Apply search filter.", "White"
 	StaticText "Escape (Search mode) - Cancel search.", "White"
 	StaticText "Backspace - Clear search.", "White"
-	StaticText "P - Gain prestige if at max player rank and reset XP.", "White"
+	StaticText "P - Gain prestige if at max player rank, and reset XP.", "White"
 	StaticText ""
 	StaticText "F12 - Screenshot.", "White"
 	StaticText "NOTE: In order for F12 to work, you must have enabled the following option:", "Fire"
 	Option "$MISCMNU_ENABLESCRIPTSCREENSHOTS", "enablescriptscreenshot", "OnOff"
+}
+
+OptionMenu "LiteHudMenu"
+{
+	Title "Lite HUD Options"
+
+	Option "Lite HUD", "wt_showlite", "LiteHudType"
+	Slider "Offset X", "wt_lite_offset_x", 0, 30, 1, 0
+	Slider "Offset Y", "wt_lite_offset_y", 0, 30, 1, 0
+	Slider "Alpha", "wt_lite_alpha", 0.1, 1.0, 0.05, 2
+	StaticText ""
+	Submenu "Folders", "LiteHudFolders"
+	Submenu "Colors", "LiteHudColors"
+}
+
+OptionMenu "LiteHudFolders"
+{
+	Title "Lite HUD Folders"
+
+	Option "Use Folders", "wt_lite_usefolders", "YesNo"
+	StaticText "Merge multiple weapons under a common namespace into a single entity.", "White"
+	StaticText "This only works for the Lite HUD.", "White"
+	StaticText ""
+	StaticText "----- SUPPORTED MODS -----", "Teal"
+	StaticText "Bullet-Eye", "White"
+	StaticText "Final Doomer", "White"
+}
+
+OptionMenu "LiteHudColors"
+{
+	Title "Lite HUD Colors"
+
+	Option "Labels", "wt_lite_color_labels", "LiteHUDColor"
+	Option "Total Kills", "wt_lite_color_totalkills", "LiteHUDColor"
+	Option "Genocide Rank", "wt_lite_color_genociderank", "LiteHUDColor"
+	Option "Player Rank", "wt_lite_color_playerrank", "LiteHUDColor"
+	Option "Weapon Name", "wt_lite_color_weaponname", "LiteHUDColor"
+	Option "Weapon Rank", "wt_lite_color_weaponrank", "LiteHUDColor"
+	Option "Weapon Kills", "wt_lite_color_weaponkills", "LiteHUDColor"
+}
+
+OptionMenu "FiltersMenu"
+{
+	Title "Filter Options"
+
+	Option "Filter Weapons To IWAD", "wt_filter_iwad_weapons", "IWADFilterMode"
+	Option "Filter Monsters To IWAD", "wt_filter_iwad_monsters", "IWADFilterMode"
+	StaticText "Use the filters to only show classes from a specific IWAD.", "White"
+	StaticText "Mod classes will always appear, regardless of this setting.", "White"
+	StaticText "Recommended to set weapons to 'None' if playing with weapon mods.", "White"
+	StaticText "Same logic applies to monsters as well.", "White"
 }
 
 AddOptionMenu "OptionsMenu"
