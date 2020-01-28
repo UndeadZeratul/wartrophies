@@ -10,7 +10,8 @@ OptionMenu "WarTrophies"
 	StaticText ""
 	StaticText "----- Lite HUD -----", "Teal"
 	Option "Lite HUD", "wt_showlite", "LiteHudType"
-	Slider "Offset Y", "wt_lite_offset_y", 0, 20, 1, 0
+	Slider "Offset X", "wt_lite_offset_x", 0, 30, 1, 0
+	Slider "Offset Y", "wt_lite_offset_y", 0, 30, 1, 0
 	Slider "Alpha", "wt_lite_alpha", 0.1, 1.0, 0.05, 2
 	StaticText ""
 	Option "Use Folders", "wt_lite_usefolders", "YesNo"

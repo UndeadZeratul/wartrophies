@@ -23,6 +23,7 @@ extend class WT_MainHandler
 
 	private transient CVar BlackDisplay;
 	private transient CVar LiteHudType;
+	private transient CVar LiteHudOffsetX;
 	private transient CVar LiteHudOffsetY;
 	private transient CVar LiteHudColors[7];
 	private transient CVar LiteHudAlpha;
@@ -85,12 +86,13 @@ extend class WT_MainHandler
 		if (LiteHUD > 0 && !DrawUi && !AutomapActive && GameState == GS_LEVEL)
 		{
 			double Alpha = LiteHudAlpha.GetFloat();
+			int GlobalOffsetX = 10 * LiteHudOffsetX.GetInt();
 			int GlobalOffsetY = 10 * LiteHudOffsetY.GetInt();
 
 			// [Ace] Check: Not "Weapons Stats".
 			if (LiteHud != 2)
 			{
-				DrawLiteHudPlayerStats(StatusBar, 2, 2 + GlobalOffsetY, Alpha);
+				DrawLiteHudPlayerStats(StatusBar, 2 + GlobalOffsetX, 2 + GlobalOffsetY, Alpha);
 			}
 
 			// [Ace] Weapon Stats or All. Don't update available weapons if the weapon stats aren't visible. It'd be a waste of VM time.
