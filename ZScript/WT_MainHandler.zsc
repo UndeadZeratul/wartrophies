@@ -84,8 +84,8 @@ class WT_MainHandler : EventHandler
 			int SkillNumber = min(4, (G_SkillPropertyInt(SKILLP_ACSReturn) + 1));
 			int ExperienceGained = int(min(12000, e.Thing.default.Health) * 0.05 * SkillNumber * FastMonstersMult);
 
-			// [Ace] Killer is a projectile.
-			if (e.Inflictor && e.Inflictor.bMISSILE)
+			// [Ace] Killer is a projectile that's also not a puff.
+			if (e.Inflictor && e.Inflictor.bMISSILE && !e.Inflictor.bALWAYSPUFF && !e.Inflictor.bPUFFONACTORS)
 			{
 				string WeaponUsed = ProjectileBinds.At(e.Inflictor.GetClassName());
 				if (WeaponUsed != "")
@@ -119,7 +119,8 @@ class WT_MainHandler : EventHandler
 
 	override void WorldThingSpawned(WorldEvent e)
 	{
-		if (e.Thing && e.Thing.bMISSILE && e.Thing.target && e.Thing.target is "PlayerPawn")
+		// [Ace] Some mods' puffs have "ISMISSILE". Don't consider them a projectile if they also have one of the puff flags.
+		if (e.Thing && e.Thing.bMISSILE && !e.Thing.bALWAYSPUFF && !e.Thing.bPUFFONACTORS && e.Thing.target && e.Thing.target is "PlayerPawn")
 		{
 			let plr = PlayerPawn(e.Thing.target);
 			if (plr && plr.player && plr.player.ReadyWeapon)
