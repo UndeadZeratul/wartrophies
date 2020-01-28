@@ -785,12 +785,14 @@ extend class WT_MainHandler
 					case UiEvent.Key_Up:
 						if (SelectedPage != Page_Main) break;
 						WeaponListSelIndex = max(0, WeaponListSelIndex - 1);
+						SelMonsterPage = 0;
 						break;
 
 					// [Ace] Move weapon selection down.
 					case UiEvent.Key_Down:
 						if (SelectedPage != Page_Main) break;
 						WeaponListSelIndex = min(WeaponListSelIndex + 1, AvailableWeapons.Size() - 1);
+						SelMonsterPage = 0;
 						break;
 
 					// [Ace] Previous monster page.
