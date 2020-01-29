@@ -818,7 +818,7 @@ extend class WT_MainHandler
 
 					// [Ace] Next monster page. No cap on this because it'd be a pain to get how many monster pages the current weapon has.
 					case UiEvent.Key_PgDn:
-						SelMonsterPage = min(SelMonsterPage + 1, GetMonsterPages(MonsterListEntries) - 1);
+						SelMonsterPage = min(SelMonsterPage + 1, GetMonsterPages(SelectedPage == Page_Monsters ? MonsterListEntriesLong : MonsterListEntries) - 1);
 						break;
 
 					// [Ace] Exit menu.
