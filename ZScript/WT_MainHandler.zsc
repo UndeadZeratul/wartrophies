@@ -101,7 +101,14 @@ class WT_MainHandler : EventHandler
 			else
 			{
 				let plr = PlayerPawn(e.DamageSource);
-				if (plr && plr.player && plr.player.ReadyWeapon)
+				if (plr && e.DamageType == 'Telefrag')
+				{
+					UpdateTallyFor("WT_Telefrag", e.Thing.GetClassName());
+
+					Experience += ExperienceGained;
+					PlayKillSound();
+				}
+				else if (plr && plr.player && plr.player.ReadyWeapon)
 				{
 					string WeaponUsed = plr.player.ReadyWeapon.GetClassName();
 					UpdateTallyFor(WeaponUsed, e.Thing.GetClassName());

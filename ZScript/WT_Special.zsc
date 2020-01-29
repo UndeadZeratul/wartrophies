@@ -1,0 +1,26 @@
+class WT_Telefrag : Weapon
+{
+	Default
+	{
+		Tag "Telefragging";
+		Inventory.Icon "TFOGB0";
+		+WEAPON.CHEATNOTWEAPON
+	}
+
+	States
+	{
+		// [Ace] Don't even try equipping it.
+		Ready:
+			TNT1 A 1;
+			Stop;
+		Select:
+			TNT1 A 1;
+			Stop;
+		Deselect:
+			TNT1 A 1;
+			Stop;
+		Fire:
+			TNT1 A 1;
+			Stop;
+	}
+}
