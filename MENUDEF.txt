@@ -50,7 +50,7 @@ OptionMenu "LiteHudMenu"
 	Option "Orientation", "wt_lite_orientation", "LiteHudOrientation"
 	Slider "Offset X", "wt_lite_offset_x", 0, 30, 1, 0
 	Slider "Offset Y", "wt_lite_offset_y", 0, 30, 1, 0
-	Slider "Alpha", "wt_lite_alpha", 0.1, 1.0, 0.05, 2
+	Slider "Opacity", "wt_lite_alpha", 0.1, 1.0, 0.05, 2
 	StaticText ""
 	Submenu "Folders", "LiteHudFolders"
 	Submenu "Colors", "LiteHudColors"
