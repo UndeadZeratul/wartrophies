@@ -17,6 +17,8 @@ class WT_MainHandler : EventHandler
 	private transient CVar WeaponStorage;
 	private transient CVar ExperienceStorage;
 	private transient CVar PrestigeStorage;
+
+	private transient CVar EnableTracking;
 	private transient CVar KillSoundType;
 
 	private transient int Experience;
@@ -78,7 +80,7 @@ class WT_MainHandler : EventHandler
 	// 30 bucks I'm not paying up if I lose.
 	override void WorldThingDamaged(WorldEvent e)
 	{
-		if (e.Thing && e.Thing.bISMONSTER && e.DamageSource && e.DamageSource is "PlayerPawn" && e.Thing.Health <= 0)
+		if (EnableTracking.GetBool() && e.Thing && e.Thing.bISMONSTER && e.DamageSource && e.DamageSource is "PlayerPawn" && e.Thing.Health <= 0)
 		{
 			double FastMonstersMult = sv_fastmonsters || G_SkillPropertyInt(SKILLP_FastMonsters) ? 2.5 : 1;
 			int SkillNumber = min(4, (G_SkillPropertyInt(SKILLP_ACSReturn) + 1));
@@ -126,8 +128,8 @@ class WT_MainHandler : EventHandler
 
 	override void WorldThingSpawned(WorldEvent e)
 	{
-		// [Ace] Some mods' puffs have "ISMISSILE". Don't consider them a projectile if they also have one of the puff flags.
-		if (e.Thing && e.Thing.bMISSILE && !e.Thing.bALWAYSPUFF && !e.Thing.bPUFFONACTORS && e.Thing.target && e.Thing.target is "PlayerPawn")
+		// [Ace] Some mods' puffs have "+MISSILE". Don't consider them a projectile if they also have one of the puff flags.
+		if (EnableTracking.GetBool() && e.Thing && e.Thing.bMISSILE && !e.Thing.bALWAYSPUFF && !e.Thing.bPUFFONACTORS && e.Thing.target && e.Thing.target is "PlayerPawn")
 		{
 			let plr = PlayerPawn(e.Thing.target);
 			if (plr && plr.player && plr.player.ReadyWeapon)
@@ -147,6 +149,8 @@ class WT_MainHandler : EventHandler
 		WeaponStorage = CVar.FindCVar("wt_stats_weapons_kills");
 		ExperienceStorage = CVar.FindCVar('wt_stats_experience');
 		PrestigeStorage = CVar.FindCVar('wt_stats_prestige');
+
+		EnableTracking = CVar.FindCVar('wt_enabletracking');
 
 		BlackDisplay = CVar.FindCVar('wt_panel_blackdisplay');
 		IWADWeaponFilter = CVar.FindCVar('wt_filter_iwad_weapons');
