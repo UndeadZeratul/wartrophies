@@ -212,13 +212,14 @@ class WT_MainHandler : EventHandler
 		}
 
 		// [Ace] Update weapon.
-		if (level.time % 5 == 0)
+		if (level.time % 2 == 0)
 		{
 			// [Ace] This will desync. You have been warned. I have been warned.
 			let plr = PlayerPawn(players[consoleplayer].mo);
 			if (plr && plr.player && plr.player.ReadyWeapon)
 			{
-				ReadyWeapon = plr.player.ReadyWeapon.GetClass();
+				// [Ace] If the weapon is a powered up version, use the main one instead.
+				ReadyWeapon = plr.player.ReadyWeapon.bPOWERED_UP ? plr.Player.ReadyWeapon.SisterWeaponType : plr.player.ReadyWeapon.GetClass();
 			}
 		}
 	}
