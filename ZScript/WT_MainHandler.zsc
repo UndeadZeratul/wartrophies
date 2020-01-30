@@ -110,7 +110,7 @@ class WT_MainHandler : EventHandler
 					Experience += ExperienceGained;
 					PlayKillSound();
 				}
-				else if (plr && ReadyWeapon && !GetDefaultByType(ReadyWeapon).bCHEATNOTWEAPON)
+				else if (plr && ReadyWeapon)
 				{
 					string WeaponUsed = ReadyWeapon.GetClassName();
 					UpdateTallyFor(WeaponUsed, e.Thing.GetClassName());
@@ -132,7 +132,7 @@ class WT_MainHandler : EventHandler
 		if (EnableTracking.GetBool() && e.Thing && e.Thing.bMISSILE && !e.Thing.bALWAYSPUFF && !e.Thing.bPUFFONACTORS && e.Thing.target && e.Thing.target is "PlayerPawn")
 		{
 			let plr = PlayerPawn(e.Thing.target);
-			if (plr && ReadyWeapon && !GetDefaultByType(ReadyWeapon).bCHEATNOTWEAPON)
+			if (plr && ReadyWeapon)
 			{
 				ProjectileBinds.Insert(e.Thing.GetClassName(), ReadyWeapon.GetClassName());
 			}
