@@ -1,14 +1,29 @@
 extend class WT_MainHandler
 {
-	enum WT_HudElementType
+	enum WT_LiteHudColor
 	{
-		Elem_Labels,
-		Elem_TotalKills,
-		Elem_GenocideRank,
-		Elem_PlayerRank,
-		Elem_WeaponName,
-		Elem_WeaponRank,
-		Elem_WeaponKills
+		Color_Labels,
+		Color_TotalKills,
+		Color_GenocideRank,
+		Color_PlayerRank,
+		Color_WeaponName,
+		Color_WeaponRank,
+		Color_WeaponKills
+	}
+
+	// [Ace] Currently used for visibility toggles.
+	enum WT_LiteHudVisibilityFlags
+	{
+		VF_TotalKills		= 1,
+		VF_GenocideRank		= 1 << 1,
+		VF_GenocideMedal	= 1 << 2,
+		VF_PlayerRank		= 1 << 3,
+		VF_PlayerExperience	= 1 << 4,
+		VF_PlayerMedal		= 1 << 5,
+		VF_WeaponName		= 1 << 6,
+		VF_WeaponRank		= 1 << 7,
+		VF_WeaponKills		= 1 << 8,
+		VF_WeaponMedals		= 1 << 9
 	}
 
 	enum WT_ScorecardPages
@@ -29,6 +44,7 @@ extend class WT_MainHandler
 	private transient CVar LiteHudOffsetY;
 	private transient CVar LiteHudColors[7];
 	private transient CVar LiteHudAlpha;
+	private transient CVar LiteHudVisibilityFlags;
 
 	const DefcolMiscLabel = "WT_FadedBrown";
 	const DefcolSelectedWeapon = "WT_OrangeRed";
@@ -92,6 +108,7 @@ extend class WT_MainHandler
 			int OriginalWidth = StatusBar.HorizontalResolution;
 			int OriginalHeight = StatusBar.VerticalResolution;
 			double Scale = LiteHudScale.GetFloat();
+			int VisiblityFlags = GetVisibilityFlags();
 
 			// [Ace] Dividing because smaller numbers means bigger HUD.
 			if (Scale > 0 && Scale != 1.0)
@@ -102,7 +119,7 @@ extend class WT_MainHandler
 			// [Ace] Check: Not "Weapons Stats".
 			if (LiteHud != 2)
 			{
-				DrawLiteHudPlayerStats(StatusBar, 2 + LiteHudOffsetX.GetInt(), 2 + LiteHudOffsetY.GetInt(), Alpha);
+				DrawLiteHudPlayerStats(StatusBar, 2 + LiteHudOffsetX.GetInt(), 2 + LiteHudOffsetY.GetInt(), VisiblityFlags, Alpha);
 			}
 
 			// [Ace] Check: Weapon Stats or All.
@@ -128,7 +145,7 @@ extend class WT_MainHandler
 						}
 					}
 
-					DrawLiteHudWeaponStats(StatusBar, WeaponListSel, PosX + LiteHudOffsetX.GetInt(), PosY + LiteHudOffsetY.GetInt(), Alpha);
+					DrawLiteHudWeaponStats(StatusBar, WeaponListSel, PosX + LiteHudOffsetX.GetInt(), PosY + LiteHudOffsetY.GetInt(), VisiblityFlags, Alpha);
 				}
 			}
 
@@ -154,7 +171,7 @@ extend class WT_MainHandler
 	// LITE HUD - PLAYER
 	// --------------------------------------------------------------
 
-	private ui void DrawLiteHudPlayerStats(BaseStatusBar sbar, int x, int y, double alpha)
+	private ui void DrawLiteHudPlayerStats(BaseStatusBar sbar, int x, int y, int visFlags, double alpha)
 	{
 		sbar.BeginHUD();
 
@@ -164,46 +181,70 @@ extend class WT_MainHandler
 		int DI_TL_CENTER_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
 
 		int TotalKills = GetTotalKillsForAllWeapons();
+		int NextOffsetY = y;
 
 		// Total kills.
-		sbar.DrawString(mMainFont, "Total:", (x, y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_Labels)), alpha);
-		sbar.DrawString(mMainFont, sbar.FormatNumber(TotalKills, 1, 10), (x + 45, y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_TotalKills)), alpha);
+		if (visFlags & VF_TotalKills)
+		{
+			sbar.DrawString(mMainFont, "Total:", (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_Labels)), alpha);
+			sbar.DrawString(mMainFont, sbar.FormatNumber(TotalKills, 1, 10), (x + 45, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_TotalKills)), alpha);
+			NextOffsetY += 10;
+		}
 
 		// Genocide rank.
 		int GenocideRank; string GenocideRankString;
 		[GenocideRank, GenocideRankString] = GetGenocideRank(TotalKills);
-		sbar.DrawString(mMainFont, GenocideRankString, (x, y + 10), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_GenocideRank)), alpha);
-
-		// Genocide medal.
-		sbar.DrawImage("GRANK"..GenocideRank, (x + 44, y + 56), DI_TL, alpha);
+		if (visFlags & VF_GenocideRank)
+		{
+			sbar.DrawString(mMainFont, GenocideRankString, (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_GenocideRank)), alpha);
+			NextOffsetY += 14;
+		}
 
 		// Player rank & prestige.
 		int PlayerRank; string PlayerRankString;
 		[PlayerRank, PlayerRankString] = GetPlayerRank();
-		if (Prestige > 0)
+		if (visFlags & VF_PlayerRank)
 		{
-			sbar.DrawImage("PRSTIGE"..Prestige, (x, y + 19), DI_TL, alpha);
+			if (Prestige > 0)
+			{
+				sbar.DrawImage("PRSTIGE"..Prestige, (x, NextOffsetY - 5), DI_TL, alpha);
+			}
+			sbar.DrawString(mMainFont, PlayerRankString, (Prestige > 0 ? x + 12 : x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_PlayerRank)), alpha);
+			NextOffsetY += 10;
 		}
-		sbar.DrawString(mMainFont, PlayerRankString, (Prestige > 0 ? x + 12 : x, y + 24), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_PlayerRank)), alpha);
 
 		// Player experience.
-		sbar.DrawString(mMainFont, "XP:", (x, y + 34), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_Labels)), alpha);
-		sbar.DrawString(mMainFont, sbar.FormatNumber(Experience, 1, 7), (x + 22, y + 34), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_PlayerRank)), alpha);
+		if (visFlags & VF_PlayerExperience)
+		{
+			sbar.DrawString(mMainFont, "XP:", (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_Labels)), alpha);
+			sbar.DrawString(mMainFont, sbar.FormatNumber(Experience, 1, 7), (x + 22, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_PlayerRank)), alpha);
+			NextOffsetY += 10;
 
-		// Player experience for next level.
-		string NextPlayerRankExp = PlayerRank < XPReq.Size() ? sbar.FormatNumber(XPReq[PlayerRank], 1, 7) : "-";
-		sbar.DrawString(mMainFont, "NX:", (x, y + 44), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_Labels)), alpha);
-		sbar.DrawString(mMainFont, NextPlayerRankExp, (x + 22, y + 44), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_PlayerRank)), alpha);
+			// Player experience for next level.
+			string NextPlayerRankExp = PlayerRank < XPReq.Size() ? sbar.FormatNumber(XPReq[PlayerRank], 1, 7) : "-";
+			sbar.DrawString(mMainFont, "NX:", (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_Labels)), alpha);
+			sbar.DrawString(mMainFont, NextPlayerRankExp, (x + 22, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_PlayerRank)), alpha);
+			NextOffsetY += 14;
+		}
+
+		// Genocide medal.
+		if (visFlags & VF_GenocideMedal)
+		{
+			sbar.DrawImage("GRANK"..GenocideRank, (x + 44, NextOffsetY), DI_TL, alpha);
+		}
 
 		// Player medal.
-		sbar.DrawImage("RANK"..(PlayerRank + 1), (x + 2, y + 56), DI_TL, alpha);
+		if (visFlags & VF_GenocideMedal)
+		{
+			sbar.DrawImage("RANK"..(PlayerRank + 1), (x + 2, NextOffsetY), DI_TL, alpha);
+		}
 	}
 
 	// --------------------------------------------------------------
 	// LITE HUD - WEAPON
 	// --------------------------------------------------------------
 
-	private ui void DrawLiteHudWeaponStats(BaseStatusBar sbar, class<Weapon> wpn, int x, int y, double alpha)
+	private ui void DrawLiteHudWeaponStats(BaseStatusBar sbar, class<Weapon> wpn, int x, int y, int visFlags, double alpha)
 	{
 		sbar.BeginHUD();
 
@@ -214,33 +255,49 @@ extend class WT_MainHandler
 
 		bool UseFolderView = LiteFolderView.GetBool();
 		int WeaponKills = wpn ? GetKillsForWeapon(GetDefaultByType(wpn).GetClassName(), UseFolderView) : 0;
+		int NextOffsetY = y;
 
 		// Weapon name.
-		Font fnt = FontName;
-		BrokenLines MultilineName = fnt.BreakLines(GetWeaponName(wpn, UseFolderView), LiteHudMaxStringWidth);
-		for (int i = 0; i < MultilineName.Count(); ++i)
+		if (visFlags & VF_WeaponName)
 		{
-			y += 10 * i;
-			sbar.DrawString(mMainFont, MultilineName.StringAt(i), (x, y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponName)), alpha);
+			Font fnt = FontName;
+			BrokenLines MultilineName = fnt.BreakLines(GetWeaponName(wpn, UseFolderView), LiteHudMaxStringWidth);
+			for (int i = 0; i < MultilineName.Count(); ++i)
+			{
+				NextOffsetY += 10 * i;
+				sbar.DrawString(mMainFont, MultilineName.StringAt(i), (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_WeaponName)), alpha);
+			}
+			NextOffsetY += 14;
 		}
 		
 		// Weapon rank.
 		int WeaponRank; string WeaponRankString;
 		[WeaponRank, WeaponRankString] = GetWeaponRank(WeaponKills);
-		sbar.DrawString(mMainFont, WeaponRankString, (x, y + 12), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponRank)), alpha);
-		sbar.DrawString(mMainFont, WeaponRank.."/"..WeapRanks.Size(), (x, y + 22), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponRank)), alpha);
+		if (visFlags & VF_WeaponRank)
+		{
+			sbar.DrawString(mMainFont, WeaponRankString, (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_WeaponRank)), alpha);
+			NextOffsetY += 14;
+		}
 
-		// Weapon kills.
-		sbar.DrawString(mMainFont, "K:", (x, y + 36), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_Labels)), alpha);
-		sbar.DrawString(mMainFont, sbar.FormatNumber(WeaponKills, 1, 6), (x + 14, y + 36), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponKills)), alpha);
+		if (visFlags & VF_WeaponKills)
+		{
+			// Weapon kills.
+			sbar.DrawString(mMainFont, "K:", (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_Labels)), alpha);
+			sbar.DrawString(mMainFont, sbar.FormatNumber(WeaponKills, 1, 6), (x + 14, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_WeaponKills)), alpha);
+			NextOffsetY += 10;
 
-		// Weapon kills for next level.
-		string NextWeaponRankKills = WeaponRank < WeapKillReq.Size() ? sbar.FormatNumber(WeapKillReq[WeaponRank], 1, 6) : "-";
-		sbar.DrawString(mMainFont, "NX:", (x, y + 46), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_Labels)), alpha);
-		sbar.DrawString(mMainFont, NextWeaponRankKills, (x + 24, y + 46), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Elem_WeaponRank)), alpha);
+			// Weapon kills for next level.
+			string NextWeaponRankKills = WeaponRank < WeapKillReq.Size() ? sbar.FormatNumber(WeapKillReq[WeaponRank], 1, 6) : "-";
+			sbar.DrawString(mMainFont, "NX:", (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_Labels)), alpha);
+			sbar.DrawString(mMainFont, NextWeaponRankKills, (x + 24, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_WeaponRank)), alpha);
+			NextOffsetY += 14;
+		}
 
 		// Weapon medals.
-		DrawWeaponMedals(WeaponKills, x, y + 60, DI_TL, alpha);
+		if (visFlags & VF_WeaponMedals)
+		{
+			DrawWeaponMedals(WeaponKills, x, NextOffsetY, DI_TL, alpha);
+		}
 	}
 
 	// --------------------------------------------------------------
@@ -749,20 +806,20 @@ extend class WT_MainHandler
 		return max(1, int(ceil(AvailableMonsters.Size() / double(maxEntries))));
 	}
 
-	private ui string GetColorForElement(WT_HudElementType element)
+	private ui string GetColorForElement(WT_LiteHudColor element)
 	{
 		int CvarValue = LiteHudColors[element].GetInt();
 		if (CvarValue == 0)
 		{
 			switch(element)
 			{
-				case Elem_Labels: return DefcolMiscLabel;
-				case Elem_TotalKills: return DefcolTotalKills;
-				case Elem_GenocideRank: return DefcolGenocideRank;
-				case Elem_PlayerRank: return DefcolPlayerRank;
-				case Elem_WeaponName: return DefcolWeaponName;
-				case Elem_WeaponRank: return DefcolWeaponRank;
-				case Elem_WeaponKills: return DefcolWeaponKills;
+				case Color_Labels: return DefcolMiscLabel;
+				case Color_TotalKills: return DefcolTotalKills;
+				case Color_GenocideRank: return DefcolGenocideRank;
+				case Color_PlayerRank: return DefcolPlayerRank;
+				case Color_WeaponName: return DefcolWeaponName;
+				case Color_WeaponRank: return DefcolWeaponRank;
+				case Color_WeaponKills: return DefcolWeaponKills;
 			}
 		}
 
@@ -782,6 +839,37 @@ extend class WT_MainHandler
 		}
 
 		return text;
+	}
+
+	private ui int GetVisibilityFlags()
+	{
+		string FlagsString = LiteHudVisibilityFlags.GetString();
+		Array<string> SplitFlags;
+		FlagsString.Split(SplitFlags, "|");
+		int Flags = 0;
+
+		for (int i = 0; i < SplitFlags.Size() || i < 1 && SplitFlags.Size() == 0; ++i)
+		{
+			Name Flag = SplitFlags.Size() > 0 ? SplitFlags[i] : FlagsString;
+			switch(flag)
+			{
+				case 'VF_PLR_TKILLS': Flags |= VF_TotalKills; break;
+				case 'VF_PLR_GENRANK': Flags |= VF_GenocideRank; break;
+				case 'VF_PLR_GENMEDAL': Flags |= VF_GenocideMedal; break;
+				case 'VF_PLR_PLRANK': Flags |= VF_PlayerRank; break;
+				case 'VF_PLR_PLEXP': Flags |= VF_PlayerExperience; break;
+				case 'VF_PLR_PLMEDAL': Flags |= VF_PlayerMedal; break;
+				case 'VF_PLR_ALL': Flags |= (VF_TotalKills | VF_GenocideRank | VF_GenocideMedal | VF_PlayerRank | VF_PlayerExperience | VF_PlayerMedal); break;
+
+				case 'VF_WPN_NAME': Flags |= VF_WeaponName; break;
+				case 'VF_WPN_RANK': Flags |= VF_WeaponRank; break;
+				case 'VF_WPN_KILLS': Flags |= VF_WeaponKills; break;
+				case 'VF_WPN_MEDALS': Flags |= VF_WeaponMedals; break;
+				case 'VF_WPN_ALL': Flags |= (VF_WeaponName | VF_WeaponRank | VF_WeaponKills | VF_WeaponMedals); break;
+			}
+		}
+
+		return Flags;
 	}
 
 	// --------------------------------------------------

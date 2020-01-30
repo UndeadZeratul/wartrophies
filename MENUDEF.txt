@@ -2,9 +2,9 @@ OptionMenu "WarTrophies"
 {
 	Title "War Trophies Options"
 	
-	SubMenu "Scorecard", "ScorecardMenu"
-	Submenu "Lite HUD", "LiteHudMenu"
-	SubMenu "Filters", "FiltersMenu"
+	SubMenu "Scorecard Options", "ScorecardMenu"
+	Submenu "Lite HUD Options", "LiteHudMenu"
+	SubMenu "Filter Options", "FiltersMenu"
 	StaticText ""
 	StaticText "----- Miscellaneous -----", "Teal"
 	Option "Kill Sound Type", "wt_killsound", "KillSoundType"
@@ -46,20 +46,21 @@ OptionMenu "LiteHudMenu"
 {
 	Title "Lite HUD Options"
 
+	Submenu "Folder Options", "LiteHudFolders"
+	Submenu "Color Options", "LiteHudColors"
+	SubMenu "Advanced Options", "LiteHudAdvanced"
+	StaticText ""
 	Option "Lite HUD", "wt_showlite", "LiteHudType"
 	Option "Orientation", "wt_lite_orientation", "LiteHudOrientation"
 	Slider "Scale", "wt_lite_scale", 0.1, 3.0, 0.1, 1
 	Slider "Offset X", "wt_lite_offset_x", 0, 300, 5, 0
 	Slider "Offset Y", "wt_lite_offset_y", 0, 300, 5, 0
 	Slider "Opacity", "wt_lite_alpha", 0.1, 1.0, 0.05, 2
-	StaticText ""
-	Submenu "Folders", "LiteHudFolders"
-	Submenu "Colors", "LiteHudColors"
 }
 
 OptionMenu "LiteHudFolders"
 {
-	Title "Lite HUD Folders"
+	Title "Lite HUD Folder Options"
 
 	Option "Use Folders", "wt_lite_usefolders", "YesNo"
 	StaticText "Merge multiple weapons under a common namespace into a single entity.", "White"
@@ -72,7 +73,7 @@ OptionMenu "LiteHudFolders"
 
 OptionMenu "LiteHudColors"
 {
-	Title "Lite HUD Colors"
+	Title "Lite HUD Color Options"
 
 	Option "Labels", "wt_lite_color_labels", "LiteHUDColor"
 	Option "Total Kills", "wt_lite_color_totalkills", "LiteHUDColor"
@@ -81,6 +82,33 @@ OptionMenu "LiteHudColors"
 	Option "Weapon Name", "wt_lite_color_weaponname", "LiteHUDColor"
 	Option "Weapon Rank", "wt_lite_color_weaponrank", "LiteHUDColor"
 	Option "Weapon Kills", "wt_lite_color_weaponkills", "LiteHUDColor"
+}
+
+OptionMenu "LiteHudAdvanced"
+{
+	Title "Lite HUD Advanced Options"
+
+	StaticText "The flag fields below control which elements are displayed.", "White"
+	StaticText "Flags are separated with the '|' character. Don't use spaces!", "White"
+	StaticText ""
+	TextField "Visibility: Player Stats", "wt_lite_adv_visibility"
+	StaticText ""
+	StaticText "----- AVAILABLE FLAGS -----", "Teal"
+	StaticText "VF_SHOWALL - Shows everything.", "White"
+	StaticText ""
+	StaticText "VF_PLR_ALL - Show all player stats.", "White"
+	StaticText "VF_PLR_TKILLS - Total kills.", "White"
+	StaticText "VF_PLR_GENRANK - Genocide rank.", "White"
+	StaticText "VF_PLR_GENMEDAL - Genocide medal.", "White"
+	StaticText "VF_PLR_PLRANK - Player rank.", "White"
+	StaticText "VF_PLR_PLEXP - Player experience.", "White"
+	StaticText "VF_PLR_PLMEDAL - Player medal.", "White"
+	StaticText ""
+	StaticText "VF_WPN_ALL - Show all weapon stats.", "White"
+	StaticText "VF_WPN_NAME - Weapon name.", "White"
+	StaticText "VF_WPN_RANK - Weapon rank.", "White"
+	StaticText "VF_WPN_KILLS - Weapon kills.", "White"
+	StaticText "VF_WPN_MEDALS - Weapon medals.", "White"
 }
 
 OptionMenu "FiltersMenu"
