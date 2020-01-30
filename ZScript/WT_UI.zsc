@@ -88,8 +88,6 @@ extend class WT_MainHandler
 		if (LiteHUD > 0 && !DrawUi && !AutomapActive && GameState == GS_LEVEL)
 		{
 			double Alpha = LiteHudAlpha.GetFloat();
-			int GlobalOffsetX = 10 * LiteHudOffsetX.GetInt();
-			int GlobalOffsetY = 10 * LiteHudOffsetY.GetInt();
 
 			int OriginalWidth = StatusBar.HorizontalResolution;
 			int OriginalHeight = StatusBar.VerticalResolution;
@@ -104,7 +102,7 @@ extend class WT_MainHandler
 			// [Ace] Check: Not "Weapons Stats".
 			if (LiteHud != 2)
 			{
-				DrawLiteHudPlayerStats(StatusBar, 2 + GlobalOffsetX, 2 + GlobalOffsetY, Alpha);
+				DrawLiteHudPlayerStats(StatusBar, 2 + LiteHudOffsetX.GetInt(), 2 + LiteHudOffsetY.GetInt(), Alpha);
 			}
 
 			// [Ace] Check: Weapon Stats or All.
@@ -130,7 +128,7 @@ extend class WT_MainHandler
 						}
 					}
 
-					DrawLiteHudWeaponStats(StatusBar, WeaponListSel, PosX + GlobalOffsetX, PosY + GlobalOffsetY, Alpha);
+					DrawLiteHudWeaponStats(StatusBar, WeaponListSel, PosX + LiteHudOffsetX.GetInt(), PosY + LiteHudOffsetY.GetInt(), Alpha);
 				}
 			}
 
