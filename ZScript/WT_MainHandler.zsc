@@ -159,6 +159,7 @@ class WT_MainHandler : EventHandler
 
 		LiteHudType = CVar.FindCVar('wt_showlite');
 		LiteHudOrientation = CVar.FindCVar('wt_lite_orientation');
+		LiteHudScale = CVar.FindCVar('wt_lite_scale');
 		LiteHudOffsetX = CVar.FindCVar('wt_lite_offset_x');
 		LiteHudOffsetY = CVar.FindCVar('wt_lite_offset_y');
 		LiteHudAlpha = CVar.FindCVar('wt_lite_alpha');

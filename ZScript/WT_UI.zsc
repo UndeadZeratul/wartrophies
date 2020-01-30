@@ -24,6 +24,7 @@ extend class WT_MainHandler
 	private transient CVar BlackDisplay;
 	private transient CVar LiteHudType;
 	private transient CVar LiteHudOrientation;
+	private transient CVar LiteHudScale;
 	private transient CVar LiteHudOffsetX;
 	private transient CVar LiteHudOffsetY;
 	private transient CVar LiteHudColors[7];
@@ -90,13 +91,24 @@ extend class WT_MainHandler
 			int GlobalOffsetX = 10 * LiteHudOffsetX.GetInt();
 			int GlobalOffsetY = 10 * LiteHudOffsetY.GetInt();
 
+			int OriginalWidth = StatusBar.HorizontalResolution;
+			int OriginalHeight = StatusBar.VerticalResolution;
+			double Scale = LiteHudScale.GetFloat();
+
+			// [Ace] Dividing because smaller numbers means bigger HUD.
+			if (Scale > 0 && Scale != 1.0)
+			{
+				StatusBar.SetSize(StatusBar.RelTop, int(OriginalWidth / Scale), int(OriginalHeight / Scale));
+			}
+
 			// [Ace] Check: Not "Weapons Stats".
 			if (LiteHud != 2)
 			{
 				DrawLiteHudPlayerStats(StatusBar, 2 + GlobalOffsetX, 2 + GlobalOffsetY, Alpha);
 			}
 
-			// [Ace] Weapon Stats or All. Don't update available weapons if the weapon stats aren't visible. It'd be a waste of VM time.
+			// [Ace] Check: Weapon Stats or All.
+			// Don't update available weapons if the weapon stats aren't visible. It'd be a waste of VM time.
 			if (LiteHUD >= 2)
 			{
 				GetAvailableWeapons(AvailableWeapons);
@@ -121,6 +133,8 @@ extend class WT_MainHandler
 					DrawLiteHudWeaponStats(StatusBar, WeaponListSel, PosX + GlobalOffsetX, PosY + GlobalOffsetY, Alpha);
 				}
 			}
+
+			StatusBar.SetSize(StatusBar.RelTop, OriginalWidth, OriginalHeight);
 		}
 
 		// ---------- SCORECARD ----------
