@@ -45,5 +45,3 @@ Certain mods don't play too well with War Trophies. They will work, but not alwa
 *The mod will work without it, but raw class names will be displayed instead and it won't look good unless your class names are sensible.*
 - Add an Icon property to your weapons or define a Spawn state sprite.  
 *Again, will work without it, but sometimes Ready state sprites may be used and it'd look bad.*
-- Make use of +WEAPON.CHEATNOTWEAPON.  
-*Use this to prevent weapons from getting registered. If it's not a weapon, it shouldn't be a problem if it's not given via cheats anyway.*
