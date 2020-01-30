@@ -88,10 +88,10 @@ OptionMenu "LiteHudAdvanced"
 {
 	Title "Lite HUD Advanced Options"
 
-	StaticText "The flag fields below control which elements are displayed.", "White"
+	StaticText "The text field below controls which elements are displayed.", "White"
 	StaticText "Flags are separated with the '|' character. Don't use spaces!", "White"
 	StaticText ""
-	TextField "Visibility: Player Stats", "wt_lite_adv_visibility"
+	TextField "Visibility Flags", "wt_lite_adv_visibility"
 	StaticText ""
 	StaticText "----- AVAILABLE FLAGS -----", "Teal"
 	StaticText "VF_SHOWALL - Shows everything.", "White"
