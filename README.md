@@ -24,13 +24,6 @@ To fix this, you have four options, three of which require config editing:
 - The IWAD filters are enabled by default, meaning you will always see vanilla Doom/Heretic/Hexen/Strife weapons. If playing with mods that add custom weapons, set the weapon filter to "None". If the mod adds monsters, do the same for the monster filter.
 - Check out the "Scorecard Keys" submenu in the options. It will give useful information.
 
-### Mods with 'Folder' support.
----
-Compatibility with certain mods has been extended to allow them to make use of the 'Folder' feature for the Lite HUD. This combines the kills from all weapons in the same folder and displays them as one weapon.  
-*NOTE: Weapons will still be separate in the scorecard!*
-- Final Doomer
-- Bullet-Eye
-
 ### (In)Compatibility
 ---
 Certain mods don't play too well with War Trophies. They will work, but not always the way you'd expect them to. A few examples:
