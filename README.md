@@ -5,8 +5,8 @@ NOTE: Loading through command line doesn't seem to work with certain launchers, 
 
 ### Important
 ---
-~~- Requires at least GZDoom 4.3.3! Playing it on anything lower that that won't work right and you may lose progress. You have been warned.~~
-#### *There is a memory leak with dictionaries in GZDoom 4.3.3 and below! A patch has been applied to severely reduce the impact of this, so you will likely not encounter it at all. Should be properly fixed engine-side eventually.*
+##### *There is a memory leak with dictionaries in GZDoom 4.3.3 and below! A patch has been applied to severely reduce the impact of this, so you will likely not encounter it at all. Should be properly fixed engine-side eventually.*
+- Requires at least GZDoom 4.3.3! Playing it on anything lower that that won't work right and you may lose progress. You have been warned.
 - The mod is likely not multiplayer compatible! Not tested.
 - Due to the way data is saved, mod may cause ini bloat if played with too many mods for a long time. The data is at the bottom of your config file in a separate section. If ini bloat really bothers you, this mod probably isn't for you. At the moment there is no other way to store data between saves.
 - Stats do not persist between IWADs. Due to how CVars are stored in the ini file, the only workaround is to use JPL's [WadSmoosh](https://forum.zdoom.org/viewtopic.php?f=232&t=52757) and use Doom_Complete as an IWAD.
