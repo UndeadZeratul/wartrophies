@@ -5,6 +5,7 @@ Accensus
 Tapwave
  - FragTrak, which inspired me to make a universal version.
  - Various feature suggestions and misc support, such as picking the genocide medals and overhauling the progression numbers.
+ - Folders for DRLA and Final Doomer.
 
 m8f
  - Adding Dictionary to GZDoom. None of this would have been possible without it. Thank you!
@@ -17,6 +18,7 @@ phantombeta
 
 Mor'ladim
  - Editing some of the player ranks. Thanks!
+ - Folders for Bullet-Eye.
 
 Tetris: The Grand Master 3 - Terror-Instinct
  - Weapon medals
