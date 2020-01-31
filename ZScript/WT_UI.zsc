@@ -80,8 +80,6 @@ extend class WT_MainHandler
 	const MedalTypesCount = 9;
 	const LiteHudMaxStringWidth = 200; // [Ace] Size in pixels.
 	const FontName = "STRPFNT";
-	private transient ui Array<class<Weapon> > AvailableWeapons;
-	private transient ui Array<class<Actor> > AvailableMonsters;
 	private transient ui int WeaponListSelIndex;
 	private transient ui int FolderListSelIndex;
 	private transient ui int SelMonsterPage;
@@ -90,6 +88,13 @@ extend class WT_MainHandler
 	private transient ui string SearchFilter;
 	private transient bool DrawUi;
 	private transient ui int SelectedPage;
+
+	// [Ace] Global cache. These are here so they don't get reset all the time. With some exceptions. Part of the memory leak patch. Also boosts performance.
+	private transient ui Array<class<Weapon> > AvailableWeapons;
+	private transient ui Array<class<Actor> > AvailableMonsters;
+	private transient ui int TotalKills;
+	private transient ui int WeaponKills;
+	private transient ui Array<int> MonsterKills; // [Ace] For the currently iterated monster.
 
 	// [Ace] Misc crap.
 	private transient ui HUDFont mMainFont;
@@ -170,6 +175,11 @@ extend class WT_MainHandler
 		{
 			AutoSelected = false;
 		}
+
+		if (NeedsUpdating)
+		{
+			SendNetworkEvent("wT_MarkUpdated");
+		}
 	}
 
 	// --------------------------------------------------------------
@@ -185,7 +195,10 @@ extend class WT_MainHandler
 		int DI_TL_CENTER_TEXT_CENTER = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
 		int DI_TL_CENTER_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
 
-		int TotalKills = GetTotalKillsForAllWeapons();
+		if (NeedsUpdating)
+		{
+			TotalKills = GetTotalKillsForAllWeapons();
+		}
 		int NextOffsetY = y;
 
 		// Total kills.
@@ -259,7 +272,10 @@ extend class WT_MainHandler
 		int DI_TL_CENTER_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
 
 		bool UseFolderView = LiteFolderView.GetBool();
-		int WeaponKills = wpn ? GetKillsForWeapon(GetDefaultByType(wpn).GetClassName(), UseFolderView) : 0;
+		if (wpn && NeedsUpdating)
+		{
+			WeaponKills = GetKillsForWeapon(GetDefaultByType(wpn).GetClassName(), UseFolderView);
+		}
 		int NextOffsetY = y;
 
 		// Weapon name.
@@ -339,8 +355,11 @@ extend class WT_MainHandler
 
 		// --------------- MAIN STATS ---------------
 
-		int WeaponKills = WeaponListSel ? GetKillsForWeapon(GetDefaultByType(WeaponListSel).GetClassName(), false) : 0;
-		int TotalKills = GetTotalKillsForAllWeapons();
+		if (WeaponListSel && NeedsUpdating)
+		{
+			TotalKills = GetTotalKillsForAllWeapons();
+			WeaponKills = GetKillsForWeapon(GetDefaultByType(WeaponListSel).GetClassName(), false);
+		}
 
 		// Total kills.
 		sbar.DrawString(mMainFont, sbar.FormatNumber(TotalKills, 1, 10), (-42, -84), DI_TEXT_RIGHT, Font.FindFontColor(DefcolTotalKills));
@@ -447,7 +466,16 @@ extend class WT_MainHandler
 			// --------------- MONSTER LIST & STATS ---------------
 
 			// [Ace] Filter the monsters and get all the necessary data for the selected weapon.
-			GetMonstersForWeapon(WeaponListSel.GetClassName(), AvailableMonsters);
+			if (NeedsUpdating)
+			{
+				GetMonstersForWeapon(WeaponListSel.GetClassName(), AvailableMonsters);
+				MonsterKills.Clear();
+				for (int i = 0; i < AvailableMonsters.Size(); ++i)
+				{
+					let Monster = GetDefaultByType(AvailableMonsters[i]);
+					MonsterKills.Push(GetKillsForMonster(WeaponListSel.GetClassName(), Monster.GetClassName()));
+				}
+			}
 
 			// [Ace] Then display them.
 			sbar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..GetMonsterPages(MonsterListEntries), (160, 12), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
@@ -462,8 +490,7 @@ extend class WT_MainHandler
 				sbar.DrawString(mMainFont, GetTruncatedText(Monster.GetTag(), MonsterNameMaxLength), (-7, 36 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(DefcolMonsterInfo));
 
 				// Kills.
-				int Kills = GetKillsForMonster(WeaponListSel.GetClassName(), Monster.GetClassName());
-				sbar.DrawString(mMainFont, sbar.FormatNumber(Kills, 1, 5), (224, 36 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
+				sbar.DrawString(mMainFont, sbar.FormatNumber(MonsterKills[i], 1, 5), (224, 36 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
 				
 				mRow++;
 			}
@@ -494,7 +521,16 @@ extend class WT_MainHandler
 		// --------------- MONSTER LIST & STATS ---------------
 
 		// [Ace] Filter the monsters and get all of them for all filtered weapons.
-		GetAllMonsters(AvailableWeapons, AvailableMonsters);
+		if (NeedsUpdating)
+		{
+			GetAllMonsters(AvailableWeapons, AvailableMonsters);
+			MonsterKills.Clear();
+			for (int i = 0; i < AvailableMonsters.Size(); ++i)
+			{
+				let Monster = GetDefaultByType(AvailableMonsters[i]);
+				MonsterKills.Push(GetTotalKillsForMonster(AvailableWeapons, Monster.GetClassName()));
+			}
+		}
 
 		// [Ace] Then display them.
 		sbar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..GetMonsterPages(MonsterListEntriesLong), (70, -132), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
@@ -509,7 +545,7 @@ extend class WT_MainHandler
 			sbar.DrawString(mMainFont, GetTruncatedText(Monster.GetTag(), MonsterNameMaxLengthLong), (-133, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(DefcolMonsterInfo));
 
 			// Kills.
-			sbar.DrawString(mMainFont, sbar.FormatNumber(GetTotalKillsForMonster(AvailableWeapons, Monster.GetClassName()), 1, 5), (134, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
+			sbar.DrawString(mMainFont, sbar.FormatNumber(MonsterKills[i], 1, 5), (134, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
 
 			mRow++;
 		}
@@ -894,12 +930,14 @@ extend class WT_MainHandler
 						--SelectedPage %= Page_Monsters + 1;
 						SelectedPage = abs(SelectedPage);
 						SelMonsterPage = 0;
+						SendNetworkEvent("WT_MarkNotUpdated");
 						break;
 
 					// [Ace] Cycle pages right.
 					case UiEvent.Key_Right:
 						++SelectedPage %= Page_Monsters + 1;
 						SelMonsterPage = 0;
+						SendNetworkEvent("WT_MarkNotUpdated");
 						break;
 
 					// [Ace] Move weapon selection up.
@@ -907,6 +945,7 @@ extend class WT_MainHandler
 						if (SelectedPage != Page_Main) break;
 						WeaponListSelIndex = max(0, WeaponListSelIndex - 1);
 						SelMonsterPage = 0;
+						SendNetworkEvent("WT_MarkNotUpdated");
 						break;
 
 					// [Ace] Move weapon selection down.
@@ -914,6 +953,7 @@ extend class WT_MainHandler
 						if (SelectedPage != Page_Main) break;
 						WeaponListSelIndex = min(WeaponListSelIndex + 1, AvailableWeapons.Size() - 1);
 						SelMonsterPage = 0;
+						SendNetworkEvent("WT_MarkNotUpdated");
 						break;
 
 					// [Ace] Previous monster page.
@@ -921,7 +961,7 @@ extend class WT_MainHandler
 						SelMonsterPage = max(0, SelMonsterPage - 1);
 						break;
 
-					// [Ace] Next monster page. No cap on this because it'd be a pain to get how many monster pages the current weapon has.
+					// [Ace] Next monster page.
 					case UiEvent.Key_PgDn:
 						SelMonsterPage = min(SelMonsterPage + 1, GetMonsterPages(SelectedPage == Page_Monsters ? MonsterListEntriesLong : MonsterListEntries) - 1);
 						break;

@@ -14,6 +14,8 @@ class WT_MainHandler : EventHandler
 	// CVARS & GLOBAL VARS
 	// --------------------------------------------------
 
+	private transient bool NeedsUpdating; // [Ace] Used to only update data when needed.
+
 	private transient CVar WeaponStorage;
 	private transient CVar ExperienceStorage;
 	private transient CVar PrestigeStorage;
@@ -55,6 +57,8 @@ class WT_MainHandler : EventHandler
 
 			WeaponStats.Insert(weapon, KillStats.ToString());
 		}
+
+		NeedsUpdating = true;
 	}
 
 	private void PlayKillSound()
@@ -195,6 +199,8 @@ class WT_MainHandler : EventHandler
 			Experience = ExperienceStorage.GetInt();
 			Prestige = PrestigeStorage.GetInt();
 		}
+
+		NeedsUpdating = true;
 	}
 
 	// --------------------------------------------------
@@ -218,8 +224,16 @@ class WT_MainHandler : EventHandler
 			let plr = PlayerPawn(players[consoleplayer].mo);
 			if (plr && plr.player && plr.player.ReadyWeapon)
 			{
+				class<Weapon> OldWeapon = ReadyWeapon;
+
 				// [Ace] If the weapon is a powered up version, use the main one instead.
 				ReadyWeapon = plr.player.ReadyWeapon.bPOWERED_UP ? plr.Player.ReadyWeapon.SisterWeaponType : plr.player.ReadyWeapon.GetClass();
+
+				// [Ace] Checks if the weapon selection has changed.
+				if (ReadyWeapon != OldWeapon)
+				{
+					NeedsUpdating = true;
+				} 
 			}
 		}
 	}
@@ -258,17 +272,20 @@ class WT_MainHandler : EventHandler
 		if (e.Name ~== "WT_ResetTally")
 		{
 			ResetTally();
+			NeedsUpdating = true; // [Ace] Just in case.
 		}
 
 		if (e.Name ~== "WT_ResetWeapon")
 		{
 			ResetWeapon();
+			NeedsUpdating = true;
 		}
 
 		if (e.Name ~== "WT_ToggleUI")
 		{
 			DrawUi = !DrawUi;
 			self.IsUiProcessor = !self.IsUiProcessor;
+			NeedsUpdating = true;
 		}
 
 		if (e.Name ~== "WT_UpgradePrestige")
@@ -280,6 +297,16 @@ class WT_MainHandler : EventHandler
 		{
 			DisableTracking = !DisableTracking;
 			Console.Printf("Kill tracking "..(DisableTracking ? "disabled" : "enabled")..".");
+		}
+
+		if (e.Name ~== "WT_MarkUpdated")
+		{
+			NeedsUpdating = false;
+		}
+
+		if (e.Name ~== "WT_MarkNotUpdated")
+		{
+			NeedsUpdating = true;
 		}
 	}
 }
