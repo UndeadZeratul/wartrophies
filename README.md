@@ -5,7 +5,7 @@ NOTE: Loading through command line doesn't seem to work with certain launchers, 
 
 ### Important
 ---
-##### *There is a memory leak with dictionaries in GZDoom 4.3.3 and below! A patch has been applied to severely reduce the impact of this, so you will likely not encounter it at all. Should be properly fixed engine-side eventually.*
+##### *There is currently a memory leak with the dictionaries in the engine. A mod patch has been applied to almost neutralize this issue. Crashes should NOT be expected. Will be properly fixed engine-side eventually. If you are reading this, a fix does not yet exist.*
 - Requires at least GZDoom 4.3.3! Playing it on anything lower that that won't work right and you may lose progress. You have been warned.
 - The mod is likely not multiplayer compatible! Not tested.
 - Due to the way data is saved, mod may cause ini bloat if played with too many mods for a long time. The data is at the bottom of your config file in a separate section. If ini bloat really bothers you, this mod probably isn't for you. At the moment there is no other way to store data between saves.
