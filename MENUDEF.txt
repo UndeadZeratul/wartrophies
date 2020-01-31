@@ -69,6 +69,7 @@ OptionMenu "LiteHudFolders"
 	StaticText "----- SUPPORTED MODS -----", "Teal"
 	StaticText "Bullet-Eye", "White"
 	StaticText "Final Doomer", "White"
+	StaticText "DoomRL Arsenal", "White"
 }
 
 OptionMenu "LiteHudColors"

@@ -95,6 +95,12 @@ extend class WT_MainHandler
 	private transient ui int TotalKills;
 	private transient ui int WeaponKills;
 	private transient ui Array<int> MonsterKills; // [Ace] For the currently iterated monster.
+	private transient ui int PlayerRank;
+	private transient ui string PlayerRankString;
+	private transient ui int WeaponRank;
+	private transient ui string WeaponRankString;
+	private transient ui int GenocideRank;
+	private transient ui string GenocideRankString;
 
 	// [Ace] Misc crap.
 	private transient ui HUDFont mMainFont;
@@ -146,7 +152,10 @@ extend class WT_MainHandler
 						switch(LiteHudOrientation.GetInt())
 						{
 							case 0: PosY += 100; break;
-							case 1: PosX += 120; break;
+							case 1:
+								Font fnt = FontName;
+								PosX += (PlayerRankString != "" || GenocideRankString != "") ? 10 + max(fnt.StringWidth(PlayerRankString), fnt.StringWidth(GenocideRankString)) : 100;
+								break;
 						}
 					}
 
@@ -210,7 +219,6 @@ extend class WT_MainHandler
 		}
 
 		// Genocide rank.
-		int GenocideRank; string GenocideRankString;
 		[GenocideRank, GenocideRankString] = GetGenocideRank(TotalKills);
 		if (visFlags & VF_GenocideRank)
 		{
@@ -219,7 +227,6 @@ extend class WT_MainHandler
 		}
 
 		// Player rank & prestige.
-		int PlayerRank; string PlayerRankString;
 		[PlayerRank, PlayerRankString] = GetPlayerRank();
 		if (visFlags & VF_PlayerRank)
 		{
@@ -288,11 +295,10 @@ extend class WT_MainHandler
 				NextOffsetY += 10 * i;
 				sbar.DrawString(mMainFont, MultilineName.StringAt(i), (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_WeaponName)), alpha);
 			}
-			NextOffsetY += 14;
+			NextOffsetY += 10;
 		}
 		
 		// Weapon rank.
-		int WeaponRank; string WeaponRankString;
 		[WeaponRank, WeaponRankString] = GetWeaponRank(WeaponKills);
 		if (visFlags & VF_WeaponRank)
 		{
@@ -365,7 +371,6 @@ extend class WT_MainHandler
 		sbar.DrawString(mMainFont, sbar.FormatNumber(TotalKills, 1, 10), (-42, -84), DI_TEXT_RIGHT, Font.FindFontColor(DefcolTotalKills));
 
 		// Genocide rank.
-		int GenocideRank; string GenocideRankString;
 		[GenocideRank, GenocideRankString] = GetGenocideRank(TotalKills);
 		sbar.DrawString(mMainFont, GenocideRankString, (-223, -60), DI_TEXT_LEFT, Font.FindFontColor(DefcolGenocideRank));
 
@@ -373,7 +378,6 @@ extend class WT_MainHandler
 		sbar.DrawImage("GRANK"..GenocideRank, (-206, 77), DI_CENTER);
 
 		// Player rank.
-		int PlayerRank; string PlayerRankString;
 		[PlayerRank, PlayerRankString] = GetPlayerRank();
 		sbar.DrawString(mMainFont, PlayerRankString, (-223, -36), DI_TEXT_LEFT, Font.FindFontColor(DefcolPlayerRank));
 
@@ -414,7 +418,6 @@ extend class WT_MainHandler
 			sbar.DrawString(mMainFont, GetTruncatedText(GetDefaultByType(WeaponListSel).GetTag(), WeaponNameMaxLength), (-7, -132), DI_TEXT_LEFT, Font.FindFontColor(DefcolWeaponName));
 
 			// Weapon rank.
-			int WeaponRank; string WeaponRankString;
 			[WeaponRank, WeaponRankString] = GetWeaponRank(WeaponKills);
 			sbar.DrawString(mMainFont, WeaponRankString, (-7, -108), DI_TEXT_LEFT, Font.FindFontColor(DefcolWeaponRank));
 			sbar.DrawString(mMainFont, WeaponRank.."/"..WeapRanks.Size(), (223, -108), DI_TEXT_RIGHT, Font.FindFontColor(DefcolWeaponRank));
