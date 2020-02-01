@@ -1,6 +1,6 @@
 class WT_MainHandler : EventHandler
 {
-	enum IWADFilter
+	enum WT_IwadFilter
 	{
 		Filter_None,
 		Filter_Doom,
@@ -303,6 +303,7 @@ class WT_MainHandler : EventHandler
 			Console.Printf("Kill saving "..(DisableSaving ? "disabled" : "enabled")..".");
 		}
 
+		// [Ace] These are here if they need to be called from UI scope.
 		if (e.Name ~== "WT_MarkUpdated")
 		{
 			NeedsUpdating = false;
@@ -311,6 +312,11 @@ class WT_MainHandler : EventHandler
 		if (e.Name ~== "WT_MarkNotUpdated")
 		{
 			NeedsUpdating = true;
+		}
+
+		if (e.Name ~== "WT_FolderInit")
+		{
+			FolderInit();
 		}
 	}
 }

@@ -241,7 +241,7 @@ extend class WT_MainHandler
 		"Reaver"
 	};
 
-	private IWADFilter GetIwadType(SearchType type, class<Actor> a) const
+	private WT_IwadFilter GetIwadType(SearchType type, class<Actor> a) const
 	{
 		// [Ace] Unfortunately it needs to go through all of these.
 		switch (type)

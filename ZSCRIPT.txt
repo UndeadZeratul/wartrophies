@@ -1,5 +1,6 @@
 version 4.3
 
+#include "ZScript/WT_Menu.zsc"
 #include "ZScript/WT_MainHandler.zsc"
 #include "ZScript/WT_UI.zsc"
 #include "ZScript/WT_Special.zsc"

@@ -1,4 +1,4 @@
-OptionMenu "WarTrophies"
+OptionMenu "WarTrophiesMenu"
 {
 	Title "War Trophies Options"
 	
@@ -46,9 +46,9 @@ OptionMenu "LiteHudMenu"
 {
 	Title "Lite HUD Options"
 
-	Submenu "Folder Options", "LiteHudFolders"
-	Submenu "Color Options", "LiteHudColors"
-	SubMenu "Advanced Options", "LiteHudAdvanced"
+	Submenu "Folder Options", "LiteHudFoldersMenu"
+	Submenu "Color Options", "LiteHudColorsMenu"
+	SubMenu "Advanced Options", "LiteHudAdvancedMenu"
 	StaticText ""
 	Option "Lite HUD", "wt_showlite", "LiteHudType"
 	Option "Orientation", "wt_lite_orientation", "LiteHudOrientation"
@@ -58,21 +58,21 @@ OptionMenu "LiteHudMenu"
 	Slider "Opacity", "wt_lite_alpha", 0.1, 1.0, 0.05, 2
 }
 
-OptionMenu "LiteHudFolders"
+OptionMenu "LiteHudFoldersMenu"
 {
 	Title "Lite HUD Folder Options"
 
-	Option "Use Folders", "wt_lite_usefolders", "YesNo"
+	FolderOption "Use Folders", "wt_lite_usefolders", "LiteHudFolders"
 	StaticText "Merge multiple weapons under a common namespace into a single entity.", "White"
 	StaticText "This only works for the Lite HUD.", "White"
 	StaticText ""
-	StaticText "----- SUPPORTED MODS -----", "Teal"
-	StaticText "Bullet-Eye", "White"
-	StaticText "Final Doomer", "White"
-	StaticText "DoomRL Arsenal", "White"
+	StaticText "----- SUPPORTED MODS & FOLDERS-----", "Teal"
+	StaticText "Bullet-Eye - Slots", "White"
+	StaticText "Final Doomer - Type, Game", "White"
+	StaticText "DoomRL Arsenal - Type", "White"
 }
 
-OptionMenu "LiteHudColors"
+OptionMenu "LiteHudColorsMenu"
 {
 	Title "Lite HUD Color Options"
 
@@ -85,7 +85,7 @@ OptionMenu "LiteHudColors"
 	Option "Weapon Kills", "wt_lite_color_weaponkills", "LiteHUDColor"
 }
 
-OptionMenu "LiteHudAdvanced"
+OptionMenu "LiteHudAdvancedMenu"
 {
 	Title "Lite HUD Advanced Options"
 
@@ -126,7 +126,7 @@ OptionMenu "FiltersMenu"
 
 AddOptionMenu "OptionsMenu"
 {
-	Submenu "War Trophies", "WarTrophies"
+	Submenu "War Trophies", "WarTrophiesMenu"
 }
 
 OptionValue "IWADFilterMode"
@@ -166,6 +166,16 @@ OptionValue "LiteHudOrientation"
 {
 	0, "Vertical"
 	1, "Horizontal"
+}
+
+OptionValue "LiteHudFolders"
+{
+	0, "Disabled"
+	1, "Bullet-Eye (Slots)"
+	2, "Final Doomer (Type)"
+	3, "Final Doomer (Game)"
+	4, "DoomRL Arsenal (Type)"
+	//5, "DoomRL Arsenal (Rarity)"
 }
 
 // [Ace] See LANGUAGE.txt

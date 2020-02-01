@@ -1,0 +1,12 @@
+// [Ace] Each time I have to create somethingsomethingMenu.zsc I feel like drinking myself to death.
+
+class OptionMenuItemFolderOption : OptionMenuItemOption
+{
+	override void SetSelection(int Selection)
+	{
+		Super.SetSelection(Selection);
+
+		EventHandler.SendNetworkEvent("WT_FolderInit");
+		EventHandler.SendNetworkEvent("WT_MarkNotUpdated");
+	}
+} 

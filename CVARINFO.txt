@@ -18,7 +18,7 @@ user float wt_lite_alpha = 1.0;
 
 user string wt_lite_adv_visibility = "VF_PLR_ALL|VF_WPN_ALL";
 
-user bool wt_lite_usefolders = false;
+user int wt_lite_usefolders = 0;
 user int wt_lite_color_labels = 0;
 user int wt_lite_color_totalkills = 0;
 user int wt_lite_color_genociderank = 0;

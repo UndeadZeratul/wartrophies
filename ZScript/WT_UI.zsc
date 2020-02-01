@@ -185,6 +185,7 @@ extend class WT_MainHandler
 			AutoSelected = false;
 		}
 
+		// [Ace] It's the end of the method. Everything has been updated. Mark it as such.
 		if (NeedsUpdating)
 		{
 			SendNetworkEvent("wT_MarkUpdated");
@@ -278,7 +279,7 @@ extend class WT_MainHandler
 		int DI_TL_CENTER_TEXT_CENTER = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
 		int DI_TL_CENTER_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
 
-		bool UseFolderView = LiteFolderView.GetBool();
+		bool UseFolderView = LiteFolderView.GetInt();
 		if (wpn && NeedsUpdating)
 		{
 			WeaponKills = GetKillsForWeapon(GetDefaultByType(wpn).GetClassName(), UseFolderView);
