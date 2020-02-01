@@ -93,9 +93,11 @@ extend class WT_MainHandler
 	// [Ace] Global cache. These are here so they don't get reset all the time. With some exceptions. Part of the memory leak patch. Also boosts performance.
 	private transient ui Array<class<Weapon> > AvailableWeapons;
 	private transient ui Array<class<Actor> > AvailableMonsters;
+	private transient ui Array<class<Actor> > AllMonsters;
 	private transient ui int TotalKills;
 	private transient ui int WeaponKills;
 	private transient ui Array<int> MonsterKills; // [Ace] For the currently iterated monster.
+	private transient ui Array<int> AllMonsterKills; // [Ace] For every monster.
 	private transient ui int PlayerRank;
 	private transient ui string PlayerRankString;
 	private transient ui int WeaponRank;
@@ -491,7 +493,7 @@ extend class WT_MainHandler
 			}
 
 			// [Ace] Then display them.
-			sbar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..GetMonsterPages(MonsterListEntries), (160, 12), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
+			sbar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..GetMonsterPages(AvailableMonsters.Size(), MonsterListEntries), (160, 12), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
 
 			int StartIndex = MonsterListEntries * SelMonsterPage;
 			int mRow = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
@@ -540,30 +542,30 @@ extend class WT_MainHandler
 		// [Ace] Filter the monsters and get all of them for all filtered weapons.
 		if (NeedsUpdating & Update_Scorecard_Monsters)
 		{
-			GetAllMonsters(AvailableWeapons, AvailableMonsters);
-			MonsterKills.Clear();
-			for (int i = 0; i < AvailableMonsters.Size(); ++i)
+			GetAllMonsters(AvailableWeapons, AllMonsters);
+			AllMonsterKills.Clear();
+			for (int i = 0; i < AllMonsters.Size(); ++i)
 			{
-				let Monster = GetDefaultByType(AvailableMonsters[i]);
-				MonsterKills.Push(GetTotalKillsForMonster(AvailableWeapons, Monster.GetClassName()));
+				let Monster = GetDefaultByType(AllMonsters[i]);
+				AllMonsterKills.Push(GetTotalKillsForMonster(AvailableWeapons, Monster.GetClassName()));
 			}
 		}
 
 		// [Ace] Then display them.
-		sbar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..GetMonsterPages(MonsterListEntriesLong), (110, -132), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
+		sbar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..GetMonsterPages(AllMonsters.Size(), MonsterListEntriesLong), (110, -132), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
 
 		int StartIndex = MonsterListEntriesLong * SelMonsterPage;
 		int mRow = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
-		for (int i = StartIndex; i < AvailableMonsters.Size() && mRow < MonsterListEntriesLong; ++i)
+		for (int i = StartIndex; i < AllMonsters.Size() && mRow < MonsterListEntriesLong; ++i)
 		{
 			bool AlternateColor = i % 2;
-			let Monster = GetDefaultByType(AvailableMonsters[i]);
+			let Monster = GetDefaultByType(AllMonsters[i]);
 
 			// Name.
 			sbar.DrawString(mMainFont, GetTruncatedText(Monster.GetTag(), MonsterNameMaxLengthLong), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? DefcolMonsterAlt : DefcolMonsterInfo));
 
 			// Kills.
-			sbar.DrawString(mMainFont, sbar.FormatNumber(MonsterKills[i], 1, 5), (174, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? DefcolMonsterAlt : DefcolMonsterInfo));
+			sbar.DrawString(mMainFont, sbar.FormatNumber(AllMonsterKills[i], 1, 5), (174, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? DefcolMonsterAlt : DefcolMonsterInfo));
 
 			mRow++;
 		}
@@ -860,9 +862,9 @@ extend class WT_MainHandler
 		return TotalKills;
 	}
 
-	private ui int GetMonsterPages(int maxEntries) const
+	private ui int GetMonsterPages(int totalEntries, int maxEntries) const
 	{
-		return max(1, int(ceil(AvailableMonsters.Size() / double(maxEntries))));
+		return max(1, int(ceil(totalEntries / double(maxEntries))));
 	}
 
 	private ui string GetColorForElement(WT_LiteHudColor element)
@@ -980,7 +982,9 @@ extend class WT_MainHandler
 
 					// [Ace] Next monster page.
 					case UiEvent.Key_PgDn:
-						SelMonsterPage = min(SelMonsterPage + 1, GetMonsterPages(SelectedPage == Page_Monsters ? MonsterListEntriesLong : MonsterListEntries) - 1);
+						int TotalMonsters = SelectedPage == Page_Monsters ? AllMonsters.Size() : AvailableMonsters.Size();
+						int MaxEntries = SelectedPage == Page_Monsters ? MonsterListEntriesLong : MonsterListEntries - 1;
+						SelMonsterPage = min(SelMonsterPage + 1, GetMonsterPages(TotalMonsters, MaxEntries) - 1);
 						break;
 
 					// [Ace] Exit menu.
