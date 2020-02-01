@@ -174,8 +174,9 @@ OptionValue "LiteHudFolders"
 	1, "Bullet-Eye (Slots)"
 	2, "Final Doomer (Type)"
 	3, "Final Doomer (Game)"
-	4, "DoomRL Arsenal (Type)"
-	//5, "DoomRL Arsenal (Rarity)"
+	4, "DoomRL Arsenal (Weapon Type)"
+	5, "DoomRL Arsenal (Assembly Type)"
+	6, "DoomRL Arsenal (Rarity)"
 }
 
 // [Ace] See LANGUAGE.txt
