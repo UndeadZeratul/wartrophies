@@ -940,7 +940,7 @@ extend class WT_MainHandler
 
 	override bool UiProcess(UiEvent e)
 	{
-		if (e.Type == UiEvent.Type_KeyDown && DrawUi)
+		if ((e.Type == UiEvent.Type_KeyDown || e.Type == UiEvent.Type_KeyRepeat) && DrawUi)
 		{
 			if (!InSearchMode)
 			{
