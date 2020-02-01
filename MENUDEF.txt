@@ -5,6 +5,7 @@ OptionMenu "WarTrophiesMenu"
 	SubMenu "Scorecard Options", "ScorecardMenu"
 	Submenu "Lite HUD Options", "LiteHudMenu"
 	SubMenu "Filter Options", "FiltersMenu"
+	SubMenu "Custom Tag Options", "CustomTagMenu"
 	StaticText ""
 	StaticText "----- Miscellaneous -----", "Teal"
 	Option "Kill Sound Type", "wt_killsound", "KillSoundType"
@@ -122,6 +123,19 @@ OptionMenu "FiltersMenu"
 	StaticText "Mod classes will always appear, regardless of this setting.", "White"
 	StaticText "Recommended to set weapons to 'None' if playing with weapon mods.", "White"
 	StaticText "Same logic applies to monsters as well.", "White"
+}
+
+OptionMenu "CustomTagMenu"
+{
+	Title "Custom Tag Options"
+
+	Option "Force Custom Tags", "wt_tags_force", "YesNo"
+	StaticText "This mod defines custom tags for actors that don't have any.", "White"
+	StaticText "Flipping this on will force custom tags to be used on all applicable actors,", "White"
+	StaticText "even if they do have an already defined native tag.", "White"
+	StaticText ""
+	StaticText "----- SUPPORTED CLASSES-----", "Teal"
+	Class "OptionMenuCustomTagListMenu"
 }
 
 AddOptionMenu "OptionsMenu"

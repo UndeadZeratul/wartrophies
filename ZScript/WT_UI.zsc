@@ -46,6 +46,8 @@ extend class WT_MainHandler
 	private transient CVar LiteHudAlpha;
 	private transient CVar LiteHudVisibilityFlags;
 
+	private transient CVar ForceCustomTags;
+
 	const DefcolMiscLabel = "WT_FadedBrown";
 	const DefcolSelectedWeapon = "WT_OrangeRed";
 	const DefcolTotalKills = "WT_Red";
@@ -414,9 +416,9 @@ extend class WT_MainHandler
 
 		for (int i = 0; WeaponListEntries * WeaponPage + i < AvailableWeapons.Size() && i < WeaponListEntries; ++i)
 		{
-			let CurrWeapon = GetDefaultByType(AvailableWeapons[WeaponListEntries * WeaponPage + i]);
+			let CurrWeapon = AvailableWeapons[WeaponListEntries * WeaponPage + i];
 			
-			sbar.DrawString(mMainFont, GetTruncatedText(CurrWeapon.GetTag(), WeaponNameListMaxLength), (-174, 36 + 9 * i), DI_TEXT_LEFT, WeaponListSel == CurrWeapon.GetClass() ? Font.FindFontColor(DefcolSelectedWeapon) : Font.FindFontColor(DefcolMiscLabel));
+			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrWeapon), WeaponNameListMaxLength), (-174, 36 + 9 * i), DI_TEXT_LEFT, WeaponListSel == CurrWeapon ? Font.FindFontColor(DefcolSelectedWeapon) : Font.FindFontColor(DefcolMiscLabel));
 		}
 
 		// --------------- WEAPON STATS ---------------
@@ -424,7 +426,7 @@ extend class WT_MainHandler
 		if (WeaponListSel)
 		{
 			// Weapon name.
-			sbar.DrawString(mMainFont, GetTruncatedText(GetDefaultByType(WeaponListSel).GetTag(), WeaponNameMaxLength), (-7, -132), DI_TEXT_LEFT, Font.FindFontColor(DefcolWeaponName));
+			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(WeaponListSel), WeaponNameMaxLength), (-7, -132), DI_TEXT_LEFT, Font.FindFontColor(DefcolWeaponName));
 
 			// Weapon rank.
 			[WeaponRank, WeaponRankString] = GetWeaponRank(WeaponKills);
@@ -487,22 +489,22 @@ extend class WT_MainHandler
 				MonsterKills.Clear();
 				for (int i = 0; i < AvailableMonsters.Size(); ++i)
 				{
-					let Monster = GetDefaultByType(AvailableMonsters[i]);
-					MonsterKills.Push(GetKillsForMonster(WeaponListSel.GetClassName(), Monster.GetClassName()));
+					let CurrMonster = AvailableMonsters[i];
+					MonsterKills.Push(GetKillsForMonster(WeaponListSel.GetClassName(), CurrMonster.GetClassName()));
 				}
 			}
 
-			// [Ace] Then display them.
+			// [Ace] Then display them.G
 			sbar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..GetMonsterPages(AvailableMonsters.Size(), MonsterListEntries), (160, 12), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
 
 			int StartIndex = MonsterListEntries * SelMonsterPage;
 			int mRow = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
 			for (int i = StartIndex; i < AvailableMonsters.Size() && mRow < MonsterListEntries; ++i)
 			{
-				let Monster = GetDefaultByType(AvailableMonsters[i]);
+				let CurrMonster = AvailableMonsters[i];
 
 				// Name.
-				sbar.DrawString(mMainFont, GetTruncatedText(Monster.GetTag(), MonsterNameMaxLength), (-7, 36 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(DefcolMonsterInfo));
+				sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrMonster), MonsterNameMaxLength), (-7, 36 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(DefcolMonsterInfo));
 
 				// Kills.
 				sbar.DrawString(mMainFont, sbar.FormatNumber(MonsterKills[i], 1, 5), (224, 36 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
@@ -546,8 +548,8 @@ extend class WT_MainHandler
 			AllMonsterKills.Clear();
 			for (int i = 0; i < AllMonsters.Size(); ++i)
 			{
-				let Monster = GetDefaultByType(AllMonsters[i]);
-				AllMonsterKills.Push(GetTotalKillsForMonster(AvailableWeapons, Monster.GetClassName()));
+				let CurrMonster = AllMonsters[i];
+				AllMonsterKills.Push(GetTotalKillsForMonster(AvailableWeapons, CurrMonster.GetClassName()));
 			}
 		}
 
@@ -559,10 +561,10 @@ extend class WT_MainHandler
 		for (int i = StartIndex; i < AllMonsters.Size() && mRow < MonsterListEntriesLong; ++i)
 		{
 			bool AlternateColor = i % 2;
-			let Monster = GetDefaultByType(AllMonsters[i]);
+			let CurrMonster = AllMonsters[i];
 
 			// Name.
-			sbar.DrawString(mMainFont, GetTruncatedText(Monster.GetTag(), MonsterNameMaxLengthLong), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? DefcolMonsterAlt : DefcolMonsterInfo));
+			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrMonster), MonsterNameMaxLengthLong), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? DefcolMonsterAlt : DefcolMonsterInfo));
 
 			// Kills.
 			sbar.DrawString(mMainFont, sbar.FormatNumber(AllMonsterKills[i], 1, 5), (174, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? DefcolMonsterAlt : DefcolMonsterInfo));
@@ -645,7 +647,7 @@ extend class WT_MainHandler
 			if (wpn)
 			{
 				int IwadType = GetIwadType(Search_Weapons, wpn);
-				if ((WFilter == Filter_All || WFilter == IWadType || IwadType == Filter_None) && !InSearchMode && (SearchFilter == "" || GetDefaultByType(wpn).GetTag().MakeLower().IndexOf(SearchFilter.MakeLower()) != -1))
+				if ((WFilter == Filter_All || WFilter == IWadType || IwadType == Filter_None) && !InSearchMode && (SearchFilter == "" || GetActorTag(wpn).MakeLower().IndexOf(SearchFilter.MakeLower()) != -1))
 				{
 					arr.Push(wpn);
 				}
@@ -779,7 +781,7 @@ extend class WT_MainHandler
 	{
 		string WpnName = wpn.GetClassName();
 		string WeaponFolder = FolderBindings.At(WpnName.MakeLower());
-		return useFolder && WeaponFolder != "" ? WeaponFolder : GetDefaultByType(wpn).GetTag();
+		return useFolder && WeaponFolder != "" ? WeaponFolder : GetActorTag(wpn);
 	}
 
 	private ui int, string GetWeaponRank(int kills) const
@@ -901,6 +903,16 @@ extend class WT_MainHandler
 		}
 
 		return text;
+	}
+
+	// [Ace] Checks if there's a custom tag. If not, gets the tag. If no tag is present either, get class name.
+	private ui string GetActorTag(class<Actor> a)
+	{
+		string Tag = GetDefaultByType(a).GetTag();
+		string ClassName = a.GetClassName();
+		string CustomTag = TagBindings.At(ClassName.MakeLower());
+		
+		return ForceCustomTags.GetBool() ? (CustomTag != "" ? CustomTag : Tag) : (Tag == ClassName && CustomTag != "" ? CustomTag : Tag); // [Ace] Tag will be class name if it doesn't exist.
 	}
 
 	private ui int GetVisibilityFlags()

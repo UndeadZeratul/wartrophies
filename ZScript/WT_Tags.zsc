@@ -1,0 +1,20 @@
+extend class WT_MainHandler
+{
+	private transient Dictionary TagBindings;
+
+	static const string TagDefs[] =
+	{
+		// Class name. Must be lowercase.	// Custom tag
+		//"hunter",							"Frost Snap"
+	};
+
+	private void TagsInit()
+	{
+		TagBindings = Dictionary.Create();
+
+		for (int i = 0; i < TagDefs.Size(); i += 2)
+		{
+			TagBindings.Insert(TagDefs[i], TagDefs[i + 1]);
+		}
+	}
+}

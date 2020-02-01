@@ -46,3 +46,27 @@ class OptionMenuItemOptionCustomFont : OptionMenuItemOption
 		return indent;
 	}
 }
+
+class OptionMenuCustomTagListMenu : OptionMenu
+{
+	override void Init(Menu parent, OptionMenuDescriptor desc)
+	{
+		Super.Init(parent, desc);
+		mParentMenu = parent;
+		mDesc = desc;
+
+		let MainHandler = WT_MainHandler(EventHandler.Find("WT_MainHandler"));
+		if (MainHandler)
+		{
+			// Prevents item duplication in menu when re-entering it.
+			mDesc.mItems.Delete(6, MainHandler.TagDefs.Size() / 2);
+
+			for (int i = 0; i < MainHandler.TagDefs.Size(); i += 2)
+			{
+				let StaticTextItem = new ("OptionMenuItemStaticText");
+				string Text = "Class: "..MainHandler.TagDefs[i]..", Tag: "..MainHandler.TagDefs[i + 1];
+				mDesc.mItems.Push(StaticTextItem.InitDirect(Text, Font.CR_WHITE));
+			}
+		}
+	}
+}

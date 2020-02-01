@@ -34,6 +34,10 @@ class WT_MainHandler : EventHandler
 	private transient int Experience;
 	private transient int Prestige;
 
+	// [Ace] I want to note, mainly to myself, that dictionaries are case-sensitive. Normally everything should Just Work(tm), but it may, and I mean ***MAY*** be possible for the planets to align and something to get fucked.
+	// That's because I didn't know this at the time and didn't make everything lowercase. Not changing it now because people would lose progress. If something gets screwed up someday, I'll fix it. So far that hasn't happened.
+	// Again, I underline that it MAY happen. Doesn't mean it WILL. MAY =/= WILL. Got it?
+
 	private transient Dictionary WeaponStats; // [Ace] The value of each key is the monster dictionary's JSON. The key is the weapon.
 	private transient Dictionary ProjectileBinds; // [Ace] Key - projectile, value - weapon.
 
@@ -183,12 +187,15 @@ class WT_MainHandler : EventHandler
 		LiteHudColors[Color_WeaponKills] = CVar.FindCVar('wt_lite_color_weaponkills');
 		LiteHudVisibilityFlags = CVar.FindCVar('wt_lite_adv_visibility');
 
+		ForceCustomTags = CVar.FindCVar('wt_tags_force');
+
 		Initialize(false);
 	}
 
 	void Initialize(bool reset)
 	{
 		FolderInit();
+		TagsInit();
 		ProjectileBinds = Dictionary.Create();
 
 		if (reset)
