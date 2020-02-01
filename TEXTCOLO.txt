@@ -25,6 +25,16 @@ WT_OrangeRed
 	#131313 #D4452A 0 128
 }
 
+WT_FadedOrangeRed // [Ace] Unused.
+{
+	#131313 #BF6F40 0 128
+}
+
+WT_FadedOrangeRedAlt // [Ace] Unused.
+{
+	#131313 #F5A77A 0 128
+}
+
 WT_FadedBrown
 {
 	#131313 #B3904C 0 128
@@ -57,7 +67,12 @@ WT_DeepBlue
 
 WT_FadedBlue
 {
-	#131313 #6B9BAD 0 128
+	#131313 #7CA8C0 0 128
+}
+
+WT_FadedBlueAlt
+{
+	#131313 #C8E4F4 0 128
 }
 
 WT_Purple

@@ -56,6 +56,7 @@ extend class WT_MainHandler
 	const DefcolWeaponKills = "WT_Red";
 	const DefcolWeaponPreference = "WT_Grey";
 	const DefcolMonsterInfo = "WT_FadedBlue";
+	const DefcolMonsterAlt = "WT_FadedBlueAlt";
 
 	static const int XPReq[] = { 5000, 8500, 12500, 16000, 20000, 25000, 31000, 37000, 45000, 60000, 85000, 100000, 125000, 175000, 250000, 400000, 600000, 900000, 1150000, 1400000, 1900000, 2850000, 4000000, 5000000 };
 	static const string XPRanks[] = { "Private 1st Class", "Corporal", "Sergeant", "Staff Sergeant", "Sergeant 1st Class", "Master Sergeant", "First Sergeant", "Sergeant Major", "Cmd. Sergeant Major", "Master Chief Sergeant", "2nd Lieutenant", "1st Lieutenant", "Captain", "Major", "Lieutenant Colonel", "Colonel", "Brigadier General", "Major General", "Lieutenant General", "General", "General of the Army", "Field Marshal", "Force Of Freedom", "Savior of Humanity" };
@@ -73,7 +74,7 @@ extend class WT_MainHandler
 	const MonsterListEntries = 11;
 	const MonsterListEntriesLong = 27;
 	const MonsterNameMaxLength = 22;
-	const MonsterNameMaxLengthLong = 27; // [Ace] Timmy Turner, my name is DougsDaleDimmaDaleDimmaDimmsDomeDoDiDomeDimmsDimmaDimmaDome, Owner of the DougDimmsDimmaDaleDimmsDomeDoDiDimmaDimmsDaleDimmaDimmsDaleDimmaDome.
+	const MonsterNameMaxLengthLong = 36; // [Ace] Timmy Turner, my name is DougsDaleDimmaDaleDimmaDimmsDomeDoDiDomeDimmsDimmaDimmaDome, Owner of the DougDimmsDimmaDaleDimmsDomeDoDiDimmaDimmsDaleDimmaDimmsDaleDimmaDome.
 	const KillsPerMedal = 3;
 	const MedalsPerUpgrade = 3; // [Ace] This must be 2 or above!
 	const MedalsPerLine = 11;
@@ -474,6 +475,9 @@ extend class WT_MainHandler
 
 			// --------------- MONSTER LIST & STATS ---------------
 
+			sbar.DrawString(mMainFont, "Monsters", (-7, 12), DI_TEXT_LEFT, Font.FindFontColor(DefcolMonsterInfo));
+			sbar.DrawString(mMainFont, "Kills", (224, 12), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
+
 			// [Ace] Filter the monsters and get all the necessary data for the selected weapon.
 			if (NeedsUpdating & Update_Scorecard_Main)
 			{
@@ -529,6 +533,10 @@ extend class WT_MainHandler
 
 		// --------------- MONSTER LIST & STATS ---------------
 
+		// Labels.
+		sbar.DrawString(mMainFont, "Monsters", (-173, -132), DI_TEXT_LEFT, Font.FindFontColor(DefcolMonsterInfo));
+		sbar.DrawString(mMainFont, "T. Kills", (174, -132), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
+
 		// [Ace] Filter the monsters and get all of them for all filtered weapons.
 		if (NeedsUpdating & Update_Scorecard_Monsters)
 		{
@@ -542,19 +550,20 @@ extend class WT_MainHandler
 		}
 
 		// [Ace] Then display them.
-		sbar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..GetMonsterPages(MonsterListEntriesLong), (70, -132), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
+		sbar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..GetMonsterPages(MonsterListEntriesLong), (110, -132), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
 
 		int StartIndex = MonsterListEntriesLong * SelMonsterPage;
 		int mRow = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
 		for (int i = StartIndex; i < AvailableMonsters.Size() && mRow < MonsterListEntriesLong; ++i)
 		{
+			bool AlternateColor = i % 2;
 			let Monster = GetDefaultByType(AvailableMonsters[i]);
 
 			// Name.
-			sbar.DrawString(mMainFont, GetTruncatedText(Monster.GetTag(), MonsterNameMaxLengthLong), (-133, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(DefcolMonsterInfo));
+			sbar.DrawString(mMainFont, GetTruncatedText(Monster.GetTag(), MonsterNameMaxLengthLong), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? DefcolMonsterAlt : DefcolMonsterInfo));
 
 			// Kills.
-			sbar.DrawString(mMainFont, sbar.FormatNumber(MonsterKills[i], 1, 5), (134, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
+			sbar.DrawString(mMainFont, sbar.FormatNumber(MonsterKills[i], 1, 5), (174, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? DefcolMonsterAlt : DefcolMonsterInfo));
 
 			mRow++;
 		}
