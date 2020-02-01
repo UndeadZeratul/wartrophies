@@ -72,7 +72,7 @@ extend class WT_MainHandler
 	const WeaponNameMaxLength = 30; // [Ace] For the scorecard.
 	const MonsterListEntries = 11;
 	const MonsterListEntriesLong = 27;
-	const MonsterNameMaxLength = 25;
+	const MonsterNameMaxLength = 22;
 	const MonsterNameMaxLengthLong = 25; // [Ace] Timmy Turner, my name is DougsDaleDimmaDaleDimmaDimmsDomeDoDiDomeDimmsDimmaDimmaDome, Owner of the DougDimmsDimmaDaleDimmsDomeDoDiDimmaDimmsDaleDimmaDimmsDaleDimmaDome.
 	const KillsPerMedal = 3;
 	const MedalsPerUpgrade = 3; // [Ace] This must be 2 or above!
