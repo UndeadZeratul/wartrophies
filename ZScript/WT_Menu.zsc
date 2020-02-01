@@ -27,7 +27,8 @@ class OptionMenuItemOptionCustomFont : OptionMenuItemOption
 	{
 		String label = Stringtable.Localize(text);
 		int overlay = grayed? Color(96,48,0,0) : 0;
-		screen.DrawText(WT_MainHandler.FontName, color, indent + CursorSpace(), y + 10, text, DTA_CleanNoMove_1, true, DTA_ColorOverlay, overlay);
+		Font fnt = WT_MainHandler.FontName;
+		screen.DrawText(fnt, color, indent + CursorSpace(), y + fnt.GetHeight() + 2, text, DTA_CleanNoMove_1, true, DTA_ColorOverlay, overlay);
 	}
 
 	override int Draw(OptionMenuDescriptor desc, int y, int indent, bool selected)
@@ -45,6 +46,3 @@ class OptionMenuItemOptionCustomFont : OptionMenuItemOption
 		return indent;
 	}
 }
-
-
-
