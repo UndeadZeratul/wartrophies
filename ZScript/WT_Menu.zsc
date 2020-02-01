@@ -10,3 +10,13 @@ class OptionMenuItemFolderOption : OptionMenuItemOption
 		EventHandler.SendNetworkEvent("WT_MarkNotUpdated", WT_MainHandler.Update_Lite);
 	}
 } 
+
+class OptionMenuItemFilterOption : OptionMenuItemOption
+{
+	override void SetSelection(int Selection)
+	{
+		Super.SetSelection(Selection);
+
+		EventHandler.SendNetworkEvent("WT_MarkNotUpdated", WT_MainHandler.Update_All);
+	}
+} 

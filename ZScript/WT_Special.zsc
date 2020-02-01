@@ -4,6 +4,7 @@ class WT_Telefrag : Weapon
 	{
 		Tag "Telefragging";
 		Inventory.Icon "TFOGB0";
+		Weapon.SlotNumber -2;
 		+WEAPON.CHEATNOTWEAPON
 	}
 

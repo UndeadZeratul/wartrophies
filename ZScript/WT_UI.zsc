@@ -991,6 +991,7 @@ extend class WT_MainHandler
 					case UiEvent.Key_Escape:
 						SearchFilter = "";
 						SendNetworkEvent("WT_ToggleUi");
+						SendNetworkEvent("WT_MarkNotUpdated", Update_Lite);
 						break;
 
 					// [Ace] Enter search mode. Chars: Space

@@ -116,8 +116,8 @@ OptionMenu "FiltersMenu"
 {
 	Title "Filter Options"
 
-	Option "Filter Weapons To IWAD", "wt_filter_iwad_weapons", "IWADFilterMode"
-	Option "Filter Monsters To IWAD", "wt_filter_iwad_monsters", "IWADFilterMode"
+	FilterOption "Filter Weapons To IWAD", "wt_filter_iwad_weapons", "IWADFilterMode"
+	FilterOption "Filter Monsters To IWAD", "wt_filter_iwad_monsters", "IWADFilterMode"
 	StaticText "Use the filters to only show classes from a specific IWAD.", "White"
 	StaticText "Mod classes will always appear, regardless of this setting.", "White"
 	StaticText "Recommended to set weapons to 'None' if playing with weapon mods.", "White"
