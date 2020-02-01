@@ -5,7 +5,7 @@ extend class WT_MainHandler
 	static const string TagDefs[] =
 	{
 		// Class name. Must be lowercase.	// Custom tag
-		//"hunter",							"Frost Snap"
+		"",					""
 	};
 
 	private void TagsInit()

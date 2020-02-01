@@ -68,7 +68,7 @@ OptionMenu "LiteHudFoldersMenu"
 	StaticText "This only works for the Lite HUD.", "White"
 	StaticText ""
 	StaticText "----- SUPPORTED MODS & FOLDERS-----", "Teal"
-	StaticText "Bullet-Eye - Slots", "White"
+	StaticText "Bullet-Eye - Slots, Weapon Type", "White"
 	StaticText "Final Doomer - Weapon Type, Game", "White"
 	StaticText "DoomRL Arsenal - Weapon Type, Assembly Type, Rarity", "White"
 }
