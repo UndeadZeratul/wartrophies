@@ -172,11 +172,12 @@ OptionValue "LiteHudFolders"
 {
 	0, "Disabled"
 	1, "Bullet-Eye (Slots)"
-	2, "Final Doomer (Weapon Type)"
-	3, "Final Doomer (Game)"
-	4, "DoomRL Arsenal (Weapon Type)"
-	5, "DoomRL Arsenal (Assembly Type)"
-	6, "DoomRL Arsenal (Rarity)"
+	2, "Bullet-Eye (Weapon Type)" 
+	3, "Final Doomer (Weapon Type)"
+	4, "Final Doomer (Game)"
+	5, "DoomRL Arsenal (Weapon Type)"
+	6, "DoomRL Arsenal (Assembly Type)"
+	7, "DoomRL Arsenal (Rarity)"
 }
 
 // [Ace] See LANGUAGE.txt

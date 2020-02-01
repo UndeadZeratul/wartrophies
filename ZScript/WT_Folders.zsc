@@ -5,74 +5,74 @@ extend class WT_MainHandler
 
 	static const string BulletEyeDefs[] =
 	{
-		// Class name. Must be lowercase.	// Slots		
-		"frostsnapvalnos",					"Frost Snap",
-		"frostsnapvalnoss2",				"Frost Snap",
-		"frostsnapvalnoss3",				"Frost Snap",
-		"frostsnapvalnoss4",				"Frost Snap",
-		"spitfireweapon",					"Spitfire",			
-		"spitfireweapons2",					"Spitfire",			
-		"spitfireweapons3",					"Spitfire",			
-		"spreadshotweapon",					"Spread Shot",
-		"spreadshotweapons2",				"Spread Shot",
-		"spreadshotweapons3",				"Spread Shot",
-		"busterweapon",						"Buster",			
-		"busterweapons2",					"Buster",			
-		"busterweapons3",					"Buster",			
-		"blazestreamweapon",				"Blaze Stream",
-		"blazestreamweapons2",				"Blaze Stream",
-		"blazestreamweapons3",				"Blaze Stream",
-		"chasermissileweapon",				"Chaser Missile",	
-		"chasermissileweapons2",			"Chaser Missile",	
-		"chasermissileweapons3",			"Chaser Missile",	
-		"crushblastweapon",					"Crush Blast",
-		"crushblastweapons2",				"Crush Blast",
-		"crushblastweapons3",				"Crush Blast",
-		"scraplauncherweapon",				"Scrap Launcher",	
-		"scraplauncherweapons2",			"Scrap Launcher",	
-		"scraplauncherweapons3",			"Scrap Launcher",	
-		"quickstrikeweapon",				"Quick Strike",
-		"quickstrikeweapons2",				"Quick Strike",
-		"quickstrikeweapons3",				"Quick Strike",
-		"huntinglaserweapon",				"Hunting Laser",	
-		"huntinglaserweapons2",				"Hunting Laser",	
-		"huntinglaserweapons3",				"Hunting Laser",	
-		"rapidvulcanweapon",				"Assassin Vulcan",	
-		"rapidvulcanweapons2",				"Assassin Vulcan",	
-		"rapidvulcanweapons3",				"Assassin Vulcan",	
-		"stormgrenadeweapon",				"Storm Mine",
-		"stormgrenadeweapons2",				"Storm Mine",
-		"stormgrenadeweapons3",				"Storm Mine",
-		"volleyshotweapon",					"Volley Shot",
-		"volleyshotweapons2",				"Volley Shot",
-		"volleyshotweapons3",				"Volley Shot",
-		"viperwaveweapon",					"Viper Wave",
-		"viperwaveweapons2",				"Viper Wave",
-		"viperwaveweapons3",				"Viper Wave",
-		"repeaterweapon",					"Repeaters",
-		"repeaterweapons2",					"Repeaters",
-		"repeaterweapons3",					"Repeaters",
-		"triplewyvernweapon",				"Triple Wyvern",	
-		"triplewyvernweapons2",				"Triple Wyvern",	
-		"triplewyvernweapons3",				"Triple Wyvern",	
-		"wingedreaverweapon",				"Winged Reaver",	
-		"wingedreaverweapons2",				"Winged Reaver",	
-		"wingedreaverweapons3",				"Winged Reaver",	
-		"shotwaveweapon",					"Shotwave",			
-		"shotwaveweapons2",					"Shotwave",			
-		"shotwaveweapons3",					"Shotwave",			
-		"grindhalberdweapon",				"Grind Halberd",	
-		"grindhalberdweapons2",				"Grind Halberd",	
-		"grindhalberdweapons3",				"Grind Halberd",	
-		"vampiricgauntletsweapon",			"Vampiric Gauntlets",
-		"vampiricgauntletsweapons2",		"Vampiric Gauntlets",
-		"vampiricgauntletsweapons3",		"Vampiric Gauntlets",
-		"snipercannonweapon",				"Sniper Cannon",	
-		"snipercannonweapons2",				"Sniper Cannon",	
-		"snipercannonweapons3",				"Sniper Cannon",	
-		"metalmonstrosityweapon",			"Metal Monstrosity",
-		"metalmonstrosityweapons2",			"Metal Monstrosity",
-		"metalmonstrosityweapons3",			"Metal Monstrosity"
+		// Class name. Must be lowercase.	// Slots				// Weapon Type
+		"frostsnapvalnos",					"Frost Snap",			"Rapid",
+		"frostsnapvalnoss2",				"Frost Snap",			"Rapid",
+		"frostsnapvalnoss3",				"Frost Snap",			"Rapid",
+		"frostsnapvalnoss4",				"Frost Snap",			"Rapid",
+		"spitfireweapon",					"Spitfire",				"Rapid",
+		"spitfireweapons2",					"Spitfire",				"Rapid",
+		"spitfireweapons3",					"Spitfire",				"Rapid",
+		"spreadshotweapon",					"Spread Shot",			"Area",
+		"spreadshotweapons2",				"Spread Shot",			"Area",
+		"spreadshotweapons3",				"Spread Shot",			"Area",
+		"busterweapon",						"Buster",				"Tech",
+		"busterweapons2",					"Buster",				"Tech",
+		"busterweapons3",					"Buster",				"Tech",
+		"blazestreamweapon",				"Blaze Stream",			"Area",
+		"blazestreamweapons2",				"Blaze Stream",			"Area",
+		"blazestreamweapons3",				"Blaze Stream",			"Area",
+		"chasermissileweapon",				"Chaser Missile",		"Power",
+		"chasermissileweapons2",			"Chaser Missile",		"Power",
+		"chasermissileweapons3",			"Chaser Missile",		"Power",
+		"crushblastweapon",					"Crush Blast",			"Power",
+		"crushblastweapons2",				"Crush Blast",			"Power",
+		"crushblastweapons3",				"Crush Blast",			"Power",
+		"scraplauncherweapon",				"Scrap Launcher",		"Power",
+		"scraplauncherweapons2",			"Scrap Launcher",		"Power",
+		"scraplauncherweapons3",			"Scrap Launcher",		"Power",
+		"quickstrikeweapon",				"Quick Strike",			"Melee",
+		"quickstrikeweapons2",				"Quick Strike",			"Melee",
+		"quickstrikeweapons3",				"Quick Strike",			"Melee",
+		"huntinglaserweapon",				"Hunting Laser",		"Rapid",
+		"huntinglaserweapons2",				"Hunting Laser",		"Rapid",
+		"huntinglaserweapons3",				"Hunting Laser",		"Rapid",
+		"rapidvulcanweapon",				"Assassin Vulcan",		"Tech",
+		"rapidvulcanweapons2",				"Assassin Vulcan",		"Tech",
+		"rapidvulcanweapons3",				"Assassin Vulcan",		"Tech",
+		"stormgrenadeweapon",				"Storm Mine",			"Area",
+		"stormgrenadeweapons2",				"Storm Mine",			"Area",
+		"stormgrenadeweapons3",				"Storm Mine",			"Area",
+		"volleyshotweapon",					"Volley Shot",			"Area",
+		"volleyshotweapons2",				"Volley Shot",			"Area",
+		"volleyshotweapons3",				"Volley Shot",			"Area",
+		"viperwaveweapon",					"Viper Wave",			"Rapid",
+		"viperwaveweapons2",				"Viper Wave",			"Rapid",
+		"viperwaveweapons3",				"Viper Wave",			"Rapid",
+		"repeaterweapon",					"Repeaters",			"Rapid",
+		"repeaterweapons2",					"Repeaters",			"Rapid",
+		"repeaterweapons3",					"Repeaters",			"Rapid",
+		"triplewyvernweapon",				"Triple Wyvern",		"Power",
+		"triplewyvernweapons2",				"Triple Wyvern",		"Power",
+		"triplewyvernweapons3",				"Triple Wyvern",		"Power",
+		"wingedreaverweapon",				"Winged Reaver",		"Tech",
+		"wingedreaverweapons2",				"Winged Reaver",		"Tech",
+		"wingedreaverweapons3",				"Winged Reaver",		"Tech",
+		"shotwaveweapon",					"Shotwave",				"Power",
+		"shotwaveweapons2",					"Shotwave",				"Power",
+		"shotwaveweapons3",					"Shotwave",				"Power",
+		"grindhalberdweapon",				"Grind Halberd",		"Melee",
+		"grindhalberdweapons2",				"Grind Halberd",		"Melee",
+		"grindhalberdweapons3",				"Grind Halberd",		"Melee",
+		"vampiricgauntletsweapon",			"Vampiric Gauntlets",	"Support",
+		"vampiricgauntletsweapons2",		"Vampiric Gauntlets",	"Support",
+		"vampiricgauntletsweapons3",		"Vampiric Gauntlets",	"Support",
+		"snipercannonweapon",				"Sniper Cannon",		"Power",
+		"snipercannonweapons2",				"Sniper Cannon",		"Power",
+		"snipercannonweapons3",				"Sniper Cannon",		"Power",
+		"metalmonstrosityweapon",			"Metal Monstrosity",	"Tech",
+		"metalmonstrosityweapons2",			"Metal Monstrosity",	"Tech",
+		"metalmonstrosityweapons3",			"Metal Monstrosity",	"Tech"
 	};
 
 	static const string FinalDoomerDefs[] =
@@ -403,13 +403,14 @@ extend class WT_MainHandler
 		// [Ace] See MENUDEF -> OptionValue "LiteHudFolders" for what the numbers mean.
 		switch (LiteFolderView.GetInt())
 		{
-			// [Ace] The number i is increased by is the number of columns. The 'i + x' part is which column to use. 1 is second column, 2 is 3rd column, and so on.
-			case 1: for (int i = 0; i < BulletEyeDefs.Size(); i += 2) FolderBindings.Insert(BulletEyeDefs[i], BulletEyeDefs[i + 1]); break;
-			case 2: for (int i = 0; i < FinalDoomerDefs.Size(); i += 3) FolderBindings.Insert(FinalDoomerDefs[i], FinalDoomerDefs[i + 1]); break;
-			case 3: for (int i = 0; i < FinalDoomerDefs.Size(); i += 3) FolderBindings.Insert(FinalDoomerDefs[i], FinalDoomerDefs[i + 2]); break;
-			case 4: for (int i = 0; i < DrlaDefs.Size(); i += 4) FolderBindings.Insert(DrlaDefs[i], DrlaDefs[i + 1]); break;
-			case 5: for (int i = 0; i < DrlaDefs.Size(); i += 4) FolderBindings.Insert(DrlaDefs[i], DrlaDefs[i + 2]); break;
-			case 6: for (int i = 0; i < DrlaDefs.Size(); i += 4) FolderBindings.Insert(DrlaDefs[i], DrlaDefs[i + 3]); break;
+			// [Ace] The number 'i' is increased by each iteration is the number of columns. The 'i + x' part is which column to use. 1 is second column, 2 is 3rd column, and so on.
+			case 1: for (int i = 0; i < BulletEyeDefs.Size(); i += 3) FolderBindings.Insert(BulletEyeDefs[i], BulletEyeDefs[i + 1]); break;
+			case 2: for (int i = 0; i < BulletEyeDefs.Size(); i += 3) FolderBindings.Insert(BulletEyeDefs[i], BulletEyeDefs[i + 2]); break;
+			case 3: for (int i = 0; i < FinalDoomerDefs.Size(); i += 3) FolderBindings.Insert(FinalDoomerDefs[i], FinalDoomerDefs[i + 1]); break;
+			case 4: for (int i = 0; i < FinalDoomerDefs.Size(); i += 3) FolderBindings.Insert(FinalDoomerDefs[i], FinalDoomerDefs[i + 2]); break;
+			case 5: for (int i = 0; i < DrlaDefs.Size(); i += 4) FolderBindings.Insert(DrlaDefs[i], DrlaDefs[i + 1]); break;
+			case 6: for (int i = 0; i < DrlaDefs.Size(); i += 4) FolderBindings.Insert(DrlaDefs[i], DrlaDefs[i + 2]); break;
+			case 7: for (int i = 0; i < DrlaDefs.Size(); i += 4) FolderBindings.Insert(DrlaDefs[i], DrlaDefs[i + 3]); break;
 		}
 	}
 
