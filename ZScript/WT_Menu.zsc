@@ -19,4 +19,32 @@ class OptionMenuItemFilterOption : OptionMenuItemOption
 
 		EventHandler.SendNetworkEvent("WT_MarkNotUpdated", WT_MainHandler.Update_All);
 	}
-} 
+}
+
+class OptionMenuItemOptionCustomFont : OptionMenuItemOption
+{
+	protected void CustomDrawValue(int indent, int y, int color, String text, bool grayed = false)
+	{
+		String label = Stringtable.Localize(text);
+		int overlay = grayed? Color(96,48,0,0) : 0;
+		screen.DrawText(WT_MainHandler.FontName, color, indent + CursorSpace(), y + 10, text, DTA_CleanNoMove_1, true, DTA_ColorOverlay, overlay);
+	}
+
+	override int Draw(OptionMenuDescriptor desc, int y, int indent, bool selected)
+	{
+		if (mCenter)
+		{
+			indent = (screen.GetWidth() / 2);
+		}
+		drawLabel(indent, y, selected? OptionMenuSettings.mFontColorSelection : OptionMenuSettings.mFontColor, isGrayed());
+
+		int Selection = GetSelection();
+		String text = StringTable.Localize(OptionValues.GetText(mValues, Selection));
+		if (text.Length() == 0) text = "Unknown";
+		CustomDrawValue(indent, y, OptionMenuSettings.mFontColorValue, text, isGrayed());
+		return indent;
+	}
+}
+
+
+

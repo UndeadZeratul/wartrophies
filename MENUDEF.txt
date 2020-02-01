@@ -76,13 +76,13 @@ OptionMenu "LiteHudColorsMenu"
 {
 	Title "Lite HUD Color Options"
 
-	Option "Labels", "wt_lite_color_labels", "LiteHUDColor"
-	Option "Total Kills", "wt_lite_color_totalkills", "LiteHUDColor"
-	Option "Genocide Rank", "wt_lite_color_genociderank", "LiteHUDColor"
-	Option "Player Rank", "wt_lite_color_playerrank", "LiteHUDColor"
-	Option "Weapon Name", "wt_lite_color_weaponname", "LiteHUDColor"
-	Option "Weapon Rank", "wt_lite_color_weaponrank", "LiteHUDColor"
-	Option "Weapon Kills", "wt_lite_color_weaponkills", "LiteHUDColor"
+	OptionCustomFont "Labels", "wt_lite_color_labels", "LiteHUDColor"
+	OptionCustomFont "Total Kills", "wt_lite_color_totalkills", "LiteHUDColor"
+	OptionCustomFont "Genocide Rank", "wt_lite_color_genociderank", "LiteHUDColor"
+	OptionCustomFont "Player Rank", "wt_lite_color_playerrank", "LiteHUDColor"
+	OptionCustomFont "Weapon Name", "wt_lite_color_weaponname", "LiteHUDColor"
+	OptionCustomFont "Weapon Rank", "wt_lite_color_weaponrank", "LiteHUDColor"
+	OptionCustomFont "Weapon Kills", "wt_lite_color_weaponkills", "LiteHUDColor"
 }
 
 OptionMenu "LiteHudAdvancedMenu"
@@ -182,6 +182,7 @@ OptionValue "LiteHudFolders"
 // [Ace] See LANGUAGE.txt
 OptionValue "LiteHUDColor"
 {
+	// [Ace] Original colors. Ordered by hue.
 	0, "Default"
 	1, "$HUD_PRETTY_COLOR_1"
 	2, "$HUD_PRETTY_COLOR_2"
@@ -197,4 +198,10 @@ OptionValue "LiteHUDColor"
 	12, "$HUD_PRETTY_COLOR_12"
 	13, "$HUD_PRETTY_COLOR_13"
 	14, "$HUD_PRETTY_COLOR_14"
+
+	// [Ace] And from here on all ordering went to shit.
+	15, "$HUD_PRETTY_COLOR_15"
+	16, "$HUD_PRETTY_COLOR_16"
+	17, "$HUD_PRETTY_COLOR_17"
+	18, "$HUD_PRETTY_COLOR_18"
 }
