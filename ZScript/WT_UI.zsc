@@ -164,6 +164,11 @@ extend class WT_MainHandler
 			}
 
 			StatusBar.SetSize(StatusBar.RelTop, OriginalWidth, OriginalHeight);
+
+			if (NeedsUpdating & Update_Lite)
+			{
+				SendNetworkEvent("WT_MarkUpdated", Update_Lite);
+			}
 		}
 
 		if (DisableSaving)
@@ -176,19 +181,19 @@ extend class WT_MainHandler
 		{
 			switch (SelectedPage)
 			{
-				case 0: DrawScorecardMain(StatusBar); break;
-				case 1: DrawScorecardMonsters(StatusBar); break;
+				case Page_Main:
+					DrawScorecardMain(StatusBar);
+					if (NeedsUpdating & Update_Scorecard_Main) SendNetworkEvent("WT_MarkUpdated", Update_Scorecard_Main);
+					break;
+				case Page_Monsters:
+					DrawScorecardMonsters(StatusBar);
+					if (NeedsUpdating & Update_Scorecard_Monsters) SendNetworkEvent("WT_MarkUpdated", Update_Scorecard_Monsters);
+					break;
 			}
 		}
 		else
 		{
 			AutoSelected = false;
-		}
-
-		// [Ace] It's the end of the method. Everything has been updated. Mark it as such.
-		if (NeedsUpdating)
-		{
-			SendNetworkEvent("wT_MarkUpdated");
 		}
 	}
 
@@ -205,7 +210,7 @@ extend class WT_MainHandler
 		int DI_TL_CENTER_TEXT_CENTER = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
 		int DI_TL_CENTER_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
 
-		if (NeedsUpdating)
+		if (NeedsUpdating & Update_Lite)
 		{
 			TotalKills = GetTotalKillsForAllWeapons();
 		}
@@ -280,7 +285,7 @@ extend class WT_MainHandler
 		int DI_TL_CENTER_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
 
 		bool UseFolderView = LiteFolderView.GetInt();
-		if (wpn && NeedsUpdating)
+		if (wpn && (NeedsUpdating & Update_Lite))
 		{
 			WeaponKills = GetKillsForWeapon(GetDefaultByType(wpn).GetClassName(), UseFolderView);
 		}
@@ -362,7 +367,7 @@ extend class WT_MainHandler
 
 		// --------------- MAIN STATS ---------------
 
-		if (WeaponListSel && NeedsUpdating)
+		if (WeaponListSel && (NeedsUpdating & Update_Scorecard_Main))
 		{
 			TotalKills = GetTotalKillsForAllWeapons();
 			WeaponKills = GetKillsForWeapon(GetDefaultByType(WeaponListSel).GetClassName(), false);
@@ -470,7 +475,7 @@ extend class WT_MainHandler
 			// --------------- MONSTER LIST & STATS ---------------
 
 			// [Ace] Filter the monsters and get all the necessary data for the selected weapon.
-			if (NeedsUpdating)
+			if (NeedsUpdating & Update_Scorecard_Main)
 			{
 				GetMonstersForWeapon(WeaponListSel.GetClassName(), AvailableMonsters);
 				MonsterKills.Clear();
@@ -525,7 +530,7 @@ extend class WT_MainHandler
 		// --------------- MONSTER LIST & STATS ---------------
 
 		// [Ace] Filter the monsters and get all of them for all filtered weapons.
-		if (NeedsUpdating)
+		if (NeedsUpdating & Update_Scorecard_Monsters)
 		{
 			GetAllMonsters(AvailableWeapons, AvailableMonsters);
 			MonsterKills.Clear();
@@ -935,14 +940,12 @@ extend class WT_MainHandler
 						--SelectedPage %= Page_Monsters + 1;
 						SelectedPage = abs(SelectedPage);
 						SelMonsterPage = 0;
-						SendNetworkEvent("WT_MarkNotUpdated");
 						break;
 
 					// [Ace] Cycle pages right.
 					case UiEvent.Key_Right:
 						++SelectedPage %= Page_Monsters + 1;
 						SelMonsterPage = 0;
-						SendNetworkEvent("WT_MarkNotUpdated");
 						break;
 
 					// [Ace] Move weapon selection up.
@@ -950,7 +953,7 @@ extend class WT_MainHandler
 						if (SelectedPage != Page_Main) break;
 						WeaponListSelIndex = max(0, WeaponListSelIndex - 1);
 						SelMonsterPage = 0;
-						SendNetworkEvent("WT_MarkNotUpdated");
+						SendNetworkEvent("WT_MarkNotUpdated", Update_Scorecard_Main);
 						break;
 
 					// [Ace] Move weapon selection down.
@@ -958,7 +961,7 @@ extend class WT_MainHandler
 						if (SelectedPage != Page_Main) break;
 						WeaponListSelIndex = min(WeaponListSelIndex + 1, AvailableWeapons.Size() - 1);
 						SelMonsterPage = 0;
-						SendNetworkEvent("WT_MarkNotUpdated");
+						SendNetworkEvent("WT_MarkNotUpdated", Update_Scorecard_Main);
 						break;
 
 					// [Ace] Previous monster page.

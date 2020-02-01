@@ -10,11 +10,19 @@ class WT_MainHandler : EventHandler
 		Filter_All
 	}
 
+	enum WT_UpdateElement
+	{
+		Update_Lite					= 1,
+		Update_Scorecard_Main		= 1 << 1,
+		Update_Scorecard_Monsters	= 1 << 2,
+		Update_All					= Update_Lite | Update_Scorecard_Main | Update_Scorecard_Monsters
+	}
+
 	// --------------------------------------------------
 	// CVARS & GLOBAL VARS
 	// --------------------------------------------------
 
-	private transient bool NeedsUpdating; // [Ace] Used to only update data when needed.
+	private transient int NeedsUpdating; // [Ace] Used to only update data when needed. This is here so the Lite HUD is also affected, as the only trigger for that is monster kills/weapon changes.
 
 	private transient CVar WeaponStorage;
 	private transient CVar ExperienceStorage;
@@ -58,7 +66,7 @@ class WT_MainHandler : EventHandler
 			WeaponStats.Insert(weapon, KillStats.ToString());
 		}
 
-		NeedsUpdating = true;
+		NeedsUpdating = Update_All;
 	}
 
 	private void PlayKillSound()
@@ -200,7 +208,7 @@ class WT_MainHandler : EventHandler
 			Prestige = PrestigeStorage.GetInt();
 		}
 
-		NeedsUpdating = true;
+		NeedsUpdating = Update_All;
 	}
 
 	// --------------------------------------------------
@@ -232,7 +240,7 @@ class WT_MainHandler : EventHandler
 				// [Ace] Checks if the weapon selection has changed.
 				if (ReadyWeapon != OldWeapon)
 				{
-					NeedsUpdating = true;
+					NeedsUpdating |= Update_Lite;
 				} 
 			}
 		}
@@ -272,20 +280,20 @@ class WT_MainHandler : EventHandler
 		if (e.Name ~== "WT_ResetTally")
 		{
 			ResetTally();
-			NeedsUpdating = true; // [Ace] Just in case.
+			NeedsUpdating = Update_All;
 		}
 
 		if (e.Name ~== "WT_ResetWeapon")
 		{
 			ResetWeapon();
-			NeedsUpdating = true;
+			NeedsUpdating = Update_All;
 		}
 
 		if (e.Name ~== "WT_ToggleUI")
 		{
 			DrawUi = !DrawUi;
 			self.IsUiProcessor = !self.IsUiProcessor;
-			NeedsUpdating = true;
+			NeedsUpdating = Update_All;
 		}
 
 		if (e.Name ~== "WT_UpgradePrestige")
@@ -306,12 +314,12 @@ class WT_MainHandler : EventHandler
 		// [Ace] These are here if they need to be called from UI scope.
 		if (e.Name ~== "WT_MarkUpdated")
 		{
-			NeedsUpdating = false;
+			NeedsUpdating &= ~e.Args[0];
 		}
 
 		if (e.Name ~== "WT_MarkNotUpdated")
 		{
-			NeedsUpdating = true;
+			NeedsUpdating |= e.Args[0];
 		}
 
 		if (e.Name ~== "WT_FolderInit")

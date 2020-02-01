@@ -7,6 +7,6 @@ class OptionMenuItemFolderOption : OptionMenuItemOption
 		Super.SetSelection(Selection);
 
 		EventHandler.SendNetworkEvent("WT_FolderInit");
-		EventHandler.SendNetworkEvent("WT_MarkNotUpdated");
+		EventHandler.SendNetworkEvent("WT_MarkNotUpdated", WT_MainHandler.Update_Lite);
 	}
 } 
