@@ -18,7 +18,7 @@ OptionMenu "WT_ScorecardMenu"
 {
 	Title "Scorecard Options"
 
-	Submenu "Scorecard Keys", "ScorecardKeysMenu"
+	Submenu "Scorecard Keys", "WT_ScorecardKeysMenu"
 	StaticText ""
 	Control "Toggle Scorecard", "netevent wt_toggleui"
 	Option "Use Darker Displays", "wt_panel_blackdisplay", "YesNo"
@@ -47,9 +47,9 @@ OptionMenu "WT_LiteHudMenu"
 {
 	Title "Lite HUD Options"
 
-	Submenu "Folder Options", "LiteHudFoldersMenu"
-	Submenu "Color Options", "LiteHudColorsMenu"
-	SubMenu "Advanced Options", "LiteHudAdvancedMenu"
+	Submenu "Folder Options", "WT_LiteHudFoldersMenu"
+	Submenu "Color Options", "WT_LiteHudColorsMenu"
+	SubMenu "Advanced Options", "WT_LiteHudAdvancedMenu"
 	StaticText ""
 	Option "Lite HUD", "wt_showlite", "LiteHudType"
 	Option "Orientation", "wt_lite_orientation", "LiteHudOrientation"
