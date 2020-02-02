@@ -1,20 +1,25 @@
 extend class WT_MainHandler
 {
-	private transient Dictionary TagBindings;
+	private transient CVar ForceCustomTags;
 
+	// [Ace] Works for both weapons and monsters.
 	static const string TagDefs[] =
 	{
-		// Class name. Must be lowercase.	// Custom tag
-		"",					""
+		// Mod					// Class			// Custom tag
+		"Hideous Destructor",	"Hunter",			"Lmfao"
 	};
 
-	private void TagsInit()
+	private ui string GetCustomTag(class<Actor> cls)
 	{
-		TagBindings = Dictionary.Create();
-
-		for (int i = 0; i < TagDefs.Size(); i += 2)
+		string CustomTag = "";
+		for (int i = 0; i < TagDefs.Size(); i += 3)
 		{
-			TagBindings.Insert(TagDefs[i], TagDefs[i + 1]);
+			class<Actor> a = TagDefs[i + 1];
+			if (cls == a)
+			{
+				CustomTag = TagDefs[i + 2];
+			}
 		}
+		return CustomTag;
 	}
 }

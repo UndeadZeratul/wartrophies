@@ -46,8 +46,6 @@ extend class WT_MainHandler
 	private transient CVar LiteHudAlpha;
 	private transient CVar LiteHudVisibilityFlags;
 
-	private transient CVar ForceCustomTags;
-
 	const DefcolMiscLabel = "WT_FadedBrown";
 	const DefcolSelectedWeapon = "WT_OrangeRed";
 	const DefcolTotalKills = "WT_Red";
@@ -910,7 +908,7 @@ extend class WT_MainHandler
 	{
 		string Tag = GetDefaultByType(a).GetTag();
 		string ClassName = a.GetClassName();
-		string CustomTag = TagBindings.At(ClassName.MakeLower());
+		string CustomTag = GetCustomTag(a);
 		
 		return ForceCustomTags.GetBool() ? (CustomTag != "" ? CustomTag : Tag) : (Tag == ClassName && CustomTag != "" ? CustomTag : Tag); // [Ace] Tag will be class name if it doesn't exist.
 	}

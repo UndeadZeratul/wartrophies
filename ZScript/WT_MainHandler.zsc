@@ -200,7 +200,6 @@ class WT_MainHandler : EventHandler
 	void Initialize(bool reset)
 	{
 		FolderInit();
-		TagsInit();
 		ProjectileBinds = Dictionary.Create();
 
 		if (reset)

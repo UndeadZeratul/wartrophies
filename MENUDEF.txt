@@ -135,7 +135,7 @@ OptionMenu "WT_CustomTagMenu"
 	StaticText "Flipping this on will force custom tags to be used on all applicable actors,", "White"
 	StaticText "even if they do have an already defined native tag.", "White"
 	StaticText ""
-	StaticText "----- SUPPORTED CLASSES-----", "Teal"
+	StaticText "----- CUSTOM TAGS -----", "Teal"
 	Class "OptionMenuCustomTagListMenu"
 }
 
