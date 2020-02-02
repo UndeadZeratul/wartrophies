@@ -2,12 +2,13 @@ extend class WT_MainHandler
 {
 	private transient CVar BlacklistEnabled;
 
-	// [Ace] Works for both weapons and monsters.
+	// [Ace] Works for both weapons and monsters. Inheritance is also taken into account.
 	static const string BlacklistDefs[] =
 	{
 		// Mod					// Class			// Fancy name
-		"Hideous Destructor",	"SelfBandage",		"Improvised Bandaging",
-		"Hideous Destructor",	"NullWeapon",		"Sprinting"
+		"Hideous Destructor",	"HDWoundFixer",		"Healing Items",
+		"Hideous Destructor",	"NullWeapon",		"Sprinting",
+		"Hideous Destructor",	"HDBackpack",		"Backpack"
 	};
 
 	private bool IsBlacklisted(class<Actor> cls)

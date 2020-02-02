@@ -6,7 +6,7 @@ extend class WT_MainHandler
 	static const string TagDefs[] =
 	{
 		// Mod					// Class			// Custom tag
-		"Hideous Destructor",	"Hunter",			"Lmfao"
+		"",	"",			""
 	};
 
 	private ui string GetCustomTag(class<Actor> cls)

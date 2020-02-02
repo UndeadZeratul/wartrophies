@@ -64,7 +64,7 @@ class OptionMenuCustomTagListMenu : OptionMenu
 			for (int i = 0; i < MainHandler.TagDefs.Size(); i += 3)
 			{
 				let StaticTextItem = new ("OptionMenuItemStaticText");
-				string Text = "\c[White]Mod: \c[Green]"..MainHandler.TagDefs[i].."\c[White] - Class: \c[Green]"..MainHandler.TagDefs[i + 1].."\c-""\c[White] - Tag: \c[Green]"..MainHandler.TagDefs[i + 2].."\c-";
+				string Text = "\c[White]Mod: \c[Tan]"..MainHandler.TagDefs[i].."\c[White] - Class: \c[Tan]"..MainHandler.TagDefs[i + 1].."\c-""\c[White] - Tag: \c[Tan]"..MainHandler.TagDefs[i + 2].."\c-";
 				mDesc.mItems.Push(StaticTextItem.InitDirect(Text, Font.CR_UNTRANSLATED));
 			}
 		}
@@ -88,7 +88,7 @@ class OptionMenuWTBlacklistMenu : OptionMenu
 			for (int i = 0; i < MainHandler.BlacklistDefs.Size(); i += 3)
 			{
 				let StaticTextItem = new ("OptionMenuItemStaticText");
-				string Text = "\c[White]Mod: \c[Green]"..MainHandler.BlacklistDefs[i].."\c[White] - Name: \c[Green]"..MainHandler.BlacklistDefs[i + 2].."\c-";
+				string Text = "\c[White]Mod: \c[Tan]"..MainHandler.BlacklistDefs[i].."\c[White] - Name: \c[Tan]"..MainHandler.BlacklistDefs[i + 2].."\c-";
 				mDesc.mItems.Push(StaticTextItem.InitDirect(Text, Font.CR_UNTRANSLATED));
 			}
 		}
