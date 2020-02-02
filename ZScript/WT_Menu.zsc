@@ -70,3 +70,27 @@ class OptionMenuCustomTagListMenu : OptionMenu
 		}
 	}
 }
+
+class OptionMenuWTBlacklistMenu : OptionMenu
+{
+	override void Init(Menu parent, OptionMenuDescriptor desc)
+	{
+		Super.Init(parent, desc);
+		mParentMenu = parent;
+		mDesc = desc;
+
+		let MainHandler = WT_MainHandler(EventHandler.Find("WT_MainHandler"));
+		if (MainHandler)
+		{
+			// Prevents item duplication in menu when re-entering it.
+			mDesc.mItems.Delete(5, MainHandler.BlacklistDefs.Size() / 3);
+
+			for (int i = 0; i < MainHandler.BlacklistDefs.Size(); i += 3)
+			{
+				let StaticTextItem = new ("OptionMenuItemStaticText");
+				string Text = "\c[White]Mod: \c[Green]"..MainHandler.BlacklistDefs[i].."\c[White] - Name: \c[Green]"..MainHandler.BlacklistDefs[i + 2].."\c-";
+				mDesc.mItems.Push(StaticTextItem.InitDirect(Text, Font.CR_UNTRANSLATED));
+			}
+		}
+	}
+}

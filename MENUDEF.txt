@@ -2,10 +2,11 @@ OptionMenu "WarTrophiesMenu"
 {
 	Title "War Trophies Options"
 	
-	SubMenu "Scorecard Options", "ScorecardMenu"
-	Submenu "Lite HUD Options", "LiteHudMenu"
-	SubMenu "Filter Options", "FiltersMenu"
-	SubMenu "Custom Tag Options", "CustomTagMenu"
+	SubMenu "Scorecard Options", "WT_ScorecardMenu"
+	Submenu "Lite HUD Options", "WT_LiteHudMenu"
+	SubMenu "Filter Options", "WT_FiltersMenu"
+	SubMenu "Custom Tag Options", "WT_CustomTagMenu"
+	Submenu "Blacklist Options", "WT_BlacklistMenu"
 	StaticText ""
 	StaticText "----- Miscellaneous -----", "Teal"
 	Option "Kill Sound Type", "wt_killsound", "KillSoundType"
@@ -14,7 +15,7 @@ OptionMenu "WarTrophiesMenu"
 	SafeCommand "Reset stats for equipped weapon", "netevent wt_resetweapon"
 }
 
-OptionMenu "ScorecardMenu"
+OptionMenu "WT_ScorecardMenu"
 {
 	Title "Scorecard Options"
 
@@ -24,7 +25,7 @@ OptionMenu "ScorecardMenu"
 	Option "Use Darker Displays", "wt_panel_blackdisplay", "YesNo"
 }
 
-OptionMenu "ScorecardKeysMenu"
+OptionMenu "WT_ScorecardKeysMenu"
 {
 	Title "Scorecard Keys"
 
@@ -43,7 +44,7 @@ OptionMenu "ScorecardKeysMenu"
 	Option "$MISCMNU_ENABLESCRIPTSCREENSHOTS", "enablescriptscreenshot", "OnOff"
 }
 
-OptionMenu "LiteHudMenu"
+OptionMenu "WT_LiteHudMenu"
 {
 	Title "Lite HUD Options"
 
@@ -59,7 +60,7 @@ OptionMenu "LiteHudMenu"
 	Slider "Opacity", "wt_lite_alpha", 0.1, 1.0, 0.05, 2
 }
 
-OptionMenu "LiteHudFoldersMenu"
+OptionMenu "WT_LiteHudFoldersMenu"
 {
 	Title "Lite HUD Folder Options"
 
@@ -73,7 +74,7 @@ OptionMenu "LiteHudFoldersMenu"
 	StaticText "DoomRL Arsenal - Weapon Type, Assembly Type, Rarity", "White"
 }
 
-OptionMenu "LiteHudColorsMenu"
+OptionMenu "WT_LiteHudColorsMenu"
 {
 	Title "Lite HUD Color Options"
 
@@ -86,7 +87,7 @@ OptionMenu "LiteHudColorsMenu"
 	OptionCustomFont "Weapon Kills", "wt_lite_color_weaponkills", "LiteHUDColor"
 }
 
-OptionMenu "LiteHudAdvancedMenu"
+OptionMenu "WT_LiteHudAdvancedMenu"
 {
 	Title "Lite HUD Advanced Options"
 
@@ -113,7 +114,7 @@ OptionMenu "LiteHudAdvancedMenu"
 	StaticText "VF_WPN_MEDALS - Weapon medals.", "White"
 }
 
-OptionMenu "FiltersMenu"
+OptionMenu "WT_FiltersMenu"
 {
 	Title "Filter Options"
 
@@ -125,7 +126,7 @@ OptionMenu "FiltersMenu"
 	StaticText "Same logic applies to monsters as well.", "White"
 }
 
-OptionMenu "CustomTagMenu"
+OptionMenu "WT_CustomTagMenu"
 {
 	Title "Custom Tag Options"
 
@@ -136,6 +137,18 @@ OptionMenu "CustomTagMenu"
 	StaticText ""
 	StaticText "----- SUPPORTED CLASSES-----", "Teal"
 	Class "OptionMenuCustomTagListMenu"
+}
+
+OptionMenu "WT_BlacklistMenu"
+{
+	Title "Blacklist Options"
+
+	Option "Enable Blacklist", "wt_blacklist_enable", "YesNo"
+	StaticText "Excludes the following actors from kill tracking.", "White"
+	StaticText "Does not remove already existing actors from the scorecard!", "White"
+	StaticText ""
+	StaticText "----- BLACKLISTED CLASSES-----", "Teal"
+	Class "OptionMenuWTBlacklistMenu"
 }
 
 AddOptionMenu "OptionsMenu"
