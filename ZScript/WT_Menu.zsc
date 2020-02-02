@@ -47,30 +47,6 @@ class OptionMenuItemOptionCustomFont : OptionMenuItemOption
 	}
 }
 
-class OptionMenuCustomTagListMenu : OptionMenu
-{
-	override void Init(Menu parent, OptionMenuDescriptor desc)
-	{
-		Super.Init(parent, desc);
-		mParentMenu = parent;
-		mDesc = desc;
-
-		let MainHandler = WT_MainHandler(EventHandler.Find("WT_MainHandler"));
-		if (MainHandler)
-		{
-			// Prevents item duplication in menu when re-entering it.
-			mDesc.mItems.Delete(6, MainHandler.TagDefs.Size() / 3);
-
-			for (int i = 0; i < MainHandler.TagDefs.Size(); i += 3)
-			{
-				let StaticTextItem = new ("OptionMenuItemStaticText");
-				string Text = "\c[White]Mod: \c[Tan]"..MainHandler.TagDefs[i].."\c[White] - Class: \c[Tan]"..MainHandler.TagDefs[i + 1].."\c-""\c[White] - Tag: \c[Tan]"..MainHandler.TagDefs[i + 2].."\c-";
-				mDesc.mItems.Push(StaticTextItem.InitDirect(Text, Font.CR_UNTRANSLATED));
-			}
-		}
-	}
-}
-
 class OptionMenuWTBlacklistMenu : OptionMenu
 {
 	override void Init(Menu parent, OptionMenuDescriptor desc)

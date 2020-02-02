@@ -27,9 +27,6 @@ user int wt_lite_color_weaponname = 0;
 user int wt_lite_color_weaponrank = 0;
 user int wt_lite_color_weaponkills = 0;
 
-// [Ace] Tags.
-user bool wt_tags_force = false;
-
 // [Ace] Blacklist.
 user bool wt_blacklist_enable = true;
 

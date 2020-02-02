@@ -910,7 +910,7 @@ extend class WT_MainHandler
 		string ClassName = a.GetClassName();
 		string CustomTag = GetCustomTag(a);
 		
-		return ForceCustomTags.GetBool() ? (CustomTag != "" ? CustomTag : Tag) : (Tag == ClassName && CustomTag != "" ? CustomTag : Tag); // [Ace] Tag will be class name if it doesn't exist.
+		return CustomTag != "" ? CustomTag : Tag; // [Ace] Tag will be class name if it doesn't exist.
 	}
 
 	private ui int GetVisibilityFlags()

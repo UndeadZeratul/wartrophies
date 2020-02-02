@@ -1,23 +1,45 @@
 extend class WT_MainHandler
 {
-	private transient CVar ForceCustomTags;
-
 	// [Ace] Works for both weapons and monsters.
 	static const string TagDefs[] =
 	{
-		// Mod					// Class			// Custom tag
-		"",	"",			""
-	};
+		// Class							// Custom tag
+		// DoomRL Arsenal
+		"RLFormerHumanPistol",				"Former Human (Pistol)",
+		"RLFormerHumanBattleRifle",			"Former Human (Rifle)",
+		"RLFormerHumanBattleRifle2",		"Former Human (Rifle, Alt)",
+		"RLFormerHumanBattleRifle3",		"Former Female Human",
+		"RLLostSoulNPE",					"Lost Soul (N. Elemental)",
+		"RLNightmareLostSoulNPE",			"Nightmare Soul (Elemental)",
+		"RLNightmareRevenantReborn",		"Nightmare Revenant (Reborn)",
+		"RLCyberneticDemonReborn",			"Mechdemon (Reborn)",
+		"RLCyberneticBaronofHellreborn",	"Techno-lord (Reborn)",
+		"RLBruiserBrother",					"Elder Bruiser Brother",
+		"RLBruiserBrother2",				"Younger Bruiser Brother",
+		"RLAbominantArtifactGuardian",		"Abominant Guardian",
+		"RLLostSoulAgony",					"Agony Lost Soul",
+		"RLLostSoulAgonyspawner",			"Agonizing Lost Soul",
+		"RLLostSoulDeathAgonySpawner",		"Agony Soul",
+		"RLFormerSergeantCombatShotgun",	"Former Human Sergeant (C. Shotgun)",
+		"RLEliteHumanBattleRifle",			"Elite Human (Rifle)",
+		"RLEliteHumanCombatPistol",			"Elite Human(C. Pistol)",
+		"RLEliteHumanHandCannon",			"Elite Human(Handcannon)",
+		"RLEliteHumanBattleRifle2",			"Elite Human(Rifle, Alt)",
+		"RLEliteSergeantPlasmaShotgun",		"Elite Sergeant(P.Shotgun)",
+		"RLEliteSergeantAssaultShotgun",	"Elite Sergeant(A.Shotgun)",
+		"RLEliteSergeantDoubleShotgun",		"Elite Sergeant(D. Shotgun)",
+		"RLFormerCommandoBattleRifle",		"Former Commando(Rifle)"
+	}; 
 
 	private ui string GetCustomTag(class<Actor> cls)
 	{
 		string CustomTag = "";
-		for (int i = 0; i < TagDefs.Size(); i += 3)
+		for (int i = 0; i < TagDefs.Size(); i += 2)
 		{
-			class<Actor> a = TagDefs[i + 1];
+			class<Actor> a = TagDefs[i];
 			if (cls == a)
 			{
-				CustomTag = TagDefs[i + 2];
+				CustomTag = TagDefs[i + 1];
 			}
 		}
 		return CustomTag;
