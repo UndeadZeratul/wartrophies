@@ -170,10 +170,11 @@ class WT_MainHandler : EventHandler
 		ExperienceStorage = CVar.FindCVar('wt_stats_experience');
 		PrestigeStorage = CVar.FindCVar('wt_stats_prestige');
 
-		BlackDisplay = CVar.FindCVar('wt_panel_blackdisplay');
 		IWADWeaponFilter = CVar.FindCVar('wt_filter_iwad_weapons');
 		IWADMonsterFilter = CVar.FindCVar('wt_filter_iwad_monsters');
-		KillSoundType = CVar.FindCVar('wt_killsound');
+
+		ScorecardScale = CVar.FindCVar('wt_scorecard_scale');
+		BlackDisplay = CVar.FindCVar('wt_scorecard_blackdisplays');
 
 		LiteHudType = CVar.FindCVar('wt_showlite');
 		LiteHudOrientation = CVar.FindCVar('wt_lite_orientation');
@@ -191,6 +192,7 @@ class WT_MainHandler : EventHandler
 		LiteHudColors[Color_WeaponKills] = CVar.FindCVar('wt_lite_color_weaponkills');
 		LiteHudVisibilityFlags = CVar.FindCVar('wt_lite_adv_visibility');
 
+		KillSoundType = CVar.FindCVar('wt_killsound');
 		BlacklistEnabled = CVar.FindCVar('wt_blacklist_enable');
 
 		Initialize(false);

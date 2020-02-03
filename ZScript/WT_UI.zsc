@@ -36,7 +36,9 @@ extend class WT_MainHandler
 	// MAIN
 	// --------------------------------------------------
 
+	private transient CVar ScorecardScale;
 	private transient CVar BlackDisplay;
+	
 	private transient CVar LiteHudType;
 	private transient CVar LiteHudOrientation;
 	private transient CVar LiteHudScale;
@@ -113,14 +115,14 @@ extend class WT_MainHandler
 		mMainFont = HUDFont.Create(FontName);
 		int LiteHUD = LiteHudType.GetInt();
 
+		int OriginalWidth = StatusBar.HorizontalResolution;
+		int OriginalHeight = StatusBar.VerticalResolution;
+
 		// ---------- LITE HUD ----------
 
 		if (LiteHUD > 0 && !DrawUi && !AutomapActive && GameState == GS_LEVEL)
 		{
 			double Alpha = LiteHudAlpha.GetFloat();
-
-			int OriginalWidth = StatusBar.HorizontalResolution;
-			int OriginalHeight = StatusBar.VerticalResolution;
 			double Scale = LiteHudScale.GetFloat();
 			int VisiblityFlags = GetVisibilityFlags();
 
@@ -166,6 +168,7 @@ extend class WT_MainHandler
 				}
 			}
 
+			// [Ace] Restore to previous scale.
 			StatusBar.SetSize(StatusBar.RelTop, OriginalWidth, OriginalHeight);
 
 			if (NeedsUpdating & Update_Lite)
@@ -182,6 +185,11 @@ extend class WT_MainHandler
 		// ---------- SCORECARD ----------
 		else if (DrawUi)
 		{
+			double Scale = ScorecardScale.GetFloat();
+			if (Scale > 0 && Scale != 1.0)
+			{
+				StatusBar.SetSize(StatusBar.RelTop, int(OriginalWidth / Scale), int(OriginalHeight / Scale));
+			}
 			switch (SelectedPage)
 			{
 				case Page_Main:
@@ -193,6 +201,9 @@ extend class WT_MainHandler
 					if (NeedsUpdating & Update_Scorecard_Monsters) SendNetworkEvent("WT_MarkUpdated", Update_Scorecard_Monsters);
 					break;
 			}
+
+			// [Ace] Restore to previous scale.
+			StatusBar.SetSize(StatusBar.RelTop, OriginalWidth, OriginalHeight);
 		}
 		else
 		{
