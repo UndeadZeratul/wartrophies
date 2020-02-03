@@ -38,7 +38,7 @@ extend class WT_MainHandler
 
 	private transient CVar ScorecardScale;
 	private transient CVar BlackDisplay;
-	
+
 	private transient CVar LiteHudType;
 	private transient CVar LiteHudOrientation;
 	private transient CVar LiteHudScale;
@@ -96,7 +96,8 @@ extend class WT_MainHandler
 	private transient ui Array<class<Weapon> > AvailableWeapons;
 	private transient ui Array<class<Actor> > AvailableMonsters;
 	private transient ui Array<class<Actor> > AllMonsters;
-	private transient ui int TotalKills;
+	private transient ui int TotalKillsAll;
+	private transient ui int TotalKillsAvailable;
 	private transient ui int WeaponKills;
 	private transient ui Array<int> MonsterKills; // [Ace] For the currently iterated monster.
 	private transient ui Array<int> AllMonsterKills; // [Ace] For every monster.
@@ -226,7 +227,7 @@ extend class WT_MainHandler
 
 		if (NeedsUpdating & Update_Lite)
 		{
-			TotalKills = GetTotalKillsForAllWeapons();
+			TotalKillsAll = GetTotalKillsForAllWeapons();
 		}
 		int NextOffsetY = y;
 
@@ -234,12 +235,12 @@ extend class WT_MainHandler
 		if (visFlags & VF_TotalKills)
 		{
 			sbar.DrawString(mMainFont, "Total:", (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_Labels)), alpha);
-			sbar.DrawString(mMainFont, sbar.FormatNumber(TotalKills, 1, 10), (x + 45, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_TotalKills)), alpha);
+			sbar.DrawString(mMainFont, sbar.FormatNumber(TotalKillsAll, 1, 10), (x + 45, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_TotalKills)), alpha);
 			NextOffsetY += 10;
 		}
 
 		// Genocide rank.
-		[GenocideRank, GenocideRankString] = GetGenocideRank(TotalKills);
+		[GenocideRank, GenocideRankString] = GetGenocideRank(TotalKillsAll);
 		if (visFlags & VF_GenocideRank)
 		{
 			sbar.DrawString(mMainFont, GenocideRankString, (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_GenocideRank)), alpha);
@@ -383,15 +384,16 @@ extend class WT_MainHandler
 
 		if (WeaponListSel && (NeedsUpdating & Update_Scorecard_Main))
 		{
-			TotalKills = GetTotalKillsForAllWeapons();
+			TotalKillsAll = GetTotalKillsForAllWeapons();
+			TotalKillsAvailable = GetTotalKillsForAvailableWeapons();
 			WeaponKills = GetKillsForWeapon(GetDefaultByType(WeaponListSel).GetClassName(), false);
 		}
 
 		// Total kills.
-		sbar.DrawString(mMainFont, sbar.FormatNumber(TotalKills, 1, 10), (-42, -84), DI_TEXT_RIGHT, Font.FindFontColor(DefcolTotalKills));
+		sbar.DrawString(mMainFont, sbar.FormatNumber(TotalKillsAll, 1, 10), (-42, -84), DI_TEXT_RIGHT, Font.FindFontColor(DefcolTotalKills));
 
 		// Genocide rank.
-		[GenocideRank, GenocideRankString] = GetGenocideRank(TotalKills);
+		[GenocideRank, GenocideRankString] = GetGenocideRank(TotalKillsAll);
 		sbar.DrawString(mMainFont, GenocideRankString, (-223, -60), DI_TEXT_LEFT, Font.FindFontColor(DefcolGenocideRank));
 
 		// Genocide medal.
@@ -450,7 +452,7 @@ extend class WT_MainHandler
 			sbar.DrawString(mMainFont, NextWeaponRankKills, (152, -84), DI_TEXT_RIGHT, Font.FindFontColor(DefcolWeaponRank));
 
 			// Weapon preference.
-			sbar.DrawString(mMainFont, int(WeaponKills / double(TotalKills) * 100).."%", (223, -84), DI_TEXT_RIGHT, Font.FindFontColor(DefcolWeaponPreference));
+			sbar.DrawString(mMainFont, int(WeaponKills / double(TotalKillsAvailable) * 100).."%", (223, -84), DI_TEXT_RIGHT, Font.FindFontColor(DefcolWeaponPreference));
 
 			// Weapon icon.
 			string SpriteToDraw = "";
@@ -845,8 +847,21 @@ extend class WT_MainHandler
 	{
 		int TotalKills = 0;
 		let it = DictionaryIterator.Create(WeaponStats);
+		while (it.Next())
 		{
-			while (it.Next())
+			TotalKills += GetKillsForWeapon(it.Key(), false);
+		}
+		return TotalKills;
+	}
+
+	private ui int GetTotalKillsForAvailableWeapons() const
+	{
+		int TotalKills = 0;
+		let it = DictionaryIterator.Create(WeaponStats);
+		while (it.Next())
+		{
+			class<Weapon> wpn = it.Key();
+			if (AvailableWeapons.Find(wpn) != AvailableWeapons.Size())
 			{
 				TotalKills += GetKillsForWeapon(it.Key(), false);
 			}
