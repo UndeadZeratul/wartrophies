@@ -452,7 +452,9 @@ extend class WT_MainHandler
 			sbar.DrawString(mMainFont, NextWeaponRankKills, (152, -84), DI_TEXT_RIGHT, Font.FindFontColor(DefcolWeaponRank));
 
 			// Weapon preference.
-			sbar.DrawString(mMainFont, int(WeaponKills / double(TotalKillsAvailable) * 100).."%", (223, -84), DI_TEXT_RIGHT, Font.FindFontColor(DefcolWeaponPreference));
+			sbar.DrawString(mMainFont, "P:", (167, -84), DI_TEXT_LEFT, Font.FindFontColor(DefcolMiscLabel));
+			double Pref = WeaponKills / double(TotalKillsAvailable) * 100;
+			sbar.DrawString(mMainFont, (Pref < 100 ? String.Format("%.2f", Pref) : String.Format("%i", Pref)).."%", (223, -84), DI_TEXT_RIGHT, Font.FindFontColor(DefcolWeaponPreference));
 
 			// Weapon icon.
 			string SpriteToDraw = "";
