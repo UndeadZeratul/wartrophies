@@ -178,11 +178,6 @@ extend class WT_MainHandler
 			}
 		}
 
-		if (DisableSaving)
-		{
-			StatusBar.DrawString(mMainFont, "KILL SAVING DISABLED", (-2, 2), BaseStatusBar.DI_SCREEN_RIGHT_TOP | BaseStatusBar.DI_TEXT_ALIGN_RIGHT, Font.CR_RED);
-		}
-
 		// ---------- SCORECARD ----------
 		else if (DrawUi)
 		{
@@ -209,6 +204,11 @@ extend class WT_MainHandler
 		else
 		{
 			AutoSelected = false;
+		}
+
+		if (DisableSaving)
+		{
+			StatusBar.DrawString(mMainFont, "KILL SAVING DISABLED", (-2, 2), BaseStatusBar.DI_SCREEN_RIGHT_TOP | BaseStatusBar.DI_TEXT_ALIGN_RIGHT, Font.CR_RED);
 		}
 	}
 
