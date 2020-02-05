@@ -464,16 +464,16 @@ extend class WT_MainHandler
 				// [Ace] Loops either until NextState is null or until it starts back from the beginning.
 				State SpawnState = GetDefaultByType(WeaponListSel).SpawnState;
 				State CurrState = SpawnState;
-				do
+				for (int i = 0; i < 30 && CurrState != null; i++)
 				{
 					string SpriteName = TexMan.GetName(CurrState.GetSpriteTexture(0));
-					if (SpriteName  != "TNT1A0")
+					if (SpriteName != "TNT1A0")
 					{
 						SpriteToDraw = SpriteName;
 						break;
 					}
 					CurrState = CurrState.NextState;
-				} while (CurrState != null && SpawnState != CurrState)
+				}
 			}
 			else
 			{
