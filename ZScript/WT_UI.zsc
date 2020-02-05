@@ -507,7 +507,7 @@ extend class WT_MainHandler
 				}
 			}
 
-			// [Ace] Then display them.G
+			// [Ace] Then display them.
 			sbar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..GetMonsterPages(AvailableMonsters.Size(), MonsterListEntries), (160, 12), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
 
 			int StartIndex = MonsterListEntries * SelMonsterPage;
@@ -1021,7 +1021,7 @@ extend class WT_MainHandler
 					// [Ace] Next monster page.
 					case UiEvent.Key_PgDn:
 						int TotalMonsters = SelectedPage == Page_Monsters ? AllMonsters.Size() : AvailableMonsters.Size();
-						int MaxEntries = SelectedPage == Page_Monsters ? MonsterListEntriesLong : MonsterListEntries - 1;
+						int MaxEntries = SelectedPage == Page_Monsters ? MonsterListEntriesLong : MonsterListEntries;
 						SelMonsterPage = min(SelMonsterPage + 1, GetMonsterPages(TotalMonsters, MaxEntries) - 1);
 						break;
 
