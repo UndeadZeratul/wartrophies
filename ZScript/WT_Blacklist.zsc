@@ -8,6 +8,8 @@ extend class WT_MainHandler
 		// Mod					// Class			// Fancy name
 		"Hideous Destructor",	"HDWoundFixer",		"Healing Items",
 		"Hideous Destructor",	"NullWeapon",		"Sprinting",
+		"Hideous Destructor",	"MagManager",		"Mag Manager",
+		"Hideous Destructor",	"PickupManager",	"Item Manager",
 		"Hideous Destructor",	"HDBackpack",		"Backpack"
 	};
 
