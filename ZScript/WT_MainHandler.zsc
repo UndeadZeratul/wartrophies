@@ -249,10 +249,10 @@ class WT_MainHandler : EventHandler
 				// [Ace] If the weapon is a powered up version, use the main one instead.
 				ReadyWeapon = plr.player.ReadyWeapon.bPOWERED_UP ? plr.Player.ReadyWeapon.SisterWeaponType : plr.player.ReadyWeapon.GetClass();
 
-				// [Ace] Checks if the weapon selection has changed.
+				// [Ace] Checks if the weapon selection has changed. Also update the scorecard upon opening it because of autoselect, otherwise the wrong stats will be displayed.
 				if (ReadyWeapon != OldWeapon)
 				{
-					NeedsUpdating |= Update_Lite;
+					NeedsUpdating |= Update_Lite | Update_Scorecard_Main;
 				} 
 			}
 		}
