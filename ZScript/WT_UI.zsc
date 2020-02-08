@@ -107,6 +107,7 @@ extend class WT_MainHandler
 	private transient ui string WeaponRankString;
 	private transient ui int GenocideRank;
 	private transient ui string GenocideRankString;
+	private transient ui int PlayerStatsWidth; // [Ace] Used to shift the weapon stats dynamically.
 
 	// [Ace] Misc crap.
 	private transient ui HUDFont mMainFont;
@@ -158,10 +159,7 @@ extend class WT_MainHandler
 						switch(LiteHudOrientation.GetInt())
 						{
 							case 0: PosY += 100; break;
-							case 1:
-								Font fnt = FontName;
-								PosX += (PlayerRankString != "" || GenocideRankString != "") ? 10 + max(fnt.StringWidth(PlayerRankString), fnt.StringWidth(GenocideRankString)) : 100;
-								break;
+							case 1: PosX += 10 + PlayerStatsWidth; break;
 						}
 					}
 
@@ -220,6 +218,7 @@ extend class WT_MainHandler
 	{
 		sbar.BeginHUD();
 
+		Font fnt = FontName;
 		int DI_TL = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_ITEM_LEFT_TOP;
 		int DI_TL_TEXT_LEFT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
 		int DI_TL_CENTER_TEXT_CENTER = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
@@ -234,8 +233,10 @@ extend class WT_MainHandler
 		// Total kills.
 		if (visFlags & VF_TotalKills)
 		{
-			sbar.DrawString(mMainFont, "Total:", (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_Labels)), alpha);
-			sbar.DrawString(mMainFont, sbar.FormatNumber(TotalKillsAll, 1, 10), (x + 45, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_TotalKills)), alpha);
+			string TotalKillsString = "\c["..GetColorForElement(Color_Labels).."]Total: \c["..GetColorForElement(Color_TotalKills).."]"..sbar.FormatNumber(TotalKillsAll, 1, 10).."\c-";
+			sbar.DrawString(mMainFont, TotalKillsString, (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
+
+			PlayerStatsWidth = max(PlayerStatsWidth, fnt.StringWidth(TotalKillsString));
 			NextOffsetY += 10;
 		}
 
@@ -244,6 +245,8 @@ extend class WT_MainHandler
 		if (visFlags & VF_GenocideRank)
 		{
 			sbar.DrawString(mMainFont, GenocideRankString, (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_GenocideRank)), alpha);
+
+			PlayerStatsWidth = max(PlayerStatsWidth, fnt.StringWidth(GenocideRankString));
 			NextOffsetY += 14;
 		}
 
@@ -256,20 +259,26 @@ extend class WT_MainHandler
 				sbar.DrawImage("PRSTIGE"..Prestige, (x, NextOffsetY - 5), DI_TL, alpha);
 			}
 			sbar.DrawString(mMainFont, PlayerRankString, (Prestige > 0 ? x + 12 : x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_PlayerRank)), alpha);
+
+			PlayerStatsWidth = max(PlayerStatsWidth, fnt.StringWidth(PlayerRankString));
 			NextOffsetY += 10;
 		}
 
 		// Player experience.
 		if (visFlags & VF_PlayerExperience)
 		{
-			sbar.DrawString(mMainFont, "XP:", (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_Labels)), alpha);
-			sbar.DrawString(mMainFont, sbar.FormatNumber(Experience, 1, 7), (x + 22, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_PlayerRank)), alpha);
+			string ExperienceString = "\c["..GetColorForElement(Color_Labels).."]XP: \c["..GetColorForElement(Color_PlayerRank).."]"..sbar.FormatNumber(Experience, 1, 7).."\c-";
+			sbar.DrawString(mMainFont, ExperienceString, (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
+
+			PlayerStatsWidth = max(PlayerStatsWidth, fnt.StringWidth(ExperienceString));
 			NextOffsetY += 10;
 
 			// Player experience for next level.
-			string NextPlayerRankExp = PlayerRank < XPReq.Size() ? sbar.FormatNumber(XPReq[PlayerRank], 1, 7) : "-";
-			sbar.DrawString(mMainFont, "NX:", (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_Labels)), alpha);
-			sbar.DrawString(mMainFont, NextPlayerRankExp, (x + 22, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_PlayerRank)), alpha);
+			string NextRankExp = PlayerRank < XPReq.Size() ? sbar.FormatNumber(XPReq[PlayerRank], 1, 7) : "-";
+			string NextRankExpString = "\c["..GetColorForElement(Color_Labels).."]NX: \c["..GetColorForElement(Color_PlayerRank).."]"..NextRankExp.."\c-";
+			sbar.DrawString(mMainFont, NextRankExpString, (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
+
+			PlayerStatsWidth = max(PlayerStatsWidth, fnt.StringWidth(NextRankExpString));
 			NextOffsetY += 14;
 		}
 
