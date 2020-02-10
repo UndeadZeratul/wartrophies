@@ -6,6 +6,12 @@ WT/KillSound5 POINT5
 
 WT/Prestige PRESTIGE
 
+WT/ScorecardOpen CARDOPEN
+WT/ScorecardClose CARDCLSE
+WT/SelectWeapon SELWEAPN
+WT/ChangePage CHNGPAGE
+WT/ChangeSubPage CHSUBPGE
+
 $pitchshift WT/LevelUp 0
 $pitchshift WT/RankUp 0
 $pitchshift WT/Milestone 0

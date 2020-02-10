@@ -998,12 +998,14 @@ extend class WT_MainHandler
 						--SelectedPage %= Page_Monsters + 1;
 						SelectedPage = abs(SelectedPage);
 						SelMonsterPage = 0;
+						S_StartSound("WT/ChangePage", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
 
 					// [Ace] Cycle pages right.
 					case UiEvent.Key_Right:
 						++SelectedPage %= Page_Monsters + 1;
 						SelMonsterPage = 0;
+						S_StartSound("WT/ChangePage", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
 
 					// [Ace] Move weapon selection up.
@@ -1012,6 +1014,7 @@ extend class WT_MainHandler
 						WeaponListSelIndex = max(0, WeaponListSelIndex - 1);
 						SelMonsterPage = 0;
 						SendNetworkEvent("WT_MarkNotUpdated", Update_Scorecard_Main);
+						S_StartSound("WT/SelectWeapon", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
 
 					// [Ace] Move weapon selection down.
@@ -1020,11 +1023,13 @@ extend class WT_MainHandler
 						WeaponListSelIndex = min(WeaponListSelIndex + 1, AvailableWeapons.Size() - 1);
 						SelMonsterPage = 0;
 						SendNetworkEvent("WT_MarkNotUpdated", Update_Scorecard_Main);
+						S_StartSound("WT/SelectWeapon", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
 
 					// [Ace] Previous monster page.
 					case UiEvent.Key_PgUp:
 						SelMonsterPage = max(0, SelMonsterPage - 1);
+						S_StartSound("WT/ChangeSubPage", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
 
 					// [Ace] Next monster page.
@@ -1032,6 +1037,7 @@ extend class WT_MainHandler
 						int TotalMonsters = SelectedPage == Page_Monsters ? AllMonsters.Size() : AvailableMonsters.Size();
 						int MaxEntries = SelectedPage == Page_Monsters ? MonsterListEntriesLong : MonsterListEntries;
 						SelMonsterPage = min(SelMonsterPage + 1, GetMonsterPages(TotalMonsters, MaxEntries) - 1);
+						S_StartSound("WT/ChangeSubPage", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
 
 					// [Ace] Exit menu.

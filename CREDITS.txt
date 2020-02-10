@@ -21,6 +21,9 @@ Mor'ladim
  - Editing some of the player ranks. Thanks!
  - Folders for Bullet-Eye.
 
+Unreal Tournament (Epic Games)
+ - All UI sounds.
+
 Tetris: The Grand Master 3 - Terror-Instinct
  - Weapon medals
 

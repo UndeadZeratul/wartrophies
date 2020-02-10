@@ -75,7 +75,7 @@ class WT_MainHandler : EventHandler
 
 	private void PlayKillSound()
 	{
-		S_StartSound("WT/KillSound"..KillSoundType.GetInt(), CHANF_UI, CHAN_AUTO | CHAN_UI);
+		S_StartSound("WT/KillSound"..KillSoundType.GetInt(), CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 	}
 
 	private void UpgradePrestige()
@@ -83,7 +83,7 @@ class WT_MainHandler : EventHandler
 		Prestige++;
 		int ExtraExperience = Experience - XPReq[XPReq.Size() - 1];
 		Experience = ExtraExperience;
-		S_StartSound("WT/Prestige", CHAN_UI | CHAN_AUTO);
+		S_StartSound("WT/Prestige", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 	}
 
 	// --------------------------------------------------
@@ -305,6 +305,7 @@ class WT_MainHandler : EventHandler
 		{
 			DrawUi = !DrawUi;
 			self.IsUiProcessor = !self.IsUiProcessor;
+			S_StartSound(DrawUi ? "WT/ScorecardOpen" : "WT/ScorecardClose", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 		}
 
 		if (e.Name ~== "WT_UpgradePrestige")
