@@ -944,7 +944,6 @@ extend class WT_MainHandler
 	private ui string GetActorTag(class<Actor> a)
 	{
 		string Tag = GetDefaultByType(a).GetTag();
-		string ClassName = a.GetClassName();
 		string CustomTag = GetCustomTag(a);
 		
 		return CustomTag != "" ? CustomTag : Tag; // [Ace] Tag will be class name if it doesn't exist.
