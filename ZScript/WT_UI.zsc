@@ -669,7 +669,7 @@ extend class WT_MainHandler
 			wpn = it.Key();
 			wtWpn = it.Key();
 
-			// [Ace] If the weapon is an internal WT class, it's probably a compatibility class. Check if the mod it belongs to is loaded. If not, don't bother adding.
+			// [Ace] If the weapon is an internal WT class, it's probably a compatibility class. Check if the required actor exists, i.e. the mod it belongs to is loaded. If not, don't bother adding to list.
 			if (wtWpn)
 			{
 				string CheckedActorString = GetDefaultByType(wtWpn).CheckedActor;

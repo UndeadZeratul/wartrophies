@@ -38,8 +38,7 @@ class WT_Telefrag : WT_Weapon
 
 // [Ace] Compatibility. HEEEEEEEEEEEEEEEEEERE WE GO!
 
-// [Ace] D4T's glory kills, but will probably work with anything whose damage type is "GloryKill". Don't blame me for that.
-class WT_GloryKills : WT_Weapon
+class WT_D4TGloryKills : WT_Weapon
 {
 	Default
 	{

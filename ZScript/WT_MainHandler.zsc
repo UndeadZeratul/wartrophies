@@ -128,7 +128,7 @@ class WT_MainHandler : EventHandler
 					switch (e.DamageType)
 					{
 						case 'Telefrag': UpdateTallyFor("WT_Telefrag", e.Thing.GetClassName()); break;
-						case 'GloryKill': UpdateTallyFor("WT_GloryKills", e.Thing.GetClassName()); break;
+						case 'GloryKill': UpdateTallyFor("WT_D4TGloryKills", e.Thing.GetClassName()); break;
 						default:
 							if (ReadyWeapon && !IsBlacklisted(ReadyWeapon))
 							{
