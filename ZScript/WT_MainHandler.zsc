@@ -123,17 +123,21 @@ class WT_MainHandler : EventHandler
 			else
 			{
 				let plr = PlayerPawn(e.DamageSource);
-				if (plr && e.DamageType == 'Telefrag')
+				if (plr)
 				{
-					UpdateTallyFor("WT_Telefrag", e.Thing.GetClassName());
-
-					Experience += ExperienceGained;
-					PlayKillSound();
-				}
-				else if (plr && ReadyWeapon && !IsBlacklisted(ReadyWeapon))
-				{
-					string WeaponUsed = ReadyWeapon.GetClassName();
-					UpdateTallyFor(WeaponUsed, e.Thing.GetClassName());
+					switch (e.DamageType)
+					{
+						case 'Telefrag': UpdateTallyFor("WT_Telefrag", e.Thing.GetClassName()); break;
+						case 'GloryKill': UpdateTallyFor("WT_GloryKills", e.Thing.GetClassName()); break;
+						default:
+							if (ReadyWeapon && !IsBlacklisted(ReadyWeapon))
+							{
+								string WeaponUsed = ReadyWeapon.GetClassName();
+								UpdateTallyFor(WeaponUsed, e.Thing.GetClassName());
+							}
+							else return;
+							break;
+					}
 
 					Experience += ExperienceGained;
 					PlayKillSound();

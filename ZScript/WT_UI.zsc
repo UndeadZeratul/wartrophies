@@ -665,7 +665,22 @@ extend class WT_MainHandler
 		while (it.Next())
 		{
 			class<Weapon> wpn;
+			class<WT_Weapon> wtWpn;
 			wpn = it.Key();
+			wtWpn = it.Key();
+
+			// [Ace] If the weapon is an internal WT class, it's probably a compatibility class. Check if the mod it belongs to is loaded. If not, don't bother adding.
+			if (wtWpn)
+			{
+				string CheckedActorString = GetDefaultByType(wtWpn).CheckedActor;
+				if (CheckedActorString != "")
+				{
+					class<Actor> CheckedActorClass;
+					CheckedActorClass = CheckedActorString;
+					if (!CheckedActorClass) continue;
+				}
+			}
+
 			if (wpn)
 			{
 				int IwadType = GetIwadType(Search_Weapons, wpn);
