@@ -20,7 +20,7 @@ OptionMenu "WT_ScorecardMenu"
 
 	Submenu "Scorecard Keys", "WT_ScorecardKeysMenu"
 	StaticText ""
-	Control "Toggle Scorecard", "netevent wt_toggleui"
+	Control "Toggle Scorecard", "ToggleScorecard"
 	Slider "Scale", "wt_scorecard_scale", 0.1, 3.0, 0.1, 1
 	Option "Use Darker Displays", "wt_scorecard_blackdisplays", "YesNo"
 }
