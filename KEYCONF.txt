@@ -1,2 +1,3 @@
 AddKeySection "War Trophies" WarTrophiesKeybinds
-AddMenuKey "Open/Close Stats Panel" "netevent wt_toggleui"
+alias ToggleScorecard "netevent wt_toggleui"
+AddMenuKey "Toggle Scorecard" ToggleScorecard
