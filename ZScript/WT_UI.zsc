@@ -129,9 +129,9 @@ extend class WT_MainHandler
 			int VisiblityFlags = GetVisibilityFlags();
 
 			// [Ace] Dividing because smaller numbers means bigger HUD.
-			if (Scale > 0 && Scale != 1.0)
+			if (Scale > 0)
 			{
-				StatusBar.SetSize(StatusBar.RelTop, int(OriginalWidth / Scale), int(OriginalHeight / Scale));
+				StatusBar.SetSize(StatusBar.RelTop, int(640 / Scale), int(480 / Scale));
 			}
 
 			// [Ace] Check: Not "Weapons Stats".
@@ -180,9 +180,9 @@ extend class WT_MainHandler
 		else if (DrawUi)
 		{
 			double Scale = ScorecardScale.GetFloat();
-			if (Scale > 0 && Scale != 1.0)
+			if (Scale > 0)
 			{
-				StatusBar.SetSize(StatusBar.RelTop, int(OriginalWidth / Scale), int(OriginalHeight / Scale));
+				StatusBar.SetSize(StatusBar.RelTop, int(480 / Scale), int(320 / Scale));
 			}
 			switch (SelectedPage)
 			{
@@ -216,7 +216,7 @@ extend class WT_MainHandler
 
 	private ui void DrawLiteHudPlayerStats(BaseStatusBar sbar, int x, int y, int visFlags, double alpha)
 	{
-		sbar.BeginHUD();
+		sbar.BeginHUD(1.0, true);
 
 		Font fnt = FontName;
 		int DI_TL = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_ITEM_LEFT_TOP;
@@ -301,7 +301,7 @@ extend class WT_MainHandler
 
 	private ui void DrawLiteHudWeaponStats(BaseStatusBar sbar, class<Weapon> wpn, int x, int y, int visFlags, double alpha)
 	{
-		sbar.BeginHUD();
+		sbar.BeginHUD(1.0, true);
 
 		int DI_TL = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_ITEM_LEFT_TOP;
 		int DI_TL_TEXT_LEFT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
@@ -363,7 +363,7 @@ extend class WT_MainHandler
 
 	private ui void DrawScorecardMain(BaseStatusBar sbar)
 	{
-		sbar.BeginHUD();
+		sbar.BeginHUD(1.0, true);
 
 		int DI_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_ITEM_CENTER;
 		int DI_TEXT_LEFT = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
@@ -542,7 +542,7 @@ extend class WT_MainHandler
 
 	private ui void DrawScorecardMonsters(BaseStatusBar sbar)
 	{
-		sbar.BeginHUD();
+		sbar.BeginHUD(1.0, true);
 
 		int DI_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_ITEM_CENTER;
 		int DI_TEXT_LEFT = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
