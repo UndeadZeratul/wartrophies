@@ -467,8 +467,12 @@ extend class WT_MainHandler
 
 			// Weapon icon.
 			string SpriteToDraw = "";
-			string Icon = TexMan.GetName(GetDefaultByType(WeaponListSel).Icon);
-			if (Icon == "ALTHUDCF")
+			TextureID Icon = GetDefaultByType(WeaponListSel).Icon;
+			if (Icon.IsValid())
+			{
+				SpriteToDraw = TexMan.GetName(Icon);
+			}
+			else
 			{
 				// [Ace] Loops either until NextState is null or until it starts back from the beginning.
 				State SpawnState = GetDefaultByType(WeaponListSel).SpawnState;
@@ -484,11 +488,7 @@ extend class WT_MainHandler
 					CurrState = CurrState.NextState;
 				}
 			}
-			else
-			{
-				SpriteToDraw = Icon;
-			}
-
+			
 			// [Ace] Scale down sprites if they're too large to fit in the display.
 			TextureID Img = TexMan.CheckForTexture(SpriteToDraw, TexMan.Type_Any);
 			vector2 ImgSize;
