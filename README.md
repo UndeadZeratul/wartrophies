@@ -28,7 +28,7 @@ To fix this, you have four options, three of which require config editing:
 Certain mods don't play too well with War Trophies. They will work, but not always the way you'd expect them to. A few examples:
 - **Combined Arms (and probably lots of other mods):** Some weapons don't have icons or pickup sprites, so the weapon icon in the scorecard would instead be the first frame from the Ready state. It's only a visual "bug".
 - **Kriegsland/Doom Incarnate:** Dual-wielded weapons are separate weapons, meaning their stats are tracked separately from their single variants. This can be fixed if anyone is willing to make folders for those weapons so they count as one. PRs are welcome.
-- **Hideous Destructor:** It's possible to attribute kills from a weapon to a different weapon that cannot physically kill anything. For example, throwing a grenade and switching to bandaging will attribute kills to the latter. Normally this isn't an issue in other mods, but HD handles things... differently.
+- **Hideous Destructor:** It's possible to attribute kills from a weapon to a different weapon that cannot physically kill anything. Most such weapons have been blacklisted, but some may have been overlooked.
 - **Bullet-Eye**: Due to how weapons in Bullet-Eye function under the hood, i.e. a having separate weapon class for each slot, the only workaround is to enable the folders option for the Lite HUD.
 - **Final Doomer**: Whitemare's damage-over-time weapons don't get registered.
 
