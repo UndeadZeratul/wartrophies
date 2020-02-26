@@ -312,7 +312,7 @@ class WT_MainHandler : EventHandler
 			S_StartSound(DrawUi ? "WT/ScorecardOpen" : "WT/ScorecardClose", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 		}
 
-		if (e.Name ~== "WT_UpgradePrestige")
+		if (e.Name ~== "WT_UpgradePrestige" && !e.IsManual)
 		{
 			UpgradePrestige();
 		}
@@ -328,17 +328,17 @@ class WT_MainHandler : EventHandler
 		}
 
 		// [Ace] These are here if they need to be called from UI scope.
-		if (e.Name ~== "WT_MarkUpdated")
+		if (e.Name ~== "WT_MarkUpdated" && !e.IsManual)
 		{
 			NeedsUpdating &= ~e.Args[0];
 		}
 
-		if (e.Name ~== "WT_MarkNotUpdated")
+		if (e.Name ~== "WT_MarkNotUpdated" && !e.IsManual)
 		{
 			NeedsUpdating |= e.Args[0];
 		}
 
-		if (e.Name ~== "WT_FolderInit")
+		if (e.Name ~== "WT_FolderInit" && !e.IsManual)
 		{
 			FolderInit();
 		}
