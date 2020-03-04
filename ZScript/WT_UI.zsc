@@ -151,7 +151,7 @@ extend class WT_MainHandler
 
 				if (VisiblityFlags & VF_Player_All != 0)
 				{
-					PlayerStatsSize = DrawLiteHudPlayerStats(StatusBar, 2 + LiteHudOffsetX.GetInt(), 2 + LiteHudOffsetY.GetInt(), VisiblityFlags, Alpha);
+					PlayerStatsSize = DrawLiteHudPlayerStats(StatusBar, (2 + LiteHudOffsetX.GetInt(), 2 + LiteHudOffsetY.GetInt()), VisiblityFlags, Alpha);
 				}
 
 				// [Ace] Don't update available weapons if the weapon stats aren't visible. It'd be a waste of VM time.
@@ -169,12 +169,12 @@ extend class WT_MainHandler
 						{
 							switch(LiteHudOrientation.GetInt())
 							{
-								case 0: Pos.Y += int(PlayerStatsSize.Y); break;
-								case 1: Pos.X += 10 + int(PlayerStatsSize.X); break;
+								case 0: Pos.Y += PlayerStatsSize.Y; break;
+								case 1: Pos.X += 10 + PlayerStatsSize.X; break;
 							}
 						}
 
-						DrawLiteHudWeaponStats(StatusBar, WeaponListSel, Pos.X + LiteHudOffsetX.GetInt(), Pos.Y + LiteHudOffsetY.GetInt(), VisiblityFlags, Alpha);
+						DrawLiteHudWeaponStats(StatusBar, WeaponListSel, (Pos.X + LiteHudOffsetX.GetInt(), Pos.Y + LiteHudOffsetY.GetInt()), VisiblityFlags, Alpha);
 					}
 				}
 			}
@@ -225,7 +225,7 @@ extend class WT_MainHandler
 	// LITE HUD - PLAYER
 	// --------------------------------------------------------------
 
-	private ui vector2 DrawLiteHudPlayerStats(BaseStatusBar sbar, int x, int y, int visFlags, double alpha)
+	private ui vector2 DrawLiteHudPlayerStats(BaseStatusBar sbar, vector2 pos, int visFlags, double alpha)
 	{
 		vector2 TotalSize = (0, 0);
 
@@ -244,7 +244,7 @@ extend class WT_MainHandler
 		if (visFlags & VF_TotalKills)
 		{
 			string TotalKillsString = "\c["..GetColorForElement(Color_Labels).."]Total: \c["..GetColorForElement(Color_TotalKills).."]"..sbar.FormatNumber(TotalKillsAll, 1, 10).."\c-";
-			sbar.DrawString(mMainFont, TotalKillsString, (x, y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
+			sbar.DrawString(mMainFont, TotalKillsString, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
 
 			TotalSize.X = max(TotalSize.X, fnt.StringWidth(TotalKillsString));
 			TotalSize.Y += 10;
@@ -254,7 +254,7 @@ extend class WT_MainHandler
 		[GenocideRank, GenocideRankString] = GetGenocideRank(TotalKillsAll);
 		if (visFlags & VF_GenocideRank)
 		{
-			sbar.DrawString(mMainFont, GenocideRankString, (x, y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_GenocideRank)), alpha);
+			sbar.DrawString(mMainFont, GenocideRankString, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_GenocideRank)), alpha);
 
 			TotalSize.X = max(TotalSize.X, fnt.StringWidth(GenocideRankString));
 			TotalSize.Y += 10;
@@ -272,9 +272,9 @@ extend class WT_MainHandler
 		{
 			if (Prestige > 0)
 			{
-				sbar.DrawImage("PRSTIGE"..Prestige, (x, y + TotalSize.Y - 5), DI_TL, alpha);
+				sbar.DrawImage("PRSTIGE"..Prestige, (pos.x, pos.y + TotalSize.Y - 5), DI_TL, alpha);
 			}
-			sbar.DrawString(mMainFont, PlayerRankString, (Prestige > 0 ? x + 12 : x, y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_PlayerRank)), alpha);
+			sbar.DrawString(mMainFont, PlayerRankString, (Prestige > 0 ? pos.x + 12 : pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_PlayerRank)), alpha);
 
 			TotalSize.X = max(TotalSize.X, fnt.StringWidth(PlayerRankString));
 			TotalSize.Y += 10;
@@ -284,7 +284,7 @@ extend class WT_MainHandler
 		if (visFlags & VF_PlayerExperience)
 		{
 			string ExperienceString = "\c["..GetColorForElement(Color_Labels).."]XP: \c["..GetColorForElement(Color_PlayerRank).."]"..sbar.FormatNumber(Experience, 1, 7).."\c-";
-			sbar.DrawString(mMainFont, ExperienceString, (x, y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
+			sbar.DrawString(mMainFont, ExperienceString, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
 
 			TotalSize.X = max(TotalSize.X, fnt.StringWidth(ExperienceString));
 			TotalSize.Y += 10;
@@ -292,7 +292,7 @@ extend class WT_MainHandler
 			// Player experience for next level.
 			string NextRankExp = PlayerRank < XPReq.Size() ? sbar.FormatNumber(XPReq[PlayerRank], 1, 7) : "-";
 			string NextRankExpString = "\c["..GetColorForElement(Color_Labels).."]NX: \c["..GetColorForElement(Color_PlayerRank).."]"..NextRankExp.."\c-";
-			sbar.DrawString(mMainFont, NextRankExpString, (x, y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
+			sbar.DrawString(mMainFont, NextRankExpString, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
 
 			TotalSize.X = max(TotalSize.X, fnt.StringWidth(NextRankExpString));
 			TotalSize.Y += 10;
@@ -301,13 +301,13 @@ extend class WT_MainHandler
 		// Genocide medal.
 		if (visFlags & VF_GenocideMedal)
 		{
-			sbar.DrawImage("GRANK"..GenocideRank, (x + 44, y + TotalSize.Y + 4), DI_TL, alpha);
+			sbar.DrawImage("GRANK"..GenocideRank, (pos.x + 44, pos.y + TotalSize.Y + 4), DI_TL, alpha);
 		}
 
 		// Player medal.
 		if (visFlags & VF_PlayerMedal)
 		{
-			sbar.DrawImage("RANK"..(PlayerRank + 1), (x + 2, y + TotalSize.Y + 4), DI_TL, alpha);
+			sbar.DrawImage("RANK"..(PlayerRank + 1), (pos.x + 2, pos.y + TotalSize.Y + 4), DI_TL, alpha);
 		}
 
 		// [Ace] If any of the medals are present, bump the Y offset.
@@ -326,7 +326,7 @@ extend class WT_MainHandler
 	// LITE HUD - WEAPON
 	// --------------------------------------------------------------
 
-	private ui void DrawLiteHudWeaponStats(BaseStatusBar sbar, class<Weapon> wpn, int x, int y, int visFlags, double alpha)
+	private ui void DrawLiteHudWeaponStats(BaseStatusBar sbar, class<Weapon> wpn, vector2 pos, int visFlags, double alpha)
 	{
 		int DI_TL = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_ITEM_LEFT_TOP;
 		int DI_TL_TEXT_LEFT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
@@ -338,7 +338,7 @@ extend class WT_MainHandler
 		{
 			WeaponKills = GetKillsForWeapon(GetDefaultByType(wpn).GetClassName(), UseFolderView);
 		}
-		int NextOffsetY = y;
+		double NextOffsetY = pos.y;
 
 		// Weapon name.
 		if (visFlags & VF_WeaponName)
@@ -348,7 +348,7 @@ extend class WT_MainHandler
 			for (int i = 0; i < MultilineName.Count(); ++i)
 			{
 				NextOffsetY += 10 * i;
-				sbar.DrawString(mMainFont, MultilineName.StringAt(i), (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_WeaponName)), alpha);
+				sbar.DrawString(mMainFont, MultilineName.StringAt(i), (pos.x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_WeaponName)), alpha);
 			}
 			NextOffsetY += 10;
 		}
@@ -357,7 +357,7 @@ extend class WT_MainHandler
 		[WeaponRank, WeaponRankString] = GetWeaponRank(WeaponKills);
 		if (visFlags & VF_WeaponRank)
 		{
-			sbar.DrawString(mMainFont, WeaponRankString, (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_WeaponRank)), alpha);
+			sbar.DrawString(mMainFont, WeaponRankString, (pos.x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_WeaponRank)), alpha);
 			NextOffsetY += 10;
 		}
 
@@ -369,21 +369,21 @@ extend class WT_MainHandler
 		if (visFlags & VF_WeaponKills)
 		{
 			// Weapon kills.
-			sbar.DrawString(mMainFont, "K:", (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_Labels)), alpha);
-			sbar.DrawString(mMainFont, sbar.FormatNumber(WeaponKills, 1, 6), (x + 14, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_WeaponKills)), alpha);
+			sbar.DrawString(mMainFont, "K:", (pos.x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_Labels)), alpha);
+			sbar.DrawString(mMainFont, sbar.FormatNumber(WeaponKills, 1, 6), (pos.x + 14, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_WeaponKills)), alpha);
 			NextOffsetY += 10;
 
 			// Weapon kills for next level.
 			string NextWeaponRankKills = WeaponRank < WeapKillReq.Size() ? sbar.FormatNumber(WeapKillReq[WeaponRank], 1, 6) : "-";
-			sbar.DrawString(mMainFont, "NX:", (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_Labels)), alpha);
-			sbar.DrawString(mMainFont, NextWeaponRankKills, (x + 24, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_WeaponRank)), alpha);
+			sbar.DrawString(mMainFont, "NX:", (pos.x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_Labels)), alpha);
+			sbar.DrawString(mMainFont, NextWeaponRankKills, (pos.x + 24, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_WeaponRank)), alpha);
 			NextOffsetY += 14;
 		}
 
 		// Weapon medals.
 		if (visFlags & VF_WeaponMedals)
 		{
-			DrawWeaponMedals(WeaponKills, x, NextOffsetY, DI_TL, alpha);
+			DrawWeaponMedals(WeaponKills, (pos.x, NextOffsetY), DI_TL, alpha);
 		}
 	}
 
@@ -525,7 +525,7 @@ extend class WT_MainHandler
 			sbar.DrawImage(SpriteToDraw, (40, -33), DI_CENTER, 1.0, Box);
 
 			// Weapon medals.
-			DrawWeaponMedals(WeaponKills, 108, -53, DI_CENTER, 1.0);
+			DrawWeaponMedals(WeaponKills, (108, -53), DI_CENTER, 1.0);
 
 			// --------------- MONSTER LIST & STATS ---------------
 
@@ -654,7 +654,7 @@ extend class WT_MainHandler
 		return null;
 	}
 
-	private ui void DrawWeaponMedals(int kills, int x, int y, int flags, double alpha)
+	private ui void DrawWeaponMedals(int kills, vector2 pos, int flags, double alpha)
 	{
 		int MedalCount[MedalTypesCount]; // [Ace] Each integer denotes how many medals of a given type there should be, starting at the highest type.
 		int TotalNumberOfMedals = kills / KillsPerMedal; // [Ace] More precisely, total number of tier 1 medals.
@@ -677,7 +677,7 @@ extend class WT_MainHandler
 				int XOffset = (j + (MedalsShown - MedalCount[i]));
 				int TotalXOffset = 11 * (XOffset % (MedalsPerLine));
 				int WStatsOffsetY = 15 * (XOffset / MedalsPerLine);
-				StatusBar.DrawImage("WMEDAL"..(MedalTypesCount - i), (x + TotalXOffset, y + WStatsOffsetY), flags, alpha);
+				StatusBar.DrawImage("WMEDAL"..(MedalTypesCount - i), (pos.x + TotalXOffset, pos.y + WStatsOffsetY), flags, alpha);
 			}
 		}
 	}
