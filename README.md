@@ -38,3 +38,4 @@ Certain mods don't play too well with War Trophies. They will work, but not alwa
 *The mod will work without it, but raw class names will be displayed instead and it won't look good unless your class names are sensible.*
 - Add an Icon property to your weapons or define a Spawn state sprite.  
 *Again, will work without it, but sometimes Ready state sprites may be used and it'd look bad.*
+- Prefix your weapon classes! There have been reports of weapons from one mod affecting a weapon from another because they both shared the same class name.
