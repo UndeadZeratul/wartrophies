@@ -20,10 +20,12 @@ extend class WT_MainHandler
 		VF_PlayerRank		= 1 << 3,
 		VF_PlayerExperience	= 1 << 4,
 		VF_PlayerMedal		= 1 << 5,
+		VF_Player_All		= VF_TotalKills | VF_GenocideRank | VF_GenocideMedal | VF_PlayerRank | VF_PlayerExperience | VF_PlayerMedal,
 		VF_WeaponName		= 1 << 6,
 		VF_WeaponRank		= 1 << 7,
 		VF_WeaponKills		= 1 << 8,
-		VF_WeaponMedals		= 1 << 9
+		VF_WeaponMedals		= 1 << 9,
+		VF_Weapon_All		= VF_WeaponName | VF_WeaponRank | VF_WeaponKills | VF_WeaponMedals
 	}
 
 	enum WT_ScorecardPages
@@ -47,7 +49,7 @@ extend class WT_MainHandler
 	private transient CVar ScorecardScale;
 	private transient CVar BlackDisplay;
 
-	private transient CVar LiteHudType;
+	private transient CVar LiteHudEnabled;
 	private transient CVar LiteHudOrientation;
 	private transient CVar LiteHudScale;
 	private transient CVar LiteHudOffsetX;
@@ -124,7 +126,7 @@ extend class WT_MainHandler
 	override void RenderUnderlay(RenderEvent e)
 	{
 		mMainFont = HUDFont.Create(FontName);
-		int LiteHUD = LiteHudType.GetInt();
+		bool ShowLiteHUD = LiteHudEnabled.GetBool();
 
 		int OriginalWidth = StatusBar.HorizontalResolution;
 		int OriginalHeight = StatusBar.VerticalResolution;
@@ -133,7 +135,7 @@ extend class WT_MainHandler
 
 		// --------------- LITE HUD ---------------
 
-		if (LiteHUD > Stats_None && !DrawUi && !AutomapActive && GameState == GS_LEVEL)
+		if (ShowLiteHUD && !DrawUi && !AutomapActive && GameState == GS_LEVEL)
 		{
 			double Alpha = LiteHudAlpha.GetFloat();
 			double Scale = LiteHudScale.GetFloat();
@@ -145,33 +147,38 @@ extend class WT_MainHandler
 				StatusBar.SetSize(StatusBar.RelTop, int(640 / Scale), int(480 / Scale));
 			}
 
-			if (LiteHud != Stats_Weapon)
+			if (ShowLiteHUD)
 			{
-				DrawLiteHudPlayerStats(StatusBar, 2 + LiteHudOffsetX.GetInt(), 2 + LiteHudOffsetY.GetInt(), VisiblityFlags, Alpha);
-			}
+				PlayerStatsHeight = 0;
 
-			// [Ace] Don't update available weapons if the weapon stats aren't visible. It'd be a waste of VM time.
-			if (LiteHUD >= Stats_Weapon)
-			{
-				GetAvailableWeapons(AvailableWeapons);
-				AutoSelectCurrentWeapon();
-				class<Weapon> WeaponListSel = GetSelectedWeaponInList();
-
-				if (WeaponListSel && WeaponListSel == ReadyWeapon)
+				if (VisiblityFlags & VF_Player_All != 0)
 				{
-					int PosX = 2;
-					int PosY = 2;
+					DrawLiteHudPlayerStats(StatusBar, 2 + LiteHudOffsetX.GetInt(), 2 + LiteHudOffsetY.GetInt(), VisiblityFlags, Alpha);
+				}
 
-					if (LiteHud != Stats_Weapon)
+				// [Ace] Don't update available weapons if the weapon stats aren't visible. It'd be a waste of VM time.
+				if (VisiblityFlags & VF_Weapon_All != 0)
+				{
+					GetAvailableWeapons(AvailableWeapons);
+					AutoSelectCurrentWeapon();
+					class<Weapon> WeaponListSel = GetSelectedWeaponInList();
+
+					if (WeaponListSel && WeaponListSel == ReadyWeapon)
 					{
-						switch(LiteHudOrientation.GetInt())
-						{
-							case 0: PosY += 2 + PlayerStatsHeight; break;
-							case 1: PosX += 10 + PlayerStatsWidth; break;
-						}
-					}
+						int PosX = 2;
+						int PosY = 2;
 
-					DrawLiteHudWeaponStats(StatusBar, WeaponListSel, PosX + LiteHudOffsetX.GetInt(), PosY + LiteHudOffsetY.GetInt(), VisiblityFlags, Alpha);
+						if (ShowLiteHUD)
+						{
+							switch(LiteHudOrientation.GetInt())
+							{
+								case 0: PosY += PlayerStatsHeight; break;
+								case 1: PosX += 10 + PlayerStatsWidth; break;
+							}
+						}
+
+						DrawLiteHudWeaponStats(StatusBar, WeaponListSel, PosX + LiteHudOffsetX.GetInt(), PosY + LiteHudOffsetY.GetInt(), VisiblityFlags, Alpha);
+					}
 				}
 			}
 
@@ -252,7 +259,13 @@ extend class WT_MainHandler
 			sbar.DrawString(mMainFont, GenocideRankString, (x, PlayerStatsHeight), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_GenocideRank)), alpha);
 
 			PlayerStatsWidth = max(PlayerStatsWidth, fnt.StringWidth(GenocideRankString));
-			PlayerStatsHeight += 14;
+			PlayerStatsHeight += 10;
+		}
+
+		// [Ace] Separates sections.
+		if (visFlags & VF_GenocideRank || visFlags & VF_TotalKills)
+		{
+			PlayerStatsHeight += 4;
 		}
 
 		// Player rank & prestige.
@@ -284,25 +297,29 @@ extend class WT_MainHandler
 			sbar.DrawString(mMainFont, NextRankExpString, (x, PlayerStatsHeight), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
 
 			PlayerStatsWidth = max(PlayerStatsWidth, fnt.StringWidth(NextRankExpString));
-			PlayerStatsHeight += 14;
+			PlayerStatsHeight += 10;
 		}
 
 		// Genocide medal.
 		if (visFlags & VF_GenocideMedal)
 		{
-			sbar.DrawImage("GRANK"..GenocideRank, (x + 44, PlayerStatsHeight), DI_TL, alpha);
+			sbar.DrawImage("GRANK"..GenocideRank, (x + 44, PlayerStatsHeight + 4), DI_TL, alpha);
 		}
 
 		// Player medal.
 		if (visFlags & VF_PlayerMedal)
 		{
-			sbar.DrawImage("RANK"..(PlayerRank + 1), (x + 2, PlayerStatsHeight), DI_TL, alpha);
+			sbar.DrawImage("RANK"..(PlayerRank + 1), (x + 2, PlayerStatsHeight + 4), DI_TL, alpha);
 		}
 
+		// [Ace] If any of the medals are present, bump the Y offset.
 		if (visFlags & VF_PlayerMedal || visFlags & VF_GenocideMedal)
 		{
 			PlayerStatsHeight += 42;
 		}
+
+		// [Ace] Add a small gap after the player stats.
+		PlayerStatsHeight += 2;
 	}
 
 	// --------------------------------------------------------------
@@ -341,7 +358,12 @@ extend class WT_MainHandler
 		if (visFlags & VF_WeaponRank)
 		{
 			sbar.DrawString(mMainFont, WeaponRankString, (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_WeaponRank)), alpha);
-			NextOffsetY += 14;
+			NextOffsetY += 10;
+		}
+
+		if (visFlags & VF_WeaponName || visFlags & VF_WeaponRank)
+		{
+			NextOffsetY += 4;
 		}
 
 		if (visFlags & VF_WeaponKills)
@@ -980,19 +1002,19 @@ extend class WT_MainHandler
 			Name Flag = SplitFlags.Size() > 0 ? SplitFlags[i] : FlagsString;
 			switch(flag)
 			{
-				case 'VF_PLR_TKILLS': Flags |= VF_TotalKills; break;
-				case 'VF_PLR_GENRANK': Flags |= VF_GenocideRank; break;
-				case 'VF_PLR_GENMEDAL': Flags |= VF_GenocideMedal; break;
-				case 'VF_PLR_PLRANK': Flags |= VF_PlayerRank; break;
-				case 'VF_PLR_PLEXP': Flags |= VF_PlayerExperience; break;
-				case 'VF_PLR_PLMEDAL': Flags |= VF_PlayerMedal; break;
-				case 'VF_PLR_ALL': Flags |= (VF_TotalKills | VF_GenocideRank | VF_GenocideMedal | VF_PlayerRank | VF_PlayerExperience | VF_PlayerMedal); break;
+				case 'VF_PLR_TKILLS':	Flags |= VF_TotalKills; break;			case '!VF_PLR_TKILLS': 		Flags &= ~VF_TotalKills; break;
+				case 'VF_PLR_GENRANK':	Flags |= VF_GenocideRank; break;		case '!VF_PLR_GENRANK':		Flags &= ~VF_GenocideRank; break;
+				case 'VF_PLR_GENMEDAL':	Flags |= VF_GenocideMedal; break;		case '!VF_PLR_GENMEDAL':	Flags &= ~VF_GenocideMedal; break;
+				case 'VF_PLR_PLRANK':	Flags |= VF_PlayerRank; break;			case '!VF_PLR_PLRANK':		Flags &= ~VF_PlayerRank; break;
+				case 'VF_PLR_PLEXP':	Flags |= VF_PlayerExperience; break;	case '!VF_PLR_PLEXP':		Flags &= ~VF_PlayerExperience; break;
+				case 'VF_PLR_PLMEDAL':	Flags |= VF_PlayerMedal; break;			case '!VF_PLR_PLMEDAL':		Flags &= ~VF_PlayerMedal; break;
+				case 'VF_PLR_ALL':		Flags |= VF_Player_All; break;
 
-				case 'VF_WPN_NAME': Flags |= VF_WeaponName; break;
-				case 'VF_WPN_RANK': Flags |= VF_WeaponRank; break;
-				case 'VF_WPN_KILLS': Flags |= VF_WeaponKills; break;
-				case 'VF_WPN_MEDALS': Flags |= VF_WeaponMedals; break;
-				case 'VF_WPN_ALL': Flags |= (VF_WeaponName | VF_WeaponRank | VF_WeaponKills | VF_WeaponMedals); break;
+				case 'VF_WPN_NAME':		Flags |= VF_WeaponName; break;			case '!VF_WPN_NAME': 		Flags &= ~VF_WeaponName; break;
+				case 'VF_WPN_RANK':		Flags |= VF_WeaponRank; break;			case '!VF_WPN_RANK': 		Flags &= ~VF_WeaponRank; break;
+				case 'VF_WPN_KILLS':	Flags |= VF_WeaponKills; break;			case '!VF_WPN_KILLS': 		Flags &= ~VF_WeaponKills; break;
+				case 'VF_WPN_MEDALS':	Flags |= VF_WeaponMedals; break;		case '!VF_WPN_MEDALS': 		Flags &= ~VF_WeaponMedals; break;
+				case 'VF_WPN_ALL':		Flags |= VF_Weapon_All; break;
 			}
 		}
 

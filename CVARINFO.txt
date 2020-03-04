@@ -12,7 +12,7 @@ user bool wt_scorecard_blackdisplays = false;
 user float wt_scorecard_scale = 1.0;
 
 // [Ace] Lite HUD stuff.
-user int wt_showlite = 3;
+user bool wt_showlite = true;
 user int wt_lite_orientation = 0;
 user float wt_lite_scale = 1.0;
 user int wt_lite_offset_x = 0;

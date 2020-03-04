@@ -50,9 +50,9 @@ OptionMenu "WT_LiteHudMenu"
 
 	Submenu "Folder Options", "WT_LiteHudFoldersMenu"
 	Submenu "Color Options", "WT_LiteHudColorsMenu"
-	SubMenu "Advanced Options", "WT_LiteHudAdvancedMenu"
+	SubMenu "Visibility Options", "WT_LiteHudVisibilityMenu"
 	StaticText ""
-	Option "Lite HUD", "wt_showlite", "LiteHudType"
+	Option "Lite HUD", "wt_showlite", "OnOff"
 	Option "Orientation", "wt_lite_orientation", "LiteHudOrientation"
 	Slider "Scale", "wt_lite_scale", 0.1, 3.0, 0.1, 1
 	Slider "Offset X", "wt_lite_offset_x", 0, 300, 5, 0
@@ -87,12 +87,14 @@ OptionMenu "WT_LiteHudColorsMenu"
 	OptionCustomFont "Weapon Kills", "wt_lite_color_weaponkills", "LiteHUDColor"
 }
 
-OptionMenu "WT_LiteHudAdvancedMenu"
+OptionMenu "WT_LiteHudVisibilityMenu"
 {
 	Title "Lite HUD Advanced Options"
 
 	StaticText "The text field below controls which elements are displayed.", "White"
-	StaticText "Flags are separated with the '|' character. Don't use spaces!", "White"
+	StaticText "Flags are separated with the | character. Don't use spaces!", "White"
+	StaticText "Prefix the flags with ! to hide a specific element.", "White"
+	StaticText "VF_*_ALL does not support ! on purpose.", "Red"
 	StaticText ""
 	TextField "Visibility Flags", "wt_lite_adv_visibility"
 	StaticText ""
