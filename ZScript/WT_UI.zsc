@@ -112,7 +112,7 @@ extend class WT_MainHandler
 	// [Ace] Misc crap.
 	private transient ui HUDFont mMainFont;
 
-	override void RenderOverlay(RenderEvent e)
+	override void RenderUnderlay(RenderEvent e)
 	{
 		mMainFont = HUDFont.Create(FontName);
 		int LiteHUD = LiteHudType.GetInt();
