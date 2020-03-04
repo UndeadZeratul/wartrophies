@@ -120,7 +120,9 @@ extend class WT_MainHandler
 		int OriginalWidth = StatusBar.HorizontalResolution;
 		int OriginalHeight = StatusBar.VerticalResolution;
 
-		// ---------- LITE HUD ----------
+		StatusBar.BeginHUD(1.0, true);
+
+		// --------------- LITE HUD ---------------
 
 		if (LiteHUD > 0 && !DrawUi && !AutomapActive && GameState == GS_LEVEL)
 		{
@@ -167,16 +169,13 @@ extend class WT_MainHandler
 				}
 			}
 
-			// [Ace] Restore to previous scale.
-			StatusBar.SetSize(StatusBar.RelTop, OriginalWidth, OriginalHeight);
-
 			if (NeedsUpdating & Update_Lite)
 			{
 				SendNetworkEvent("WT_MarkUpdated", Update_Lite);
 			}
 		}
 
-		// ---------- SCORECARD ----------
+		// --------------- SCORECARD ---------------
 		else if (DrawUi)
 		{
 			double Scale = ScorecardScale.GetFloat();
@@ -195,9 +194,6 @@ extend class WT_MainHandler
 					if (NeedsUpdating & Update_Scorecard_Monsters) SendNetworkEvent("WT_MarkUpdated", Update_Scorecard_Monsters);
 					break;
 			}
-
-			// [Ace] Restore to previous scale.
-			StatusBar.SetSize(StatusBar.RelTop, OriginalWidth, OriginalHeight);
 		}
 		else
 		{
@@ -208,6 +204,11 @@ extend class WT_MainHandler
 		{
 			StatusBar.DrawString(mMainFont, "KILL SAVING DISABLED", (-2, 2), BaseStatusBar.DI_SCREEN_RIGHT_TOP | BaseStatusBar.DI_TEXT_ALIGN_RIGHT, Font.CR_RED);
 		}
+
+		// --------------- PRETEND WE WERE NEVER HERE ---------------
+
+		StatusBar.SetSize(StatusBar.RelTop, OriginalWidth, OriginalHeight);
+		StatusBar.BeginHUD(1.0, false);
 	}
 
 	// --------------------------------------------------------------
@@ -216,8 +217,6 @@ extend class WT_MainHandler
 
 	private ui void DrawLiteHudPlayerStats(BaseStatusBar sbar, int x, int y, int visFlags, double alpha)
 	{
-		sbar.BeginHUD(1.0, true);
-
 		Font fnt = FontName;
 		int DI_TL = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_ITEM_LEFT_TOP;
 		int DI_TL_TEXT_LEFT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
@@ -301,8 +300,6 @@ extend class WT_MainHandler
 
 	private ui void DrawLiteHudWeaponStats(BaseStatusBar sbar, class<Weapon> wpn, int x, int y, int visFlags, double alpha)
 	{
-		sbar.BeginHUD(1.0, true);
-
 		int DI_TL = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_ITEM_LEFT_TOP;
 		int DI_TL_TEXT_LEFT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
 		int DI_TL_CENTER_TEXT_CENTER = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
@@ -363,8 +360,6 @@ extend class WT_MainHandler
 
 	private ui void DrawScorecardMain(BaseStatusBar sbar)
 	{
-		sbar.BeginHUD(1.0, true);
-
 		int DI_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_ITEM_CENTER;
 		int DI_TEXT_LEFT = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
 		int DI_TEXT_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
@@ -542,8 +537,6 @@ extend class WT_MainHandler
 
 	private ui void DrawScorecardMonsters(BaseStatusBar sbar)
 	{
-		sbar.BeginHUD(1.0, true);
-
 		int DI_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_ITEM_CENTER;
 		int DI_TEXT_LEFT = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
 		int DI_TEXT_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
