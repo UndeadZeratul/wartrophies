@@ -217,8 +217,8 @@ extend class WT_MainHandler
 
 		// --------------- PRETEND WE WERE NEVER HERE ---------------
 
-		StatusBar.SetSize(StatusBar.RelTop, OriginalWidth, OriginalHeight);
 		StatusBar.BeginHUD(1.0, false);
+		StatusBar.SetSize(StatusBar.RelTop, OriginalWidth, OriginalHeight);
 	}
 
 	// --------------------------------------------------------------
