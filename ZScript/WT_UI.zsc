@@ -32,6 +32,14 @@ extend class WT_MainHandler
 		Page_Monsters
 	}
 
+	enum WT_LiteHudStats
+	{
+		Stats_None,
+		Stats_Player,
+		Stats_Weapon,
+		Stats_All
+	}
+
 	// --------------------------------------------------
 	// MAIN
 	// --------------------------------------------------
@@ -108,6 +116,7 @@ extend class WT_MainHandler
 	private transient ui int GenocideRank;
 	private transient ui string GenocideRankString;
 	private transient ui int PlayerStatsWidth; // [Ace] Used to shift the weapon stats dynamically.
+	private transient ui int PlayerStatsHeight;  // [Ace] Same as above.
 
 	// [Ace] Misc crap.
 	private transient ui HUDFont mMainFont;
@@ -124,7 +133,7 @@ extend class WT_MainHandler
 
 		// --------------- LITE HUD ---------------
 
-		if (LiteHUD > 0 && !DrawUi && !AutomapActive && GameState == GS_LEVEL)
+		if (LiteHUD > Stats_None && !DrawUi && !AutomapActive && GameState == GS_LEVEL)
 		{
 			double Alpha = LiteHudAlpha.GetFloat();
 			double Scale = LiteHudScale.GetFloat();
@@ -136,15 +145,13 @@ extend class WT_MainHandler
 				StatusBar.SetSize(StatusBar.RelTop, int(640 / Scale), int(480 / Scale));
 			}
 
-			// [Ace] Check: Not "Weapons Stats".
-			if (LiteHud != 2)
+			if (LiteHud != Stats_Weapon)
 			{
 				DrawLiteHudPlayerStats(StatusBar, 2 + LiteHudOffsetX.GetInt(), 2 + LiteHudOffsetY.GetInt(), VisiblityFlags, Alpha);
 			}
 
-			// [Ace] Check: Weapon Stats or All.
-			// Don't update available weapons if the weapon stats aren't visible. It'd be a waste of VM time.
-			if (LiteHUD >= 2)
+			// [Ace] Don't update available weapons if the weapon stats aren't visible. It'd be a waste of VM time.
+			if (LiteHUD >= Stats_Weapon)
 			{
 				GetAvailableWeapons(AvailableWeapons);
 				AutoSelectCurrentWeapon();
@@ -155,12 +162,11 @@ extend class WT_MainHandler
 					int PosX = 2;
 					int PosY = 2;
 
-					// [Ace] Anything except "Weapon Stats"
-					if (LiteHud != 2)
+					if (LiteHud != Stats_Weapon)
 					{
 						switch(LiteHudOrientation.GetInt())
 						{
-							case 0: PosY += 100; break;
+							case 0: PosY += 2 + PlayerStatsHeight; break;
 							case 1: PosX += 10 + PlayerStatsWidth; break;
 						}
 					}
@@ -227,26 +233,26 @@ extend class WT_MainHandler
 		{
 			TotalKillsAll = GetTotalKillsForAllWeapons();
 		}
-		int NextOffsetY = y;
+		PlayerStatsHeight = y;
 
 		// Total kills.
 		if (visFlags & VF_TotalKills)
 		{
 			string TotalKillsString = "\c["..GetColorForElement(Color_Labels).."]Total: \c["..GetColorForElement(Color_TotalKills).."]"..sbar.FormatNumber(TotalKillsAll, 1, 10).."\c-";
-			sbar.DrawString(mMainFont, TotalKillsString, (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
+			sbar.DrawString(mMainFont, TotalKillsString, (x, PlayerStatsHeight), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
 
 			PlayerStatsWidth = max(PlayerStatsWidth, fnt.StringWidth(TotalKillsString));
-			NextOffsetY += 10;
+			PlayerStatsHeight += 10;
 		}
 
 		// Genocide rank.
 		[GenocideRank, GenocideRankString] = GetGenocideRank(TotalKillsAll);
 		if (visFlags & VF_GenocideRank)
 		{
-			sbar.DrawString(mMainFont, GenocideRankString, (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_GenocideRank)), alpha);
+			sbar.DrawString(mMainFont, GenocideRankString, (x, PlayerStatsHeight), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_GenocideRank)), alpha);
 
 			PlayerStatsWidth = max(PlayerStatsWidth, fnt.StringWidth(GenocideRankString));
-			NextOffsetY += 14;
+			PlayerStatsHeight += 14;
 		}
 
 		// Player rank & prestige.
@@ -255,42 +261,47 @@ extend class WT_MainHandler
 		{
 			if (Prestige > 0)
 			{
-				sbar.DrawImage("PRSTIGE"..Prestige, (x, NextOffsetY - 5), DI_TL, alpha);
+				sbar.DrawImage("PRSTIGE"..Prestige, (x, PlayerStatsHeight - 5), DI_TL, alpha);
 			}
-			sbar.DrawString(mMainFont, PlayerRankString, (Prestige > 0 ? x + 12 : x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_PlayerRank)), alpha);
+			sbar.DrawString(mMainFont, PlayerRankString, (Prestige > 0 ? x + 12 : x, PlayerStatsHeight), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_PlayerRank)), alpha);
 
 			PlayerStatsWidth = max(PlayerStatsWidth, fnt.StringWidth(PlayerRankString));
-			NextOffsetY += 10;
+			PlayerStatsHeight += 10;
 		}
 
 		// Player experience.
 		if (visFlags & VF_PlayerExperience)
 		{
 			string ExperienceString = "\c["..GetColorForElement(Color_Labels).."]XP: \c["..GetColorForElement(Color_PlayerRank).."]"..sbar.FormatNumber(Experience, 1, 7).."\c-";
-			sbar.DrawString(mMainFont, ExperienceString, (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
+			sbar.DrawString(mMainFont, ExperienceString, (x, PlayerStatsHeight), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
 
 			PlayerStatsWidth = max(PlayerStatsWidth, fnt.StringWidth(ExperienceString));
-			NextOffsetY += 10;
+			PlayerStatsHeight += 10;
 
 			// Player experience for next level.
 			string NextRankExp = PlayerRank < XPReq.Size() ? sbar.FormatNumber(XPReq[PlayerRank], 1, 7) : "-";
 			string NextRankExpString = "\c["..GetColorForElement(Color_Labels).."]NX: \c["..GetColorForElement(Color_PlayerRank).."]"..NextRankExp.."\c-";
-			sbar.DrawString(mMainFont, NextRankExpString, (x, NextOffsetY), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
+			sbar.DrawString(mMainFont, NextRankExpString, (x, PlayerStatsHeight), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
 
 			PlayerStatsWidth = max(PlayerStatsWidth, fnt.StringWidth(NextRankExpString));
-			NextOffsetY += 14;
+			PlayerStatsHeight += 14;
 		}
 
 		// Genocide medal.
 		if (visFlags & VF_GenocideMedal)
 		{
-			sbar.DrawImage("GRANK"..GenocideRank, (x + 44, NextOffsetY), DI_TL, alpha);
+			sbar.DrawImage("GRANK"..GenocideRank, (x + 44, PlayerStatsHeight), DI_TL, alpha);
 		}
 
 		// Player medal.
-		if (visFlags & VF_GenocideMedal)
+		if (visFlags & VF_PlayerMedal)
 		{
-			sbar.DrawImage("RANK"..(PlayerRank + 1), (x + 2, NextOffsetY), DI_TL, alpha);
+			sbar.DrawImage("RANK"..(PlayerRank + 1), (x + 2, PlayerStatsHeight), DI_TL, alpha);
+		}
+
+		if (visFlags & VF_PlayerMedal || visFlags & VF_GenocideMedal)
+		{
+			PlayerStatsHeight += 42;
 		}
 	}
 
