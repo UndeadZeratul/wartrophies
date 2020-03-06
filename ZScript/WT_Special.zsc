@@ -31,7 +31,7 @@ class WT_Telefrag : WT_Weapon
 	Default
 	{
 		Tag "Telefragging";
-		Inventory.Icon "TFOGB0";
+		Inventory.Icon "WTTLFRAG";
 		Weapon.SlotNumber -50;
 	}
 }
@@ -43,7 +43,7 @@ class WT_D4TGloryKills : WT_Weapon
 	Default
 	{
 		Tag "Glory Kills";
-		Inventory.Icon "STFEVL4";
+		Inventory.Icon "GLRYKILL";
 		Weapon.SlotNumber -49;
 		WT_Weapon.CheckForActor "Doom4Player";
 	}
