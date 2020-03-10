@@ -21,6 +21,9 @@ Mor'ladim
  - Editing some of the player ranks. Thanks!
  - Folders for Bullet-Eye.
 
+Sledge
+ - Reporting various rare issues that otherwise would have gone unnoticed for quite a while.
+
 Unreal Tournament (Epic Games)
  - All UI sounds.
 
