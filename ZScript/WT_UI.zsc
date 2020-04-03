@@ -166,7 +166,7 @@ extend class WT_MainHandler
 							switch(LiteHudOrientation.GetInt())
 							{
 								case 0: Pos.Y += PlayerStatsSize.Y; break;
-								case 1: Pos.X += 10 + PlayerStatsSize.X; break;
+								case 1: Pos.X += PlayerStatsSize.X; break;
 							}
 						}
 
@@ -296,16 +296,18 @@ extend class WT_MainHandler
 			TotalSize.Y += 10;
 		}
 
-		// Genocide medal.
-		if (visFlags & VF_GenocideMedal)
-		{
-			sbar.DrawImage("GRANK"..GenocideRank, (pos.x + 44, pos.y + TotalSize.Y + 4), DI_TL, alpha);
-		}
-
 		// Player medal.
 		if (visFlags & VF_PlayerMedal)
 		{
 			sbar.DrawImage("RANK"..(PlayerRank + 1), (pos.x + 2, pos.y + TotalSize.Y + 4), DI_TL, alpha);
+			TotalSize.X = max(TotalSize.X, 35);
+		}
+
+		// Genocide medal.
+		if (visFlags & VF_GenocideMedal)
+		{
+			sbar.DrawImage("GRANK"..GenocideRank, (pos.x + (visFlags & VF_PlayerMedal ? 44 : 4), pos.y + TotalSize.Y + 4), DI_TL, alpha);
+			TotalSize.X = max(TotalSize.X, (visFlags & VF_PlayerMedal ? 70 : 35));
 		}
 
 		// [Ace] If any of the medals are present, bump the Y offset.
@@ -316,6 +318,7 @@ extend class WT_MainHandler
 
 		// [Ace] Add a small gap after the player stats.
 		TotalSize.Y += 2;
+		TotalSize.X += 10;
 
 		return TotalSize;
 	}
