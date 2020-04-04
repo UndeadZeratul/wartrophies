@@ -29,6 +29,9 @@ extend class WT_MainHandler
 		"RLEliteSergeantAssaultShotgun",	"Elite Sergeant(A.Shotgun)",
 		"RLEliteSergeantDoubleShotgun",		"Elite Sergeant(D. Shotgun)",
 		"RLFormerCommandoBattleRifle",		"Former Commando(Rifle)",
+		"RLIscream",						"Vanilla Ice Cream",
+		"RLIscreamC",						"Chocolate Ice Cream",
+		"RLIscreamS",						"Strawberry Ice Cream",
 
 		// Bullet-Eye
 		"FrostSnapValnos",					"Frost Snap (Slot 1)",
