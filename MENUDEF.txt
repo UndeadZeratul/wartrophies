@@ -50,7 +50,6 @@ OptionMenu "WT_LiteHudMenu"
 
 	Submenu "Folder Options", "WT_LiteHudFoldersMenu"
 	Submenu "Color Options", "WT_LiteHudColorsMenu"
-	SubMenu "Visibility Options", "WT_LiteHudVisibilityMenu"
 	StaticText ""
 	Option "Lite HUD", "wt_showlite", "OnOff"
 	Option "Orientation", "wt_lite_orientation", "LiteHudOrientation"
@@ -58,6 +57,19 @@ OptionMenu "WT_LiteHudMenu"
 	Slider "Offset X", "wt_lite_offset_x", 0, 300, 5, 0
 	Slider "Offset Y", "wt_lite_offset_y", 0, 300, 5, 0
 	Slider "Opacity", "wt_lite_alpha", 0.1, 1.0, 0.05, 2
+	StaticText ""
+	StaticText "----- Visibility Options -----", "Teal"
+	VisibilityOption "Total Kills", "wt_lite_adv_visibility", "OnOff", 0
+	VisibilityOption "Genocide Rank", "wt_lite_adv_visibility", "OnOff", 1
+	VisibilityOption "Genocide Medal", "wt_lite_adv_visibility", "OnOff", 2
+	VisibilityOption "Player Rank", "wt_lite_adv_visibility", "OnOff", 3
+	VisibilityOption "Player Experience", "wt_lite_adv_visibility", "OnOff", 4
+	VisibilityOption "Player Medal", "wt_lite_adv_visibility", "OnOff", 5
+	StaticText ""
+	VisibilityOption "Weapon Name", "wt_lite_adv_visibility", "OnOff", 6
+	VisibilityOption "Weapon Rank", "wt_lite_adv_visibility", "OnOff", 7
+	VisibilityOption "Weapon Kills", "wt_lite_adv_visibility", "OnOff", 8
+	VisibilityOption "Weapon Medals", "wt_lite_adv_visibility", "OnOff", 9
 }
 
 OptionMenu "WT_LiteHudFoldersMenu"
@@ -78,40 +90,13 @@ OptionMenu "WT_LiteHudColorsMenu"
 {
 	Title "Lite HUD Color Options"
 
-	OptionHudColorOption "Labels", "wt_lite_color_labels", "LiteHUDColor"
-	OptionHudColorOption "Total Kills", "wt_lite_color_totalkills", "LiteHUDColor"
-	OptionHudColorOption "Genocide Rank", "wt_lite_color_genociderank", "LiteHUDColor"
-	OptionHudColorOption "Player Rank", "wt_lite_color_playerrank", "LiteHUDColor"
-	OptionHudColorOption "Weapon Name", "wt_lite_color_weaponname", "LiteHUDColor"
-	OptionHudColorOption "Weapon Rank", "wt_lite_color_weaponrank", "LiteHUDColor"
-	OptionHudColorOption "Weapon Kills", "wt_lite_color_weaponkills", "LiteHUDColor"
-}
-
-OptionMenu "WT_LiteHudVisibilityMenu"
-{
-	Title "Lite HUD Advanced Options"
-
-	StaticText "The text field below controls which elements are displayed.", "White"
-	StaticText "Flags are separated with the | character. Don't use spaces!", "White"
-	StaticText "Prefix the flags with ! to hide a specific element.", "White"
-	StaticText "VF_*_ALL does not support ! on purpose.", "Red"
-	StaticText ""
-	TextField "Visibility Flags", "wt_lite_adv_visibility"
-	StaticText ""
-	StaticText "----- AVAILABLE FLAGS -----", "Teal"
-	StaticText "VF_PLR_ALL - Show all player stats.", "White"
-	StaticText "VF_PLR_TKILLS - Total kills.", "White"
-	StaticText "VF_PLR_GENRANK - Genocide rank.", "White"
-	StaticText "VF_PLR_GENMEDAL - Genocide medal.", "White"
-	StaticText "VF_PLR_PLRANK - Player rank.", "White"
-	StaticText "VF_PLR_PLEXP - Player experience.", "White"
-	StaticText "VF_PLR_PLMEDAL - Player medal.", "White"
-	StaticText ""
-	StaticText "VF_WPN_ALL - Show all weapon stats.", "White"
-	StaticText "VF_WPN_NAME - Weapon name.", "White"
-	StaticText "VF_WPN_RANK - Weapon rank.", "White"
-	StaticText "VF_WPN_KILLS - Weapon kills.", "White"
-	StaticText "VF_WPN_MEDALS - Weapon medals.", "White"
+	HudColorOption "Labels", "wt_lite_color_labels", "LiteHUDColor"
+	HudColorOption "Total Kills", "wt_lite_color_totalkills", "LiteHUDColor"
+	HudColorOption "Genocide Rank", "wt_lite_color_genociderank", "LiteHUDColor"
+	HudColorOption "Player Rank", "wt_lite_color_playerrank", "LiteHUDColor"
+	HudColorOption "Weapon Name", "wt_lite_color_weaponname", "LiteHUDColor"
+	HudColorOption "Weapon Rank", "wt_lite_color_weaponrank", "LiteHUDColor"
+	HudColorOption "Weapon Kills", "wt_lite_color_weaponkills", "LiteHUDColor"
 }
 
 OptionMenu "WT_FiltersMenu"

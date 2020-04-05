@@ -21,6 +21,7 @@ extend class WT_MainHandler
 		VF_PlayerExperience	= 1 << 4,
 		VF_PlayerMedal		= 1 << 5,
 		VF_Player_All		= VF_TotalKills | VF_GenocideRank | VF_GenocideMedal | VF_PlayerRank | VF_PlayerExperience | VF_PlayerMedal,
+
 		VF_WeaponName		= 1 << 6,
 		VF_WeaponRank		= 1 << 7,
 		VF_WeaponKills		= 1 << 8,
@@ -129,7 +130,7 @@ extend class WT_MainHandler
 		{
 			double Alpha = LiteHudAlpha.GetFloat();
 			double Scale = LiteHudScale.GetFloat();
-			int VisiblityFlags = GetVisibilityFlags();
+			int VisiblityFlags = LiteHudVisibilityFlags.GetInt();
 
 			// [Ace] Dividing because smaller numbers means bigger HUD.
 			if (Scale > 0)
@@ -1058,37 +1059,6 @@ extend class WT_MainHandler
 		string CustomTag = GetCustomTag(a);
 		
 		return CustomTag != "" ? CustomTag : Tag; // [Ace] Tag will be class name if it doesn't exist.
-	}
-
-	private ui int GetVisibilityFlags()
-	{
-		string FlagsString = LiteHudVisibilityFlags.GetString();
-		Array<string> SplitFlags;
-		FlagsString.Split(SplitFlags, "|");
-		int Flags = 0;
-
-		for (int i = 0; i < SplitFlags.Size() || i < 1 && SplitFlags.Size() == 0; ++i)
-		{
-			Name Flag = SplitFlags.Size() > 0 ? SplitFlags[i] : FlagsString;
-			switch(flag)
-			{
-				case 'VF_PLR_TKILLS':	Flags |= VF_TotalKills; break;			case '!VF_PLR_TKILLS': 		Flags &= ~VF_TotalKills; break;
-				case 'VF_PLR_GENRANK':	Flags |= VF_GenocideRank; break;		case '!VF_PLR_GENRANK':		Flags &= ~VF_GenocideRank; break;
-				case 'VF_PLR_GENMEDAL':	Flags |= VF_GenocideMedal; break;		case '!VF_PLR_GENMEDAL':	Flags &= ~VF_GenocideMedal; break;
-				case 'VF_PLR_PLRANK':	Flags |= VF_PlayerRank; break;			case '!VF_PLR_PLRANK':		Flags &= ~VF_PlayerRank; break;
-				case 'VF_PLR_PLEXP':	Flags |= VF_PlayerExperience; break;	case '!VF_PLR_PLEXP':		Flags &= ~VF_PlayerExperience; break;
-				case 'VF_PLR_PLMEDAL':	Flags |= VF_PlayerMedal; break;			case '!VF_PLR_PLMEDAL':		Flags &= ~VF_PlayerMedal; break;
-				case 'VF_PLR_ALL':		Flags |= VF_Player_All; break;
-
-				case 'VF_WPN_NAME':		Flags |= VF_WeaponName; break;			case '!VF_WPN_NAME': 		Flags &= ~VF_WeaponName; break;
-				case 'VF_WPN_RANK':		Flags |= VF_WeaponRank; break;			case '!VF_WPN_RANK': 		Flags &= ~VF_WeaponRank; break;
-				case 'VF_WPN_KILLS':	Flags |= VF_WeaponKills; break;			case '!VF_WPN_KILLS': 		Flags &= ~VF_WeaponKills; break;
-				case 'VF_WPN_MEDALS':	Flags |= VF_WeaponMedals; break;		case '!VF_WPN_MEDALS': 		Flags &= ~VF_WeaponMedals; break;
-				case 'VF_WPN_ALL':		Flags |= VF_Weapon_All; break;
-			}
-		}
-
-		return Flags;
 	}
 
 	// --------------------------------------------------
