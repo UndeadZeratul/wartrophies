@@ -21,13 +21,13 @@ class OptionMenuItemFilterOption : OptionMenuItemOption
 	}
 }
 
-class OptionMenuItemOptionCustomFont : OptionMenuItemOption
+class OptionMenuItemOptionHudColorOption : OptionMenuItemOption
 {
 	protected void CustomDrawValue(int indent, int y, int color, String text, bool grayed = false)
 	{
 		String label = Stringtable.Localize(text);
 		int overlay = grayed? Color(96,48,0,0) : 0;
-		Font fnt = WT_MainHandler.FontName;
+		Font fnt = WT_MainHandler.FontName; // [Ace] All this code for this line.
 		screen.DrawText(fnt, color, indent + CursorSpace(), y + fnt.GetHeight() + 2, text, DTA_CleanNoMove_1, true, DTA_ColorOverlay, overlay);
 	}
 

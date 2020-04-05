@@ -432,28 +432,28 @@ extend class WT_MainHandler
 		}
 
 		// Total kills.
-		sbar.DrawString(mMainFont, sbar.FormatNumber(TotalKillsAll, 1, 10), (-42, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Red"));
+		sbar.DrawString(mMainFont, sbar.FormatNumber(TotalKillsAll, 1, 10), (-42, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Red"));
 
 		// Genocide rank.
 		[GenocideRank, GenocideRankString] = GetGenocideRank(TotalKillsAll);
-		sbar.DrawString(mMainFont, GenocideRankString, (-223, -60), DI_TEXT_LEFT, Font.FindFontColor("WT_FadedRed"));
+		sbar.DrawString(mMainFont, GenocideRankString, (-223, -60), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_FadedRed"));
 
 		// Genocide medal.
 		sbar.DrawImage("GRANK"..GenocideRank, (-206, 77), DI_CENTER);
 
 		// Player rank.
 		[PlayerRank, PlayerRankString] = GetPlayerRank();
-		sbar.DrawString(mMainFont, PlayerRankString, (-223, -36), DI_TEXT_LEFT, Font.FindFontColor("WT_DarkGreen"));
+		sbar.DrawString(mMainFont, PlayerRankString, (-223, -36), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_DarkGreen"));
 
 		// Player prestige.
 		sbar.DrawImage("PRSTIGE"..Prestige, (-45, -32.5), DI_CENTER);
 
 		// Player experience.
-		sbar.DrawString(mMainFont, sbar.FormatNumber(Experience, 1, 7), (-139, -12), DI_TEXT_RIGHT, Font.FindFontColor("WT_DarkGreen"));
+		sbar.DrawString(mMainFont, sbar.FormatNumber(Experience, 1, 7), (-139, -12), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_DarkGreen"));
 
 		// Player experience for next level.
 		string NextPlayerRankExp = PlayerRank < XPReq.Size() ? sbar.FormatNumber(XPReq[PlayerRank], 1, 7) : "-";
-		sbar.DrawString(mMainFont, NextPlayerRankExp, (-42, -12), DI_TEXT_RIGHT, Font.FindFontColor("WT_DarkGreen"));
+		sbar.DrawString(mMainFont, NextPlayerRankExp, (-42, -12), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_DarkGreen"));
 
 		// Player medal.
 		sbar.DrawImage("RANK"..(PlayerRank + 1), (-206, 28), DI_CENTER);
@@ -464,14 +464,14 @@ extend class WT_MainHandler
 		int WeaponPage = WeaponListSelIndex / ListEntries[0];
 
 		string Title = InSearchMode ? SearchFilter.."_" : (SearchFilter != "" ? SearchFilter : "All Weapons");
-		sbar.DrawString(mMainFont, Title, (-174, 12), DI_TEXT_LEFT, Font.FindFontColor("WT_FadedBrown"));
-		sbar.DrawString(mMainFont, (WeaponPage + 1).."/"..WeaponPagesTotal, (-42, 12), DI_TEXT_RIGHT, Font.FindFontColor("WT_FadedBrown"));
+		sbar.DrawString(mMainFont, Title, (-174, 12), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_FadedBrown"));
+		sbar.DrawString(mMainFont, (WeaponPage + 1).."/"..WeaponPagesTotal, (-42, 12), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBrown"));
 
 		for (int i = 0; ListEntries[0] * WeaponPage + i < AvailableWeapons.Size() && i < ListEntries[0]; ++i)
 		{
 			let CurrWeapon = AvailableWeapons[ListEntries[0] * WeaponPage + i];
 			
-			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrWeapon), WeaponNameLengths[0]), (-174, 36 + 9 * i), DI_TEXT_LEFT, WeaponListSel == CurrWeapon ? Font.FindFontColor("WT_OrangeRed") : Font.FindFontColor("WT_FadedBrown"));
+			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrWeapon), WeaponNameLengths[0]), (-174, 36 + 9 * i), DI_TEXT_LEFT, WeaponListSel == CurrWeapon ? Font.FindFontColor("WT_Old_OrangeRed") : Font.FindFontColor("WT_Old_FadedBrown"));
 		}
 
 		// --------------- WEAPON STATS ---------------
@@ -479,24 +479,24 @@ extend class WT_MainHandler
 		if (WeaponListSel)
 		{
 			// Weapon name.
-			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(WeaponListSel), WeaponNameLengths[1]), (-7, -132), DI_TEXT_LEFT, Font.FindFontColor("WT_White"));
+			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(WeaponListSel), WeaponNameLengths[1]), (-7, -132), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_White"));
 
 			// Weapon rank.
 			[WeaponRank, WeaponRankString] = GetWeaponRank(WeaponKills);
-			sbar.DrawString(mMainFont, WeaponRankString, (-7, -108), DI_TEXT_LEFT, Font.FindFontColor("WT_Gold"));
-			sbar.DrawString(mMainFont, WeaponRank.."/"..WeapRanks.Size(), (223, -108), DI_TEXT_RIGHT, Font.FindFontColor("WT_Gold"));
+			sbar.DrawString(mMainFont, WeaponRankString, (-7, -108), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_Gold"));
+			sbar.DrawString(mMainFont, WeaponRank.."/"..WeapRanks.Size(), (223, -108), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Gold"));
 
 			// Weapon kills.
-			sbar.DrawString(mMainFont, sbar.FormatNumber(WeaponKills, 1, 6), (66, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Red"));
+			sbar.DrawString(mMainFont, sbar.FormatNumber(WeaponKills, 1, 6), (66, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Red"));
 
 			// Weapon kills for next level.
 			string NextWeaponRankKills = WeaponRank < WeapKillReq.Size() ? sbar.FormatNumber(WeapKillReq[WeaponRank], 1, 6) : "-";
-			sbar.DrawString(mMainFont, NextWeaponRankKills, (152, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Gold"));
+			sbar.DrawString(mMainFont, NextWeaponRankKills, (152, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Gold"));
 
 			// Weapon preference.
-			sbar.DrawString(mMainFont, "P:", (167, -84), DI_TEXT_LEFT, Font.FindFontColor("WT_FadedBrown"));
+			sbar.DrawString(mMainFont, "P:", (167, -84), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_FadedBrown"));
 			double Pref = WeaponKills / double(TotalKillsAvailable) * 100;
-			sbar.DrawString(mMainFont, (Pref < 100 ? String.Format("%.2f", Pref) : String.Format("%i", Pref)).."%", (223, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Grey"));
+			sbar.DrawString(mMainFont, (Pref < 100 ? String.Format("%.2f", Pref) : String.Format("%i", Pref)).."%", (223, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Grey"));
 
 			// Weapon icon.
 			string SpriteToDraw = "";
@@ -534,8 +534,8 @@ extend class WT_MainHandler
 
 			// --------------- MONSTER LIST & STATS ---------------
 
-			sbar.DrawString(mMainFont, "Monsters", (-7, 12), DI_TEXT_LEFT, Font.FindFontColor("WT_FadedBlue"));
-			sbar.DrawString(mMainFont, "Kills", (224, 12), DI_TEXT_RIGHT, Font.FindFontColor("WT_FadedBlue"));
+			sbar.DrawString(mMainFont, "Monsters", (-7, 12), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_FadedBlue"));
+			sbar.DrawString(mMainFont, "Kills", (224, 12), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBlue"));
 
 			// [Ace] Filter the monsters and get all the necessary data for the selected weapon.
 			if (NeedsUpdating & Update_Scorecard_Main)
@@ -550,7 +550,7 @@ extend class WT_MainHandler
 			}
 
 			// [Ace] Then display them.
-			sbar.DrawString(mMainFont, (SubPage + 1).."/"..GetPages(AvailableMonsters.Size(), ListEntries[0]), (160, 12), DI_TEXT_RIGHT, Font.FindFontColor("WT_FadedBlue"));
+			sbar.DrawString(mMainFont, (SubPage + 1).."/"..GetPages(AvailableMonsters.Size(), ListEntries[0]), (160, 12), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBlue"));
 
 			int StartIndex = ListEntries[0] * SubPage;
 			int mRow = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
@@ -559,10 +559,10 @@ extend class WT_MainHandler
 				let CurrMonster = AvailableMonsters[i];
 
 				// Name.
-				sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrMonster), MonsterNameLengths[0]), (-7, 36 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor("WT_FadedBlue"));
+				sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrMonster), MonsterNameLengths[0]), (-7, 36 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_FadedBlue"));
 
 				// Kills.
-				sbar.DrawString(mMainFont, sbar.FormatNumber(MonsterKills[i], 1, 5), (224, 36 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor("WT_FadedBlue"));
+				sbar.DrawString(mMainFont, sbar.FormatNumber(MonsterKills[i], 1, 5), (224, 36 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBlue"));
 				
 				mRow++;
 			}
@@ -593,9 +593,9 @@ extend class WT_MainHandler
 		// --------------- WEAPON LIST & STATS ---------------
 
 		// Labels.
-		sbar.DrawString(mMainFont, "Weapons", (-173, -132), DI_TEXT_LEFT, Font.FindFontColor("WT_FadedBrown"));
-		sbar.DrawString(mMainFont, "Kills", (116, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_FadedBrown"));
-		sbar.DrawString(mMainFont, "Pref.", (174, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_FadedBrown"));
+		sbar.DrawString(mMainFont, "Weapons", (-173, -132), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_FadedBrown"));
+		sbar.DrawString(mMainFont, "Kills", (116, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBrown"));
+		sbar.DrawString(mMainFont, "Pref.", (174, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBrown"));
 
 		if (NeedsUpdating & Update_Scorecard_Weapons)
 		{
@@ -608,7 +608,7 @@ extend class WT_MainHandler
 		}
 
 		// [Ace] Then display them.
-		sbar.DrawString(mMainFont, (SubPage + 1).."/"..GetPages(AvailableWeapons.Size(), ListEntries[1]), (47, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_FadedBrown"));
+		sbar.DrawString(mMainFont, (SubPage + 1).."/"..GetPages(AvailableWeapons.Size(), ListEntries[1]), (47, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBrown"));
 
 		int StartIndex = ListEntries[1] * SubPage;
 		int mRow = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
@@ -618,14 +618,14 @@ extend class WT_MainHandler
 			let CurrWeapon = AvailableWeapons[i];
 
 			// Name.
-			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrWeapon), WeaponNameLengths[2]), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? "WT_FadedBrownAlt" : "WT_FadedBrown"));
+			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrWeapon), WeaponNameLengths[2]), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? "WT_Old_FadedBrownAlt" : "WT_Old_FadedBrown"));
 
 			// Kills.
-			sbar.DrawString(mMainFont, sbar.FormatNumber(AvailableWeaponsKills[i], 1, 5), (116, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? "WT_FadedRedAlt" : "WT_FadedRed"));
+			sbar.DrawString(mMainFont, sbar.FormatNumber(AvailableWeaponsKills[i], 1, 5), (116, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? "WT_Old_FadedRedAlt" : "WT_Old_FadedRed"));
 
 			// Preference.
 			double Pref = AvailableWeaponsKills[i] / double(TotalKillsAvailable) * 100;
-			sbar.DrawString(mMainFont, (Pref < 100 ? String.Format("%.2f", Pref) : String.Format("%i", Pref)).."%", (174, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor("WT_Grey"));
+			sbar.DrawString(mMainFont, (Pref < 100 ? String.Format("%.2f", Pref) : String.Format("%i", Pref)).."%", (174, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Grey"));
 
 			mRow++;
 		}
@@ -655,8 +655,8 @@ extend class WT_MainHandler
 		// --------------- MONSTER LIST & STATS ---------------
 
 		// Labels.
-		sbar.DrawString(mMainFont, "Monsters", (-173, -132), DI_TEXT_LEFT, Font.FindFontColor("WT_FadedBlue"));
-		sbar.DrawString(mMainFont, "T. Kills", (174, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_FadedBlue"));
+		sbar.DrawString(mMainFont, "Monsters", (-173, -132), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_FadedBlue"));
+		sbar.DrawString(mMainFont, "T. Kills", (174, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBlue"));
 
 		// [Ace] Filter the monsters and get all of them for all filtered weapons.
 		if (NeedsUpdating & Update_Scorecard_Monsters)
@@ -671,7 +671,7 @@ extend class WT_MainHandler
 		}
 
 		// [Ace] Then display them.
-		sbar.DrawString(mMainFont, (SubPage + 1).."/"..GetPages(AllMonsters.Size(), ListEntries[1]), (110, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_FadedBlue"));
+		sbar.DrawString(mMainFont, (SubPage + 1).."/"..GetPages(AllMonsters.Size(), ListEntries[1]), (110, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBlue"));
 
 		int StartIndex = ListEntries[1] * SubPage;
 		int mRow = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
@@ -681,10 +681,10 @@ extend class WT_MainHandler
 			let CurrMonster = AllMonsters[i];
 
 			// Name.
-			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrMonster), MonsterNameLengths[1]), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? "WT_FadedBlueAlt" : "WT_FadedBlue"));
+			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrMonster), MonsterNameLengths[1]), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? "WT_Old_FadedBlueAlt" : "WT_Old_FadedBlue"));
 
 			// Kills.
-			sbar.DrawString(mMainFont, sbar.FormatNumber(AllMonsterKills[i], 1, 5), (174, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? "WT_FadedBlueAlt" : "WT_FadedBlue"));
+			sbar.DrawString(mMainFont, sbar.FormatNumber(AllMonsterKills[i], 1, 5), (174, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? "WT_Old_FadedBlueAlt" : "WT_Old_FadedBlue"));
 
 			mRow++;
 		}
