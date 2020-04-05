@@ -2,19 +2,19 @@ extend class WT_MainHandler
 {
 	enum WT_LiteHudColor
 	{
-		Color_Labels,
-		Color_TotalKills,
-		Color_GenocideRank,
-		Color_PlayerRank,
-		Color_WeaponName,
-		Color_WeaponRank,
-		Color_WeaponKills
+		Element_Labels,
+		Element_TotalKills,
+		Element_GenocideRank,
+		Element_PlayerRank,
+		Element_WeaponName,
+		Element_WeaponRank,
+		Element_WeaponKills
 	}
 
 	// [Ace] Currently used for visibility toggles.
 	enum WT_LiteHudVisibilityFlags
 	{
-		VF_TotalKills		= 1,
+		VF_TotalKills		= 1 << 0,
 		VF_GenocideRank		= 1 << 1,
 		VF_GenocideMedal	= 1 << 2,
 		VF_PlayerRank		= 1 << 3,
@@ -31,15 +31,8 @@ extend class WT_MainHandler
 	enum WT_ScorecardPages
 	{
 		Page_Main,
+		Page_Weapons,
 		Page_Monsters
-	}
-
-	enum WT_LiteHudStats
-	{
-		Stats_None,
-		Stats_Player,
-		Stats_Weapon,
-		Stats_All
 	}
 
 	// --------------------------------------------------
@@ -58,18 +51,6 @@ extend class WT_MainHandler
 	private transient CVar LiteHudAlpha;
 	private transient CVar LiteHudVisibilityFlags;
 
-	const DefcolMiscLabel = "WT_FadedBrown";
-	const DefcolSelectedWeapon = "WT_OrangeRed";
-	const DefcolTotalKills = "WT_Red";
-	const DefcolGenocideRank = "WT_FadedRed";
-	const DefcolPlayerRank = "WT_DarkGreen";
-	const DefcolWeaponName = "WT_White";
-	const DefcolWeaponRank = "WT_Gold";
-	const DefcolWeaponKills = "WT_Red";
-	const DefcolWeaponPreference = "WT_Grey";
-	const DefcolMonsterInfo = "WT_FadedBlue";
-	const DefcolMonsterAlt = "WT_FadedBlueAlt";
-
 	static const int XPReq[] = { 5000, 8500, 12500, 16000, 20000, 25000, 31000, 37000, 45000, 60000, 85000, 100000, 125000, 175000, 250000, 400000, 600000, 900000, 1150000, 1400000, 1900000, 2850000, 4000000, 5000000 };
 	static const string XPRanks[] = { "Private 1st Class", "Corporal", "Sergeant", "Staff Sergeant", "Sergeant 1st Class", "Master Sergeant", "First Sergeant", "Sergeant Major", "Cmd. Sergeant Major", "Master Chief Sergeant", "2nd Lieutenant", "1st Lieutenant", "Captain", "Major", "Lieutenant Colonel", "Colonel", "Brigadier General", "Major General", "Lieutenant General", "General", "General of the Army", "Field Marshal", "Force Of Freedom", "Savior of Humanity" };
 	const RankImagesPrefix = "RANK";
@@ -80,13 +61,25 @@ extend class WT_MainHandler
 	static const int GenocideReqs[] = { 50, 100, 250, 500, 1000, 1500, 2500, 3500, 4500, 6000, 7500, 9000, 11111, 13333, 16666, 20000, 25000, 30000, 35000, 50000, 70000, 99999, 125000, 175000, 250000, 350000, 500000, 750000, 1000000 };
 	static const string GenocideRanks[] = { "Innocent", "Craven", "Unbloodied", "Gun-shy", "Rank-and-file", "Basic Grunt", "Diablophobe", "Grave Digger", "Butcher", "Spree Killer", "Bounty Hunter", "Master Gunman", "Elite Warrior", "Mass Assassin", "Basically Mor'Ladim", "Ludicrous", "The Cleaner", "Psychopath", "Warlord", "Bloodthirsty", "Anti-Army Weapon", "Okuplok", "Unstoppable Force", "Carnage Elemental", "Grim Reaper", "Icon of Slay", "Death Incarnate", "Doomslayer", "Origin Exstinctum" };
 
-	const WeaponListEntries = 11;
-	const WeaponNameListMaxLength = 17;
-	const WeaponNameMaxLength = 30; // [Ace] For the scorecard.
-	const MonsterListEntries = 11;
-	const MonsterListEntriesLong = 27;
-	const MonsterNameMaxLength = 22;
-	const MonsterNameMaxLengthLong = 36; // [Ace] Timmy Turner, my name is DougsDaleDimmaDaleDimmaDimmsDomeDoDiDomeDimmsDimmaDimmaDome, Owner of the DougDimmsDimmaDaleDimmsDomeDoDiDimmaDimmsDaleDimmaDimmsDaleDimmaDome.
+	static const int WeaponNameLengths[] =
+	{
+		17, // [Ace] Weapon list in the main page.
+		30, // [Ace] Weapon stats in the main page.
+		30 // [Ace] Weapon page.
+	};
+
+	static const int MonsterNameLengths[] =
+	{
+		22, // [Ace] Monster name in the main page.
+		36 // [Ace] Timmy Turner, my name is DougsDaleDimmaDaleDimmaDimmsDomeDoDiDomeDimmsDimmaDimmaDome, Owner of the DougDimmsDimmaDaleDimmsDomeDoDiDimmaDimmsDaleDimmaDimmsDaleDimmaDome. Also monster page.
+	};
+
+	static const int ListEntries[] =
+	{
+		11, // [Ace] Weapon and monster lists in the main page.
+		27 // [Ace] Weapon and mosnter lists in their specialized page.
+	};
+
 	const KillsPerMedal = 3;
 	const MedalsPerUpgrade = 3; // [Ace] This must be 2 or above!
 	const MedalsPerLine = 11;
@@ -95,7 +88,7 @@ extend class WT_MainHandler
 	const FontName = "STRPFNT";
 	private transient ui int WeaponListSelIndex;
 	private transient ui int FolderListSelIndex;
-	private transient ui int SelMonsterPage;
+	private transient ui int SubPage;
 	private transient ui bool AutoSelected;
 	private transient ui bool InSearchMode;
 	private transient ui string SearchFilter;
@@ -106,11 +99,14 @@ extend class WT_MainHandler
 	private transient ui Array<class<Weapon> > AvailableWeapons;
 	private transient ui Array<class<Actor> > AvailableMonsters;
 	private transient ui Array<class<Actor> > AllMonsters;
+
 	private transient ui int TotalKillsAll;
 	private transient ui int TotalKillsAvailable;
-	private transient ui int WeaponKills;
-	private transient ui Array<int> MonsterKills; // [Ace] For the currently iterated monster.
-	private transient ui Array<int> AllMonsterKills; // [Ace] For every monster.
+	private transient ui int WeaponKills; // [Ace] The total kills for the selected weapon.
+	private transient ui Array<int> AvailableWeaponsKills; // [Ace] Total kills for each available weapon.
+	private transient ui Array<int> MonsterKills; // [Ace] For the currently selected weapon.
+	private transient ui Array<int> AllMonsterKills; // [Ace] For every monster, regardless of weapon.
+
 	private transient ui int PlayerRank;
 	private transient ui string PlayerRankString;
 	private transient ui int WeaponRank;
@@ -195,6 +191,10 @@ extend class WT_MainHandler
 					DrawScorecardMain(StatusBar);
 					if (NeedsUpdating & Update_Scorecard_Main) SendNetworkEvent("WT_MarkUpdated", Update_Scorecard_Main);
 					break;
+				case Page_Weapons:
+					DrawScorecardWeapons(StatusBar);
+					if (NeedsUpdating & Update_Scorecard_Weapons) SendNetworkEvent("WT_MarkUpdated", Update_Scorecard_Weapons);
+					break;
 				case Page_Monsters:
 					DrawScorecardMonsters(StatusBar);
 					if (NeedsUpdating & Update_Scorecard_Monsters) SendNetworkEvent("WT_MarkUpdated", Update_Scorecard_Monsters);
@@ -241,7 +241,7 @@ extend class WT_MainHandler
 		// Total kills.
 		if (visFlags & VF_TotalKills)
 		{
-			string TotalKillsString = "\c["..GetColorForElement(Color_Labels).."]Total: \c["..GetColorForElement(Color_TotalKills).."]"..sbar.FormatNumber(TotalKillsAll, 1, 10).."\c-";
+			string TotalKillsString = "\c["..GetColorForElement(Element_Labels).."]Total: \c["..GetColorForElement(Element_TotalKills).."]"..sbar.FormatNumber(TotalKillsAll, 1, 10).."\c-";
 			sbar.DrawString(mMainFont, TotalKillsString, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
 
 			TotalSize.X = max(TotalSize.X, fnt.StringWidth(TotalKillsString));
@@ -252,7 +252,7 @@ extend class WT_MainHandler
 		[GenocideRank, GenocideRankString] = GetGenocideRank(TotalKillsAll);
 		if (visFlags & VF_GenocideRank)
 		{
-			sbar.DrawString(mMainFont, GenocideRankString, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_GenocideRank)), alpha);
+			sbar.DrawString(mMainFont, GenocideRankString, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Element_GenocideRank)), alpha);
 
 			TotalSize.X = max(TotalSize.X, fnt.StringWidth(GenocideRankString));
 			TotalSize.Y += 10;
@@ -272,7 +272,7 @@ extend class WT_MainHandler
 			{
 				sbar.DrawImage("PRSTIGE"..Prestige, (pos.x, pos.y + TotalSize.Y - 5), DI_TL, alpha);
 			}
-			sbar.DrawString(mMainFont, PlayerRankString, (Prestige > 0 ? pos.x + 12 : pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_PlayerRank)), alpha);
+			sbar.DrawString(mMainFont, PlayerRankString, (Prestige > 0 ? pos.x + 12 : pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Element_PlayerRank)), alpha);
 
 			TotalSize.X = max(TotalSize.X, fnt.StringWidth(PlayerRankString));
 			TotalSize.Y += 10;
@@ -281,7 +281,7 @@ extend class WT_MainHandler
 		// Player experience.
 		if (visFlags & VF_PlayerExperience)
 		{
-			string ExperienceString = "\c["..GetColorForElement(Color_Labels).."]XP: \c["..GetColorForElement(Color_PlayerRank).."]"..sbar.FormatNumber(Experience, 1, 7).."\c-";
+			string ExperienceString = "\c["..GetColorForElement(Element_Labels).."]XP: \c["..GetColorForElement(Element_PlayerRank).."]"..sbar.FormatNumber(Experience, 1, 7).."\c-";
 			sbar.DrawString(mMainFont, ExperienceString, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
 
 			TotalSize.X = max(TotalSize.X, fnt.StringWidth(ExperienceString));
@@ -289,7 +289,7 @@ extend class WT_MainHandler
 
 			// Player experience for next level.
 			string NextRankExp = PlayerRank < XPReq.Size() ? sbar.FormatNumber(XPReq[PlayerRank], 1, 7) : "-";
-			string NextRankExpString = "\c["..GetColorForElement(Color_Labels).."]NX: \c["..GetColorForElement(Color_PlayerRank).."]"..NextRankExp.."\c-";
+			string NextRankExpString = "\c["..GetColorForElement(Element_Labels).."]NX: \c["..GetColorForElement(Element_PlayerRank).."]"..NextRankExp.."\c-";
 			sbar.DrawString(mMainFont, NextRankExpString, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
 
 			TotalSize.X = max(TotalSize.X, fnt.StringWidth(NextRankExpString));
@@ -339,7 +339,7 @@ extend class WT_MainHandler
 		bool UseFolderView = LiteFolderView.GetInt();
 		if (wpn && (NeedsUpdating & Update_Lite))
 		{
-			WeaponKills = GetKillsForWeapon(GetDefaultByType(wpn).GetClassName(), UseFolderView);
+			WeaponKills = GetKillsForWeapon(wpn.GetClassName(), UseFolderView);
 		}
 		double NextOffsetY = pos.y;
 
@@ -351,7 +351,7 @@ extend class WT_MainHandler
 			for (int i = 0; i < MultilineName.Count(); ++i)
 			{
 				NextOffsetY += 10 * i;
-				sbar.DrawString(mMainFont, MultilineName.StringAt(i), (pos.x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_WeaponName)), alpha);
+				sbar.DrawString(mMainFont, MultilineName.StringAt(i), (pos.x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Element_WeaponName)), alpha);
 			}
 			NextOffsetY += 10;
 		}
@@ -360,7 +360,7 @@ extend class WT_MainHandler
 		[WeaponRank, WeaponRankString] = GetWeaponRank(WeaponKills);
 		if (visFlags & VF_WeaponRank)
 		{
-			sbar.DrawString(mMainFont, WeaponRankString, (pos.x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_WeaponRank)), alpha);
+			sbar.DrawString(mMainFont, WeaponRankString, (pos.x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Element_WeaponRank)), alpha);
 			NextOffsetY += 10;
 		}
 
@@ -372,14 +372,14 @@ extend class WT_MainHandler
 		if (visFlags & VF_WeaponKills)
 		{
 			// Weapon kills.
-			sbar.DrawString(mMainFont, "K:", (pos.x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_Labels)), alpha);
-			sbar.DrawString(mMainFont, sbar.FormatNumber(WeaponKills, 1, 6), (pos.x + 14, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_WeaponKills)), alpha);
+			sbar.DrawString(mMainFont, "K:", (pos.x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Element_Labels)), alpha);
+			sbar.DrawString(mMainFont, sbar.FormatNumber(WeaponKills, 1, 6), (pos.x + 14, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Element_WeaponKills)), alpha);
 			NextOffsetY += 10;
 
 			// Weapon kills for next level.
 			string NextWeaponRankKills = WeaponRank < WeapKillReq.Size() ? sbar.FormatNumber(WeapKillReq[WeaponRank], 1, 6) : "-";
-			sbar.DrawString(mMainFont, "NX:", (pos.x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_Labels)), alpha);
-			sbar.DrawString(mMainFont, NextWeaponRankKills, (pos.x + 24, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Color_WeaponRank)), alpha);
+			sbar.DrawString(mMainFont, "NX:", (pos.x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Element_Labels)), alpha);
+			sbar.DrawString(mMainFont, NextWeaponRankKills, (pos.x + 24, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetColorForElement(Element_WeaponRank)), alpha);
 			NextOffsetY += 14;
 		}
 
@@ -428,50 +428,50 @@ extend class WT_MainHandler
 		{
 			TotalKillsAll = GetTotalKillsForAllWeapons();
 			TotalKillsAvailable = GetTotalKillsForAvailableWeapons();
-			WeaponKills = GetKillsForWeapon(GetDefaultByType(WeaponListSel).GetClassName(), false);
+			WeaponKills = GetKillsForWeapon(WeaponListSel.GetClassName(), false);
 		}
 
 		// Total kills.
-		sbar.DrawString(mMainFont, sbar.FormatNumber(TotalKillsAll, 1, 10), (-42, -84), DI_TEXT_RIGHT, Font.FindFontColor(DefcolTotalKills));
+		sbar.DrawString(mMainFont, sbar.FormatNumber(TotalKillsAll, 1, 10), (-42, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Red"));
 
 		// Genocide rank.
 		[GenocideRank, GenocideRankString] = GetGenocideRank(TotalKillsAll);
-		sbar.DrawString(mMainFont, GenocideRankString, (-223, -60), DI_TEXT_LEFT, Font.FindFontColor(DefcolGenocideRank));
+		sbar.DrawString(mMainFont, GenocideRankString, (-223, -60), DI_TEXT_LEFT, Font.FindFontColor("WT_FadedRed"));
 
 		// Genocide medal.
 		sbar.DrawImage("GRANK"..GenocideRank, (-206, 77), DI_CENTER);
 
 		// Player rank.
 		[PlayerRank, PlayerRankString] = GetPlayerRank();
-		sbar.DrawString(mMainFont, PlayerRankString, (-223, -36), DI_TEXT_LEFT, Font.FindFontColor(DefcolPlayerRank));
+		sbar.DrawString(mMainFont, PlayerRankString, (-223, -36), DI_TEXT_LEFT, Font.FindFontColor("WT_DarkGreen"));
 
 		// Player prestige.
 		sbar.DrawImage("PRSTIGE"..Prestige, (-45, -32.5), DI_CENTER);
 
 		// Player experience.
-		sbar.DrawString(mMainFont, sbar.FormatNumber(Experience, 1, 7), (-139, -12), DI_TEXT_RIGHT, Font.FindFontColor(DefcolPlayerRank));
+		sbar.DrawString(mMainFont, sbar.FormatNumber(Experience, 1, 7), (-139, -12), DI_TEXT_RIGHT, Font.FindFontColor("WT_DarkGreen"));
 
 		// Player experience for next level.
 		string NextPlayerRankExp = PlayerRank < XPReq.Size() ? sbar.FormatNumber(XPReq[PlayerRank], 1, 7) : "-";
-		sbar.DrawString(mMainFont, NextPlayerRankExp, (-42, -12), DI_TEXT_RIGHT, Font.FindFontColor(DefcolPlayerRank));
+		sbar.DrawString(mMainFont, NextPlayerRankExp, (-42, -12), DI_TEXT_RIGHT, Font.FindFontColor("WT_DarkGreen"));
 
 		// Player medal.
 		sbar.DrawImage("RANK"..(PlayerRank + 1), (-206, 28), DI_CENTER);
 
 		// --------------- WEAPON LIST ---------------
 
-		int WeaponPagesTotal = max(1, int(ceil(AvailableWeapons.Size() / double(WeaponListEntries))));
-		int WeaponPage = WeaponListSelIndex / WeaponListEntries;
+		int WeaponPagesTotal = max(1, int(ceil(AvailableWeapons.Size() / double(ListEntries[0]))));
+		int WeaponPage = WeaponListSelIndex / ListEntries[0];
 
 		string Title = InSearchMode ? SearchFilter.."_" : (SearchFilter != "" ? SearchFilter : "All Weapons");
-		sbar.DrawString(mMainFont, Title, (-174, 12), DI_TEXT_LEFT, Font.FindFontColor(DefcolMiscLabel));
-		sbar.DrawString(mMainFont, (WeaponPage + 1).."/"..WeaponPagesTotal, (-42, 12), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMiscLabel));
+		sbar.DrawString(mMainFont, Title, (-174, 12), DI_TEXT_LEFT, Font.FindFontColor("WT_FadedBrown"));
+		sbar.DrawString(mMainFont, (WeaponPage + 1).."/"..WeaponPagesTotal, (-42, 12), DI_TEXT_RIGHT, Font.FindFontColor("WT_FadedBrown"));
 
-		for (int i = 0; WeaponListEntries * WeaponPage + i < AvailableWeapons.Size() && i < WeaponListEntries; ++i)
+		for (int i = 0; ListEntries[0] * WeaponPage + i < AvailableWeapons.Size() && i < ListEntries[0]; ++i)
 		{
-			let CurrWeapon = AvailableWeapons[WeaponListEntries * WeaponPage + i];
+			let CurrWeapon = AvailableWeapons[ListEntries[0] * WeaponPage + i];
 			
-			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrWeapon), WeaponNameListMaxLength), (-174, 36 + 9 * i), DI_TEXT_LEFT, WeaponListSel == CurrWeapon ? Font.FindFontColor(DefcolSelectedWeapon) : Font.FindFontColor(DefcolMiscLabel));
+			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrWeapon), WeaponNameLengths[0]), (-174, 36 + 9 * i), DI_TEXT_LEFT, WeaponListSel == CurrWeapon ? Font.FindFontColor("WT_OrangeRed") : Font.FindFontColor("WT_FadedBrown"));
 		}
 
 		// --------------- WEAPON STATS ---------------
@@ -479,24 +479,24 @@ extend class WT_MainHandler
 		if (WeaponListSel)
 		{
 			// Weapon name.
-			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(WeaponListSel), WeaponNameMaxLength), (-7, -132), DI_TEXT_LEFT, Font.FindFontColor(DefcolWeaponName));
+			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(WeaponListSel), WeaponNameLengths[1]), (-7, -132), DI_TEXT_LEFT, Font.FindFontColor("WT_White"));
 
 			// Weapon rank.
 			[WeaponRank, WeaponRankString] = GetWeaponRank(WeaponKills);
-			sbar.DrawString(mMainFont, WeaponRankString, (-7, -108), DI_TEXT_LEFT, Font.FindFontColor(DefcolWeaponRank));
-			sbar.DrawString(mMainFont, WeaponRank.."/"..WeapRanks.Size(), (223, -108), DI_TEXT_RIGHT, Font.FindFontColor(DefcolWeaponRank));
+			sbar.DrawString(mMainFont, WeaponRankString, (-7, -108), DI_TEXT_LEFT, Font.FindFontColor("WT_Gold"));
+			sbar.DrawString(mMainFont, WeaponRank.."/"..WeapRanks.Size(), (223, -108), DI_TEXT_RIGHT, Font.FindFontColor("WT_Gold"));
 
 			// Weapon kills.
-			sbar.DrawString(mMainFont, sbar.FormatNumber(WeaponKills, 1, 6), (66, -84), DI_TEXT_RIGHT, Font.FindFontColor(DefcolWeaponKills));
+			sbar.DrawString(mMainFont, sbar.FormatNumber(WeaponKills, 1, 6), (66, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Red"));
 
 			// Weapon kills for next level.
 			string NextWeaponRankKills = WeaponRank < WeapKillReq.Size() ? sbar.FormatNumber(WeapKillReq[WeaponRank], 1, 6) : "-";
-			sbar.DrawString(mMainFont, NextWeaponRankKills, (152, -84), DI_TEXT_RIGHT, Font.FindFontColor(DefcolWeaponRank));
+			sbar.DrawString(mMainFont, NextWeaponRankKills, (152, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Gold"));
 
 			// Weapon preference.
-			sbar.DrawString(mMainFont, "P:", (167, -84), DI_TEXT_LEFT, Font.FindFontColor(DefcolMiscLabel));
+			sbar.DrawString(mMainFont, "P:", (167, -84), DI_TEXT_LEFT, Font.FindFontColor("WT_FadedBrown"));
 			double Pref = WeaponKills / double(TotalKillsAvailable) * 100;
-			sbar.DrawString(mMainFont, (Pref < 100 ? String.Format("%.2f", Pref) : String.Format("%i", Pref)).."%", (223, -84), DI_TEXT_RIGHT, Font.FindFontColor(DefcolWeaponPreference));
+			sbar.DrawString(mMainFont, (Pref < 100 ? String.Format("%.2f", Pref) : String.Format("%i", Pref)).."%", (223, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Grey"));
 
 			// Weapon icon.
 			string SpriteToDraw = "";
@@ -534,8 +534,8 @@ extend class WT_MainHandler
 
 			// --------------- MONSTER LIST & STATS ---------------
 
-			sbar.DrawString(mMainFont, "Monsters", (-7, 12), DI_TEXT_LEFT, Font.FindFontColor(DefcolMonsterInfo));
-			sbar.DrawString(mMainFont, "Kills", (224, 12), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
+			sbar.DrawString(mMainFont, "Monsters", (-7, 12), DI_TEXT_LEFT, Font.FindFontColor("WT_FadedBlue"));
+			sbar.DrawString(mMainFont, "Kills", (224, 12), DI_TEXT_RIGHT, Font.FindFontColor("WT_FadedBlue"));
 
 			// [Ace] Filter the monsters and get all the necessary data for the selected weapon.
 			if (NeedsUpdating & Update_Scorecard_Main)
@@ -550,22 +550,84 @@ extend class WT_MainHandler
 			}
 
 			// [Ace] Then display them.
-			sbar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..GetMonsterPages(AvailableMonsters.Size(), MonsterListEntries), (160, 12), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
+			sbar.DrawString(mMainFont, (SubPage + 1).."/"..GetPages(AvailableMonsters.Size(), ListEntries[0]), (160, 12), DI_TEXT_RIGHT, Font.FindFontColor("WT_FadedBlue"));
 
-			int StartIndex = MonsterListEntries * SelMonsterPage;
+			int StartIndex = ListEntries[0] * SubPage;
 			int mRow = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
-			for (int i = StartIndex; i < AvailableMonsters.Size() && mRow < MonsterListEntries; ++i)
+			for (int i = StartIndex; i < AvailableMonsters.Size() && mRow < ListEntries[0]; ++i)
 			{
 				let CurrMonster = AvailableMonsters[i];
 
 				// Name.
-				sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrMonster), MonsterNameMaxLength), (-7, 36 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(DefcolMonsterInfo));
+				sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrMonster), MonsterNameLengths[0]), (-7, 36 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor("WT_FadedBlue"));
 
 				// Kills.
-				sbar.DrawString(mMainFont, sbar.FormatNumber(MonsterKills[i], 1, 5), (224, 36 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
+				sbar.DrawString(mMainFont, sbar.FormatNumber(MonsterKills[i], 1, 5), (224, 36 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor("WT_FadedBlue"));
 				
 				mRow++;
 			}
+		}
+	}
+
+	// --------------------------------------------------------------
+	// SCORECARD - WEAPONS
+	// --------------------------------------------------------------
+
+	private ui void DrawScorecardWeapons(BaseStatusBar sbar)
+	{
+		HUDFont mMainFont = HUDFont.Create(FontName);
+
+		int DI_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_ITEM_CENTER;
+		int DI_TEXT_LEFT = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
+		int DI_TEXT_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
+		int DI_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
+
+		// --------------- MISCELLANEOUS ---------------
+
+		GetAvailableWeapons(AvailableWeapons);
+
+		// --------------- GRAPHIC ---------------
+		
+		sbar.DrawImage(BlackDisplay.GetBool() ? "WTSTATWB" : "WTSTATWN", (0, 0.5), DI_CENTER);
+
+		// --------------- WEAPON LIST & STATS ---------------
+
+		// Labels.
+		sbar.DrawString(mMainFont, "Weapons", (-173, -132), DI_TEXT_LEFT, Font.FindFontColor("WT_FadedBrown"));
+		sbar.DrawString(mMainFont, "Kills", (116, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_FadedBrown"));
+		sbar.DrawString(mMainFont, "Pref.", (174, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_FadedBrown"));
+
+		if (NeedsUpdating & Update_Scorecard_Weapons)
+		{
+			AvailableWeaponsKills.Clear();
+			for (int i = 0; i < AvailableWeapons.Size(); ++i)
+			{
+				AvailableWeaponsKills.Push(GetKillsForWeapon(AvailableWeapons[i].GetClassName(), false));
+			}
+			TotalKillsAvailable = GetTotalKillsForAvailableWeapons();
+		}
+
+		// [Ace] Then display them.
+		sbar.DrawString(mMainFont, (SubPage + 1).."/"..GetPages(AvailableWeapons.Size(), ListEntries[1]), (47, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_FadedBrown"));
+
+		int StartIndex = ListEntries[1] * SubPage;
+		int mRow = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
+		for (int i = StartIndex; i < AvailableWeapons.Size() && mRow < ListEntries[1]; ++i)
+		{
+			bool AlternateColor = i % 2;
+			let CurrWeapon = AvailableWeapons[i];
+
+			// Name.
+			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrWeapon), WeaponNameLengths[2]), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? "WT_FadedBrownAlt" : "WT_FadedBrown"));
+
+			// Kills.
+			sbar.DrawString(mMainFont, sbar.FormatNumber(AvailableWeaponsKills[i], 1, 5), (116, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? "WT_FadedRedAlt" : "WT_FadedRed"));
+
+			// Preference.
+			double Pref = AvailableWeaponsKills[i] / double(TotalKillsAvailable) * 100;
+			sbar.DrawString(mMainFont, (Pref < 100 ? String.Format("%.2f", Pref) : String.Format("%i", Pref)).."%", (174, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor("WT_Grey"));
+
+			mRow++;
 		}
 	}
 
@@ -593,8 +655,8 @@ extend class WT_MainHandler
 		// --------------- MONSTER LIST & STATS ---------------
 
 		// Labels.
-		sbar.DrawString(mMainFont, "Monsters", (-173, -132), DI_TEXT_LEFT, Font.FindFontColor(DefcolMonsterInfo));
-		sbar.DrawString(mMainFont, "T. Kills", (174, -132), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
+		sbar.DrawString(mMainFont, "Monsters", (-173, -132), DI_TEXT_LEFT, Font.FindFontColor("WT_FadedBlue"));
+		sbar.DrawString(mMainFont, "T. Kills", (174, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_FadedBlue"));
 
 		// [Ace] Filter the monsters and get all of them for all filtered weapons.
 		if (NeedsUpdating & Update_Scorecard_Monsters)
@@ -609,20 +671,20 @@ extend class WT_MainHandler
 		}
 
 		// [Ace] Then display them.
-		sbar.DrawString(mMainFont, (SelMonsterPage + 1).."/"..GetMonsterPages(AllMonsters.Size(), MonsterListEntriesLong), (110, -132), DI_TEXT_RIGHT, Font.FindFontColor(DefcolMonsterInfo));
+		sbar.DrawString(mMainFont, (SubPage + 1).."/"..GetPages(AllMonsters.Size(), ListEntries[1]), (110, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_FadedBlue"));
 
-		int StartIndex = MonsterListEntriesLong * SelMonsterPage;
+		int StartIndex = ListEntries[1] * SubPage;
 		int mRow = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
-		for (int i = StartIndex; i < AllMonsters.Size() && mRow < MonsterListEntriesLong; ++i)
+		for (int i = StartIndex; i < AllMonsters.Size() && mRow < ListEntries[1]; ++i)
 		{
 			bool AlternateColor = i % 2;
 			let CurrMonster = AllMonsters[i];
 
 			// Name.
-			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrMonster), MonsterNameMaxLengthLong), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? DefcolMonsterAlt : DefcolMonsterInfo));
+			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrMonster), MonsterNameLengths[1]), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? "WT_FadedBlueAlt" : "WT_FadedBlue"));
 
 			// Kills.
-			sbar.DrawString(mMainFont, sbar.FormatNumber(AllMonsterKills[i], 1, 5), (174, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? DefcolMonsterAlt : DefcolMonsterInfo));
+			sbar.DrawString(mMainFont, sbar.FormatNumber(AllMonsterKills[i], 1, 5), (174, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? "WT_FadedBlueAlt" : "WT_FadedBlue"));
 
 			mRow++;
 		}
@@ -913,6 +975,7 @@ extend class WT_MainHandler
 		return TotalKills;
 	}
 
+	// [Ace] Used with weapon preference to only base the percentage on available weapons.
 	private ui int GetTotalKillsForAvailableWeapons() const
 	{
 		int TotalKills = 0;
@@ -947,7 +1010,7 @@ extend class WT_MainHandler
 		return TotalKills;
 	}
 
-	private ui int GetMonsterPages(int totalEntries, int maxEntries) const
+	private ui int GetPages(int totalEntries, int maxEntries) const
 	{
 		return max(1, int(ceil(totalEntries / double(maxEntries))));
 	}
@@ -959,17 +1022,17 @@ extend class WT_MainHandler
 		{
 			switch(element)
 			{
-				case Color_Labels: return DefcolMiscLabel;
-				case Color_TotalKills: return DefcolTotalKills;
-				case Color_GenocideRank: return DefcolGenocideRank;
-				case Color_PlayerRank: return DefcolPlayerRank;
-				case Color_WeaponName: return DefcolWeaponName;
-				case Color_WeaponRank: return DefcolWeaponRank;
-				case Color_WeaponKills: return DefcolWeaponKills;
+				case Element_Labels: return "WT_FadedBrown";
+				case Element_TotalKills: return "WT_Red";
+				case Element_GenocideRank: return "WT_FadedRed";
+				case Element_PlayerRank: return "WT_DarkGreen";
+				case Element_WeaponName: return "WT_White";
+				case Element_WeaponRank: return "WT_Gold";
+				case Element_WeaponKills: return "WT_Red";
 			}
 		}
 
-		return StringTable.Localize("$HUD_COLOR_"..CvarValue); // [Ace] Should show up as black.
+		return StringTable.Localize("$HUD_COLOR_"..CvarValue); // [Ace] Invalid colors = black.
 	}
 
 	private ui string GetTruncatedText(string text, int length)
@@ -1042,16 +1105,15 @@ extend class WT_MainHandler
 				{
 					// [Ace] Cycle pages left.
 					case UiEvent.Key_Left:
-						--SelectedPage %= Page_Monsters + 1;
-						SelectedPage = abs(SelectedPage);
-						SelMonsterPage = 0;
+						if (--SelectedPage < 0) SelectedPage = Page_Monsters;
+						SubPage = 0;
 						S_StartSound("WT/ChangePage", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
 
 					// [Ace] Cycle pages right.
 					case UiEvent.Key_Right:
 						++SelectedPage %= Page_Monsters + 1;
-						SelMonsterPage = 0;
+						SubPage = 0;
 						S_StartSound("WT/ChangePage", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
 
@@ -1059,7 +1121,7 @@ extend class WT_MainHandler
 					case UiEvent.Key_Up:
 						if (SelectedPage != Page_Main) break;
 						WeaponListSelIndex = max(0, WeaponListSelIndex - 1);
-						SelMonsterPage = 0;
+						SubPage = 0;
 						SendNetworkEvent("WT_MarkNotUpdated", Update_Scorecard_Main);
 						S_StartSound("WT/SelectWeapon", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
@@ -1068,22 +1130,38 @@ extend class WT_MainHandler
 					case UiEvent.Key_Down:
 						if (SelectedPage != Page_Main) break;
 						WeaponListSelIndex = min(WeaponListSelIndex + 1, AvailableWeapons.Size() - 1);
-						SelMonsterPage = 0;
+						SubPage = 0;
 						SendNetworkEvent("WT_MarkNotUpdated", Update_Scorecard_Main);
 						S_StartSound("WT/SelectWeapon", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
 
 					// [Ace] Previous monster page.
 					case UiEvent.Key_PgUp:
-						SelMonsterPage = max(0, SelMonsterPage - 1);
+						SubPage = max(0, SubPage - 1);
 						S_StartSound("WT/ChangeSubPage", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
 
 					// [Ace] Next monster page.
 					case UiEvent.Key_PgDn:
-						int TotalMonsters = SelectedPage == Page_Monsters ? AllMonsters.Size() : AvailableMonsters.Size();
-						int MaxEntries = SelectedPage == Page_Monsters ? MonsterListEntriesLong : MonsterListEntries;
-						SelMonsterPage = min(SelMonsterPage + 1, GetMonsterPages(TotalMonsters, MaxEntries) - 1);
+						int TotalEntries = 1;
+						int MaxEntries = 1;
+						switch (SelectedPage)
+						{
+							case Page_Main:
+								TotalEntries = AvailableMonsters.Size();
+								MaxEntries = ListEntries[0];
+								break;
+							case Page_Weapons:
+								TotalEntries = AvailableWeapons.Size();
+								MaxEntries = ListEntries[1];
+								break;
+							case Page_Monsters:
+								TotalEntries = AllMonsters.Size();
+								MaxEntries = ListEntries[1];
+								break;
+						}
+
+						SubPage = min(SubPage + 1, GetPages(TotalEntries, MaxEntries) - 1);
 						S_StartSound("WT/ChangeSubPage", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
 

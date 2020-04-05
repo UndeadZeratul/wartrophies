@@ -6,21 +6,30 @@ KILLSOUND_CUSTOM_4 = "Custom 4";
 KILLSOUND_CUSTOM_5 = "Custom 5";
 
 // [Ace] Keep the ordering consistent or I'll haunt you!
+
+// [Ace] Grey gradient.
 HUD_COLOR_1 = "WT_White";				HUD_PRETTY_COLOR_1 = "\c[WT_White]White";
 HUD_COLOR_2 = "WT_Grey";				HUD_PRETTY_COLOR_2 = "\c[WT_Grey]Grey";
 HUD_COLOR_3 = "WT_Red";					HUD_PRETTY_COLOR_3 = "\c[WT_Red]Red";
 HUD_COLOR_4 = "WT_FadedRed";			HUD_PRETTY_COLOR_4 = "\c[WT_FadedRed]Faded Red";
 HUD_COLOR_5 = "WT_OrangeRed";			HUD_PRETTY_COLOR_5 = "\c[WT_OrangeRed]Orange Red";
+
 HUD_COLOR_6 = "WT_FadedBrown";			HUD_PRETTY_COLOR_6 = "\c[WT_FadedBrown]Faded Brown";
 HUD_COLOR_7 = "WT_Gold";				HUD_PRETTY_COLOR_7 = "\c[WT_Gold]Gold";
 HUD_COLOR_8 = "WT_Green";				HUD_PRETTY_COLOR_8 = "\c[WT_Green]Green";
 HUD_COLOR_9 = "WT_DarkGreen";			HUD_PRETTY_COLOR_9 = "\c[WT_DarkGreen]Dark Green";
 HUD_COLOR_10 = "WT_Cyan";				HUD_PRETTY_COLOR_10 = "\c[WT_Cyan]Cyan";
+
 HUD_COLOR_11 = "WT_DeepBlue";			HUD_PRETTY_COLOR_11 = "\c[WT_DeepBlue]Deep Blue";
 HUD_COLOR_12 = "WT_FadedBlue";			HUD_PRETTY_COLOR_12 = "\c[WT_FadedBlue]Faded Blue";
 HUD_COLOR_13 = "WT_Purple";				HUD_PRETTY_COLOR_13 = "\c[WT_Purple]Purple";
 HUD_COLOR_14 = "WT_FadedPurple";		HUD_PRETTY_COLOR_14 = "\c[WT_FadedPurple]Faded Purple";
+
+// [Ace] Fucked up ordering. Triggered.gif
 HUD_COLOR_15 = "WT_FadedBlueAlt";		HUD_PRETTY_COLOR_15 = "\c[WT_FadedBlueAlt]Faded Blue (Alt)";
 HUD_COLOR_16 = "WT_Orange";				HUD_PRETTY_COLOR_16 = "\c[WT_Orange]Orange";
 HUD_COLOR_17 = "WT_FadedOrange";		HUD_PRETTY_COLOR_17 = "\c[WT_FadedOrange]Faded Orange";
 HUD_COLOR_18 = "WT_FadedOrangeAlt";		HUD_PRETTY_COLOR_18 = "\c[WT_FadedOrangeAlt]Faded Orange (Alt)";
+HUD_COLOR_19 = "WT_FadedBrownAlt";		HUD_PRETTY_COLOR_19 = "\c[WT_FadedBrownAlt]Faded Brown (Alt)";
+HUD_COLOR_20 = "WT_RedAlt";				HUD_PRETTY_COLOR_20 = "\c[WT_RedAlt]Red (Alt)";
+HUD_COLOR_21 = "WT_FadedRedAlt";		HUD_PRETTY_COLOR_21 = "\c[WT_FadedRedAlt]Faded Red (Alt)";

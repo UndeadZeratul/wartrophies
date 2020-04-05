@@ -1,91 +1,23 @@
 // [Ace] The colors are defined as seen on a hue strip. Keep it that way.
 
-WT_White
-{
-	#131313 #DDDDDD
-}
-
-WT_Grey
-{
-	#131313 #999999
-}
-
-WT_Red
-{
-	#131313 #FF0000
-}
-
-WT_FadedRed
-{
-	#131313 #C93935
-}
-
-WT_OrangeRed
-{
-	#131313 #D4452A
-}
-
-WT_Orange
-{
-	#131313 #F06000
-}
-
-WT_FadedOrange
-{
-	#131313 #BF6F40
-}
-
-WT_FadedOrangeAlt
-{
-	#131313 #F5A77A
-}
-
-WT_FadedBrown
-{
-	#131313 #B3904C
-}
-
-WT_Gold
-{
-	#131313 #D4B62A
-}
-
-WT_Green
-{
-	#131313 #00EE00
-}
-
-WT_DarkGreen
-{
-	#131313 #5EB34C
-}
-
-WT_Cyan
-{
-	#131313 #00B7EE
-}
-
-WT_DeepBlue
-{
-	#131313 #6666FF
-}
-
-WT_FadedBlue
-{
-	#131313 #7CA8C0
-}
-
-WT_FadedBlueAlt
-{
-	#131313 #C8E4F4
-}
-
-WT_Purple
-{
-	#131313 #9E00FF
-}
-
-WT_FadedPurple
-{
-	#131313 #C46BFF
-}
+WT_White				{ #131313 #DDDDDD }
+WT_Grey					{ #131313 #999999 }
+WT_Red					{ #131313 #FF0000 }
+WT_RedAlt				{ #131313 #FF5555 }
+WT_FadedRed				{ #131313 #C93935 }
+WT_FadedRedAlt			{ #131313 #E26460 }
+WT_OrangeRed			{ #131313 #D4452A }
+WT_Orange				{ #131313 #F06000 }
+WT_FadedOrange			{ #131313 #BF6F40 }
+WT_FadedOrangeAlt		{ #131313 #F5A77A }
+WT_FadedBrown			{ #131313 #B3904C }
+WT_FadedBrownAlt		{ #131313 #C6AD7B }
+WT_Gold					{ #131313 #D4B62A }
+WT_Green				{ #131313 #00EE00 }
+WT_DarkGreen			{ #131313 #5EB34C }
+WT_Cyan					{ #131313 #00B7EE }
+WT_DeepBlue				{ #131313 #6666FF }
+WT_FadedBlue			{ #131313 #7CA8C0 }
+WT_FadedBlueAlt			{ #131313 #C8E4F4 }
+WT_Purple				{ #131313 #9E00FF }
+WT_FadedPurple			{ #131313 #C46BFF }
