@@ -36,6 +36,15 @@ extend class WT_MainHandler
 		Page_Monsters
 	}
 
+	enum WT_LiteHudStats
+	{
+		Stats_None,
+		Stats_Player,
+		Stats_Weapon,
+		Stats_All
+	}
+
+
 	// --------------------------------------------------
 	// MAIN
 	// --------------------------------------------------
@@ -43,7 +52,7 @@ extend class WT_MainHandler
 	private transient CVar ScorecardScale;
 	private transient CVar BlackDisplay;
 
-	private transient CVar LiteHudEnabled;
+	private transient CVar LiteHudType;
 	private transient CVar LiteHudOrientation;
 	private transient CVar LiteHudScale;
 	private transient CVar LiteHudOffsetX;
@@ -117,7 +126,7 @@ extend class WT_MainHandler
 
 	override void RenderOverlay(RenderEvent e)
 	{
-		bool ShowLiteHUD = LiteHudEnabled.GetBool();
+		int LiteHud = LiteHudType.GetInt();
 
 		int OriginalWidth = StatusBar.HorizontalResolution;
 		int OriginalHeight = StatusBar.VerticalResolution;
@@ -126,7 +135,7 @@ extend class WT_MainHandler
 
 		// --------------- LITE HUD ---------------
 
-		if (ShowLiteHUD && !DrawUi && !AutomapActive && GameState == GS_LEVEL)
+		if (LiteHud > Stats_None && !DrawUi && !AutomapActive && GameState == GS_LEVEL)
 		{
 			double Alpha = LiteHudAlpha.GetFloat();
 			double Scale = LiteHudScale.GetFloat();
@@ -138,37 +147,31 @@ extend class WT_MainHandler
 				StatusBar.SetSize(StatusBar.RelTop, int(640 / Scale), int(480 / Scale));
 			}
 
-			if (ShowLiteHUD)
+			vector2 PlayerStatsSize = (0, 0);
+
+			if (LiteHud != Stats_Weapon && VisiblityFlags & VF_Player_All != 0)
 			{
-				vector2 PlayerStatsSize = (0, 0);
+				PlayerStatsSize = DrawLiteHudPlayerStats(StatusBar, (2 + LiteHudOffsetX.GetInt(), 2 + LiteHudOffsetY.GetInt()), VisiblityFlags, Alpha);
+			}
 
-				if (VisiblityFlags & VF_Player_All != 0)
+			// [Ace] Don't update available weapons if the weapon stats aren't visible. It'd be a waste of VM time.
+			if (LiteHud != Stats_Player && VisiblityFlags & VF_Weapon_All != 0)
+			{
+				GetAvailableWeapons(AvailableWeapons);
+				AutoSelectCurrentWeapon();
+				class<Weapon> WeaponListSel = GetSelectedWeaponInList();
+
+				if (WeaponListSel && WeaponListSel == ReadyWeapon)
 				{
-					PlayerStatsSize = DrawLiteHudPlayerStats(StatusBar, (2 + LiteHudOffsetX.GetInt(), 2 + LiteHudOffsetY.GetInt()), VisiblityFlags, Alpha);
-				}
+					vector2 Pos = (2, 2);
 
-				// [Ace] Don't update available weapons if the weapon stats aren't visible. It'd be a waste of VM time.
-				if (VisiblityFlags & VF_Weapon_All != 0)
-				{
-					GetAvailableWeapons(AvailableWeapons);
-					AutoSelectCurrentWeapon();
-					class<Weapon> WeaponListSel = GetSelectedWeaponInList();
-
-					if (WeaponListSel && WeaponListSel == ReadyWeapon)
+					switch(LiteHudOrientation.GetInt())
 					{
-						vector2 Pos = (2, 2);
-
-						if (ShowLiteHUD)
-						{
-							switch(LiteHudOrientation.GetInt())
-							{
-								case 0: Pos.Y += PlayerStatsSize.Y; break;
-								case 1: Pos.X += PlayerStatsSize.X; break;
-							}
-						}
-
-						DrawLiteHudWeaponStats(StatusBar, WeaponListSel, (Pos.X + LiteHudOffsetX.GetInt(), Pos.Y + LiteHudOffsetY.GetInt()), VisiblityFlags, Alpha);
+						case 0: Pos.Y += PlayerStatsSize.Y; break;
+						case 1: Pos.X += PlayerStatsSize.X; break;
 					}
+
+					DrawLiteHudWeaponStats(StatusBar, WeaponListSel, (Pos.X + LiteHudOffsetX.GetInt(), Pos.Y + LiteHudOffsetY.GetInt()), VisiblityFlags, Alpha);
 				}
 			}
 
