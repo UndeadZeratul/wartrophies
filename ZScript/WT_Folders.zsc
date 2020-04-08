@@ -299,7 +299,7 @@ extend class WT_MainHandler
 		"rlbfginfinity",							"BFG",					"Stock",				"Legendary",
 		"rldragonslayer",							"Melee",				"Stock",				"Legendary",
 		"rlduke2rifle",								"Plasma Rifle",			"Stock",				"Legendary",
-		"rlhurricanecannon",						"Pistol",				"Stock",				"Legendary",
+		"rlhurricanecannon",						"Rocket Launcher",		"Stock",				"Legendary",
 		"rljudgeofthedead",							"Shotgun",				"Stock",				"Legendary",
 		"rllonghorn",								"Pistol",				"Stock",				"Legendary",
 		"rlneuralstunner",							"Pistol",				"Stock",				"Legendary",
