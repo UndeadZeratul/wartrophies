@@ -97,7 +97,7 @@ class WT_MainHandler : EventHandler
 	// 30 bucks I'm not paying up if I lose.
 	override void WorldThingDamaged(WorldEvent e)
 	{
-		if (e.Thing && e.Thing.bISMONSTER && e.DamageSource && e.DamageSource is "PlayerPawn" && e.Thing.Health <= 0 && !IsBlacklisted(e.Thing.GetClass()))
+		if (e.Thing && e.Thing.bISMONSTER && e.DamageSource && e.Thing.Health <= 0 && !IsBlacklisted(e.Thing.GetClass()))
 		{
 			double FastMonstersMult = sv_fastmonsters || G_SkillPropertyInt(SKILLP_FastMonsters) ? 2.5 : 1;
 			int SkillNumber = min(4, (G_SkillPropertyInt(SKILLP_ACSReturn) + 1));
@@ -123,8 +123,7 @@ class WT_MainHandler : EventHandler
 			// [Ace] Killer is the player's hitscan or telefrag. Don't blacklist the telefrag.
 			else
 			{
-				let plr = PlayerPawn(e.DamageSource);
-				if (plr)
+				if (e.DamageSource is "PlayerPawn")
 				{
 					switch (e.DamageType)
 					{
