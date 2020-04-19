@@ -100,7 +100,19 @@ extend class WT_MainHandler
 		"SniperCannonWeaponS3",				"Sniper Cannon (Slot 3)",
 		"MetalMonstrosityWeapon",			"Metal Monstrosity (Slot 1)",
 		"MetalMonstrosityWeaponS2",			"Metal Monstrosity (Slot 2)",
-		"MetalMonstrosityWeaponS3",			"Metal Monstrosity (Slot 3)"
+		"MetalMonstrosityWeaponS3",			"Metal Monstrosity (Slot 3)",
+
+		// Compendium
+		"SCI2_scientistbase",				"The Scientist",
+		"Obituary_Bazookaman",				"Bazooka Man",
+		"Obituary_harderImp",				"Super Imp",
+		"Obituary_hitechguy",				"Hi-Tech Guy",
+		"CommanderKeen",					"Commander Keen",
+		"TVRprop1",							"Chained Zombieman",
+		"Biowarthundersounds",				"Lightning Itself",
+		"Holobotinvisable",					"Camouflaged Holobot",
+		"Cyberdemonjr",						"Cyberdemon Jr.",
+		"SCI2_Scientistboss",				"The Scientist (Boss)"
 	}; 
 
 	private ui string GetCustomTag(class<Actor> cls)
