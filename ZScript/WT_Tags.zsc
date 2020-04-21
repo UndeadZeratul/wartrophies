@@ -112,7 +112,8 @@ extend class WT_MainHandler
 		"Biowarthundersounds",				"Lightning Itself",
 		"Holobotinvisable",					"Camouflaged Holobot",
 		"Cyberdemonjr",						"Cyberdemon Jr.",
-		"SCI2_Scientistboss",				"The Scientist (Boss)"
+		"SCI2_Scientistboss",				"The Scientist (Boss)",
+		"TTPEvilTrooper",					"Evil Trooper"
 	}; 
 
 	private ui string GetCustomTag(class<Actor> cls)
