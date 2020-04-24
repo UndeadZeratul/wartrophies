@@ -113,7 +113,8 @@ extend class WT_MainHandler
 		"Holobotinvisable",					"Camouflaged Holobot",
 		"Cyberdemonjr",						"Cyberdemon Jr.",
 		"SCI2_Scientistboss",				"The Scientist (Boss)",
-		"TTPEvilTrooper",					"Evil Trooper"
+		"TTPEvilTrooper",					"Evil Trooper",
+		"POSTProp15",						"Coniferous Tree"
 	}; 
 
 	private ui string GetCustomTag(class<Actor> cls)
