@@ -84,7 +84,7 @@ extend class WT_MainHandler
 		36 // [Ace] Timmy Turner, my name is DougsDaleDimmaDaleDimmaDimmsDomeDoDiDomeDimmsDimmaDimmaDome, Owner of the DougDimmsDimmaDaleDimmsDomeDoDiDimmaDimmsDaleDimmaDimmsDaleDimmaDome. Also monster page.
 	};
 
-	static const int ListEntries[] =
+	static const int MaxListEntries[] =
 	{
 		11, // [Ace] Weapon and monster lists in the main page.
 		27 // [Ace] Weapon and mosnter lists in their specialized page.
@@ -464,16 +464,16 @@ extend class WT_MainHandler
 
 		// --------------- WEAPON LIST ---------------
 
-		int WeaponPagesTotal = max(1, int(ceil(AvailableWeapons.Size() / double(ListEntries[0]))));
-		int WeaponPage = WeaponListSelIndex / ListEntries[0];
+		int WeaponPagesTotal = max(1, int(ceil(AvailableWeapons.Size() / double(MaxListEntries[0]))));
+		int WeaponPage = WeaponListSelIndex / MaxListEntries[0];
 
 		string Title = InSearchMode ? SearchFilter.."_" : (SearchFilter != "" ? SearchFilter : "All Weapons");
 		sbar.DrawString(mMainFont, Title, (-174, 12), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_FadedBrown"));
 		sbar.DrawString(mMainFont, (WeaponPage + 1).."/"..WeaponPagesTotal, (-42, 12), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBrown"));
 
-		for (int i = 0; ListEntries[0] * WeaponPage + i < AvailableWeapons.Size() && i < ListEntries[0]; ++i)
+		for (int i = 0; MaxListEntries[0] * WeaponPage + i < AvailableWeapons.Size() && i < MaxListEntries[0]; ++i)
 		{
-			let CurrWeapon = AvailableWeapons[ListEntries[0] * WeaponPage + i];
+			let CurrWeapon = AvailableWeapons[MaxListEntries[0] * WeaponPage + i];
 			
 			sbar.DrawString(mMainFont, GetTruncatedText(GetActorTag(CurrWeapon), WeaponNameLengths[0]), (-174, 36 + 9 * i), DI_TEXT_LEFT, WeaponListSel == CurrWeapon ? Font.FindFontColor("WT_Old_OrangeRed") : Font.FindFontColor("WT_Old_FadedBrown"));
 		}
@@ -554,11 +554,11 @@ extend class WT_MainHandler
 			}
 
 			// [Ace] Then display them.
-			sbar.DrawString(mMainFont, (SubPage + 1).."/"..GetPages(AvailableMonsters.Size(), ListEntries[0]), (160, 12), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBlue"));
+			sbar.DrawString(mMainFont, (SubPage + 1).."/"..GetPages(AvailableMonsters.Size(), MaxListEntries[0]), (160, 12), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBlue"));
 
-			int StartIndex = ListEntries[0] * SubPage;
+			int StartIndex = MaxListEntries[0] * SubPage;
 			int mRow = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
-			for (int i = StartIndex; i < AvailableMonsters.Size() && mRow < ListEntries[0]; ++i)
+			for (int i = StartIndex; i < AvailableMonsters.Size() && mRow < MaxListEntries[0]; ++i)
 			{
 				let CurrMonster = AvailableMonsters[i];
 
@@ -612,11 +612,11 @@ extend class WT_MainHandler
 		}
 
 		// [Ace] Then display them.
-		sbar.DrawString(mMainFont, (SubPage + 1).."/"..GetPages(AvailableWeapons.Size(), ListEntries[1]), (47, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBrown"));
+		sbar.DrawString(mMainFont, (SubPage + 1).."/"..GetPages(AvailableWeapons.Size(), MaxListEntries[1]), (47, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBrown"));
 
-		int StartIndex = ListEntries[1] * SubPage;
+		int StartIndex = MaxListEntries[1] * SubPage;
 		int mRow = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
-		for (int i = StartIndex; i < AvailableWeapons.Size() && mRow < ListEntries[1]; ++i)
+		for (int i = StartIndex; i < AvailableWeapons.Size() && mRow < MaxListEntries[1]; ++i)
 		{
 			bool AlternateColor = i % 2;
 			let CurrWeapon = AvailableWeapons[i];
@@ -675,11 +675,11 @@ extend class WT_MainHandler
 		}
 
 		// [Ace] Then display them.
-		sbar.DrawString(mMainFont, (SubPage + 1).."/"..GetPages(AllMonsters.Size(), ListEntries[1]), (110, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBlue"));
+		sbar.DrawString(mMainFont, (SubPage + 1).."/"..GetPages(AllMonsters.Size(), MaxListEntries[1]), (110, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBlue"));
 
-		int StartIndex = ListEntries[1] * SubPage;
+		int StartIndex = MaxListEntries[1] * SubPage;
 		int mRow = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
-		for (int i = StartIndex; i < AllMonsters.Size() && mRow < ListEntries[1]; ++i)
+		for (int i = StartIndex; i < AllMonsters.Size() && mRow < MaxListEntries[1]; ++i)
 		{
 			bool AlternateColor = i % 2;
 			let CurrMonster = AllMonsters[i];
@@ -1122,15 +1122,15 @@ extend class WT_MainHandler
 						{
 							case Page_Main:
 								TotalEntries = AvailableMonsters.Size();
-								MaxEntries = ListEntries[0];
+								MaxEntries = MaxListEntries[0];
 								break;
 							case Page_Weapons:
 								TotalEntries = AvailableWeapons.Size();
-								MaxEntries = ListEntries[1];
+								MaxEntries = MaxListEntries[1];
 								break;
 							case Page_Monsters:
 								TotalEntries = AllMonsters.Size();
-								MaxEntries = ListEntries[1];
+								MaxEntries = MaxListEntries[1];
 								break;
 						}
 
