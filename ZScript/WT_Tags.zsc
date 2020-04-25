@@ -116,7 +116,14 @@ extend class WT_MainHandler
 		"TTPEvilTrooper",					"Evil Trooper",
 		"POSTProp15",						"Coniferous Tree",
 		"bfgtrooper",						"BFG Trooper",
-		"Fastimp",							"Fast Imp"
+		"Fastimp",							"Fast Imp",
+		"HTP_Enemy1",						"Hell Guard",
+		"HTP_Enemy2",						"HTP Robot",
+		"HTP_Enemy3",						"Liquid Metal Orb",
+		"HTP_Enemy4",						"HTP Fireball Robot",
+		"HTP_Enemy5",						"Master Metal Orb",
+		"HTP_Enemy6",						"HTP Heavy Robot",
+		"HTP_Prop1",						"HTP Core"
 	}; 
 
 	private ui string GetCustomTag(class<Actor> cls)
