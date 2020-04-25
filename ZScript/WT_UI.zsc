@@ -1065,8 +1065,22 @@ extend class WT_MainHandler
 	}
 
 	// --------------------------------------------------
-	// INPUT
+	// INPUT & MISC
 	// --------------------------------------------------
+
+	private ui void OnChangeScorecardPage()
+	{
+		SubPage = 0;
+		SearchFilter = "";
+		S_StartSound("WT/ChangePage", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
+	}
+
+	private ui void OnChangeWeaponSelection()
+	{
+		SubPage = 0;
+		SendNetworkEvent("WT_MarkNotUpdated", Update_Scorecard_Main);
+		S_StartSound("WT/SelectWeapon", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
+	}
 
 	override bool UiProcess(UiEvent e)
 	{
@@ -1078,34 +1092,28 @@ extend class WT_MainHandler
 				{
 					// [Ace] Cycle pages left.
 					case UiEvent.Key_Left:
+						OnChangeScorecardPage();
 						if (--SelectedPage < 0) SelectedPage = Page_Monsters;
-						SubPage = 0;
-						S_StartSound("WT/ChangePage", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
 
 					// [Ace] Cycle pages right.
 					case UiEvent.Key_Right:
+						OnChangeScorecardPage();
 						++SelectedPage %= Page_Monsters + 1;
-						SubPage = 0;
-						S_StartSound("WT/ChangePage", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
 
 					// [Ace] Move weapon selection up.
 					case UiEvent.Key_Up:
 						if (SelectedPage != Page_Main) break;
+						OnChangeWeaponSelection();
 						WeaponListSelIndex = max(0, WeaponListSelIndex - 1);
-						SubPage = 0;
-						SendNetworkEvent("WT_MarkNotUpdated", Update_Scorecard_Main);
-						S_StartSound("WT/SelectWeapon", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
 
 					// [Ace] Move weapon selection down.
 					case UiEvent.Key_Down:
 						if (SelectedPage != Page_Main) break;
+						OnChangeWeaponSelection();
 						WeaponListSelIndex = min(WeaponListSelIndex + 1, AvailableWeapons.Size() - 1);
-						SubPage = 0;
-						SendNetworkEvent("WT_MarkNotUpdated", Update_Scorecard_Main);
-						S_StartSound("WT/SelectWeapon", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
 
 					// [Ace] Previous monster page.
@@ -1194,7 +1202,7 @@ extend class WT_MainHandler
 						break;
 
 					default:
-						if (SearchFilter.Length() < 13)
+						if (SearchFilter.Length() < 13 && e.KeyChar >= 32 && e.KeyChar <= 126) // [Ace] Only valid characters.
 						{
 							SearchFilter = SearchFilter..e.KeyString;
 						}
