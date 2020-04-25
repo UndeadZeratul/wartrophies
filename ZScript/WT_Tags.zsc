@@ -114,7 +114,9 @@ extend class WT_MainHandler
 		"Cyberdemonjr",						"Cyberdemon Jr.",
 		"SCI2_Scientistboss",				"The Scientist (Boss)",
 		"TTPEvilTrooper",					"Evil Trooper",
-		"POSTProp15",						"Coniferous Tree"
+		"POSTProp15",						"Coniferous Tree",
+		"bfgtrooper",						"BFG Trooper",
+		"Fastimp",							"Fast Imp"
 	}; 
 
 	private ui string GetCustomTag(class<Actor> cls)
