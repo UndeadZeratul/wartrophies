@@ -22,8 +22,9 @@ OptionMenu "WT_ScorecardMenu"
 	Submenu "Scorecard Keys", "WT_ScorecardKeysMenu"
 	StaticText ""
 	Control "Toggle Scorecard", "ToggleScorecard"
-	Option "Theme", "wt_scorecard_theme", "ScorecardTheme"
+	StaticText ""
 	Slider "Scale", "wt_scorecard_scale", 0.1, 3.0, 0.1, 1
+	Option "Theme", "wt_scorecard_theme", "ScorecardTheme"
 	Option "Use Darker Displays", "wt_scorecard_blackdisplays", "YesNo"
 }
 
@@ -42,7 +43,7 @@ OptionMenu "WT_ScorecardKeysMenu"
 	StaticText "P - Gain prestige if at max player rank, and reset XP.", "White"
 	StaticText ""
 	StaticText "F12 - Screenshot.", "White"
-	StaticText "NOTE: In order for F12 to work, you must have enabled the following option:", "Fire"
+	StaticText "NOTE: In order for F12 to work, you must have the following option enabled:", "Fire"
 	Option "$MISCMNU_ENABLESCRIPTSCREENSHOTS", "enablescriptscreenshot", "OnOff"
 }
 
