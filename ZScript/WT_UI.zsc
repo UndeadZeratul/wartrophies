@@ -424,7 +424,7 @@ extend class WT_MainHandler
 
 		// --------------- GRAPHIC ---------------
 		
-		sbar.DrawImage(BlackDisplay.GetBool() ? "WTSTATPB" : "WTSTATPN", (0, 0.5), DI_CENTER); // [Ace] 0.5 because nearest neighbour scaling is not your friend.
+		sbar.DrawImage(BlackDisplay.GetBool() ? "WTSTP1B" : "WTSTP1N", (0, 0.5), DI_CENTER); // [Ace] 0.5 because nearest neighbour scaling is not your friend.
 
 		// --------------- MAIN STATS ---------------
 
@@ -592,7 +592,7 @@ extend class WT_MainHandler
 
 		// --------------- GRAPHIC ---------------
 		
-		sbar.DrawImage(BlackDisplay.GetBool() ? "WTSTATWB" : "WTSTATWN", (0, 0.5), DI_CENTER);
+		sbar.DrawImage(BlackDisplay.GetBool() ? "WTSTW1B" : "WTSTW1N", (0, 0.5), DI_CENTER);
 
 		// --------------- WEAPON LIST & STATS ---------------
 
@@ -654,7 +654,7 @@ extend class WT_MainHandler
 
 		// --------------- GRAPHIC ---------------
 		
-		sbar.DrawImage(BlackDisplay.GetBool() ? "WTSTATMB" : "WTSTATMN", (0, 0.5), DI_CENTER);
+		sbar.DrawImage(BlackDisplay.GetBool() ? "WTSTM1B" : "WTSTM1N", (0, 0.5), DI_CENTER);
 
 		// --------------- MONSTER LIST & STATS ---------------
 
