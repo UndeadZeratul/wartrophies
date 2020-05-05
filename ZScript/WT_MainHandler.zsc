@@ -196,6 +196,7 @@ class WT_MainHandler : EventHandler
 		LiteHudColors[Element_WeaponKills] = CVar.FindCVar('wt_lite_color_weaponkills');
 		LiteHudVisibilityFlags = CVar.FindCVar('wt_lite_adv_visibility');
 
+		UiFont = CVar.FindCVar('wt_ui_font');
 		KillSoundType = CVar.FindCVar('wt_killsound');
 		BlacklistEnabled = CVar.FindCVar('wt_blacklist_enable');
 

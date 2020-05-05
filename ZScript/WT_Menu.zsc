@@ -27,7 +27,10 @@ class OptionMenuItemHudColorOption : OptionMenuItemOption
 	{
 		String label = Stringtable.Localize(text);
 		int overlay = grayed? Color(96,48,0,0) : 0;
-		Font fnt = WT_MainHandler.FontName; // [Ace] All this code for this line.
+
+		Font fnt = Font.GetFont(WT_MainHandler.FontPrefix..CVar.FindCVar('wt_ui_font').GetInt() + 1);
+
+		// [Ace] All this code for this line.
 		screen.DrawText(fnt, color, indent + CursorSpace(), y + fnt.GetHeight() + 2, text, DTA_CleanNoMove_1, true, DTA_ColorOverlay, overlay);
 	}
 

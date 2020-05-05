@@ -8,6 +8,7 @@ OptionMenu "WarTrophiesMenu"
 	Submenu "Blacklist Options", "WT_BlacklistMenu"
 	StaticText ""
 	StaticText "----- Miscellaneous -----", "Teal"
+	Option "UI Font", "wt_ui_font", "WTFont"
 	Option "Kill Sound Type", "wt_killsound", "KillSoundType"
 	StaticText ""
 	SafeCommand "Reset all statistics", "netevent wt_resettally"
@@ -187,6 +188,11 @@ OptionValue "LiteHudType"
 	3, "Show All"
 }
 
+OptionValue "WTFont"
+{
+	0, "Simply Unreal"
+	1, "Teevee Gold"
+}
 
 // [Ace] See LANGUAGE.txt
 OptionValue "LiteHUDColor"
