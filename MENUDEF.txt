@@ -192,6 +192,7 @@ OptionValue "WTFont"
 {
 	0, "Simply Unreal"
 	1, "Teevee Gold"
+	2, "Jenocide"
 }
 
 // [Ace] See LANGUAGE.txt

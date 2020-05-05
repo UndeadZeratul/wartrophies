@@ -65,3 +65,8 @@ WTFONT1
 	_ WTFNT_
 	` WTFNTTLD
 }
+
+WTFONT3
+{
+	Template JNBRD%03d
+}
