@@ -14,8 +14,8 @@ extend class WT_MainHandler
 	enum WT_ScorecardColor
 	{
 		SElement_Labels,
-		SElement_LabelsAlt,
 		SElement_WeaponList,
+		SElement_WeaponListAlt,
 		SElement_SelectedWeapon,
 		SElement_WeaponKills
 	}
@@ -638,7 +638,7 @@ extend class WT_MainHandler
 			let CurrWeapon = AvailableWeapons[i];
 
 			// Name.
-			sbar.DrawString(MainHudFont, GetTruncatedText(GetActorTag(CurrWeapon), WeaponNameLengths[2 + 3 * UiFont.GetInt()]), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? GetScorecardColor(SElement_LabelsAlt) : GetScorecardColor(SElement_Labels)));
+			sbar.DrawString(MainHudFont, GetTruncatedText(GetActorTag(CurrWeapon), WeaponNameLengths[2 + 3 * UiFont.GetInt()]), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? GetScorecardColor(SElement_WeaponListAlt) : GetScorecardColor(SElement_WeaponList)));
 
 			// Kills.
 			sbar.DrawString(MainHudFont, sbar.FormatNumber(AvailableWeaponsKills[i], 1, 5), (116, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? "WT_Old_FadedRedAlt" : "WT_Old_FadedRed"));
@@ -1087,17 +1087,17 @@ extend class WT_MainHandler
 					case 0: return "WT_Old_FadedBrown";
 					case 1: return "WT_LightSteelBlue";
 				}
-			case SElement_LabelsAlt:
-				switch (Theme)
-				{
-					case 0: return "WT_Old_FadedBrownAlt";
-					case 1: return "WT_LightSteelBlue";
-				}
 			case SElement_WeaponList:
 				switch (Theme)
 				{
 					case 0: return "WT_Old_FadedBrown";
 					case 1: return "WT_SlateGray";
+				}
+			case SElement_WeaponListAlt:
+				switch (Theme)
+				{
+					case 0: return "WT_Old_FadedBrownAlt";
+					case 1: return "WT_LightSteelBlue";
 				}
 			case SElement_SelectedWeapon:
 				switch (Theme)
