@@ -177,6 +177,7 @@ class WT_MainHandler : EventHandler
 		IWADWeaponFilter = CVar.FindCVar('wt_filter_iwad_weapons');
 		IWADMonsterFilter = CVar.FindCVar('wt_filter_iwad_monsters');
 
+		ScorecardTheme = CVar.FindCVar('wt_scorecard_theme');
 		ScorecardScale = CVar.FindCVar('wt_scorecard_scale');
 		BlackDisplay = CVar.FindCVar('wt_scorecard_blackdisplays');
 
@@ -187,13 +188,13 @@ class WT_MainHandler : EventHandler
 		LiteHudOffsetY = CVar.FindCVar('wt_lite_offset_y');
 		LiteHudAlpha = CVar.FindCVar('wt_lite_alpha');
 		LiteFolderView = CVar.FindCVar('wt_lite_usefolders');
-		LiteHudColors[Element_Labels] = CVar.FindCVar('wt_lite_color_labels');
-		LiteHudColors[Element_TotalKills] = CVar.FindCVar('wt_lite_color_totalkills');
-		LiteHudColors[Element_GenocideRank] = CVar.FindCVar('wt_lite_color_genociderank');
-		LiteHudColors[Element_PlayerRank] = CVar.FindCVar('wt_lite_color_playerrank');
-		LiteHudColors[Element_WeaponName] = CVar.FindCVar('wt_lite_color_weaponname');
-		LiteHudColors[Element_WeaponRank] = CVar.FindCVar('wt_lite_color_weaponrank');
-		LiteHudColors[Element_WeaponKills] = CVar.FindCVar('wt_lite_color_weaponkills');
+		LiteHudColors[LElement_Labels] = CVar.FindCVar('wt_lite_color_labels');
+		LiteHudColors[LElement_TotalKills] = CVar.FindCVar('wt_lite_color_totalkills');
+		LiteHudColors[LElement_GenocideRank] = CVar.FindCVar('wt_lite_color_genociderank');
+		LiteHudColors[LElement_PlayerRank] = CVar.FindCVar('wt_lite_color_playerrank');
+		LiteHudColors[LElement_WeaponName] = CVar.FindCVar('wt_lite_color_weaponname');
+		LiteHudColors[LElement_WeaponRank] = CVar.FindCVar('wt_lite_color_weaponrank');
+		LiteHudColors[LElement_WeaponKills] = CVar.FindCVar('wt_lite_color_weaponkills');
 		LiteHudVisibilityFlags = CVar.FindCVar('wt_lite_adv_visibility');
 
 		UiFont = CVar.FindCVar('wt_ui_font');

@@ -8,7 +8,7 @@ OptionMenu "WarTrophiesMenu"
 	Submenu "Blacklist Options", "WT_BlacklistMenu"
 	StaticText ""
 	StaticText "----- Miscellaneous -----", "Teal"
-	Option "UI Font", "wt_ui_font", "WTFont"
+	Option "UI Font", "wt_ui_font", "UiFont"
 	Option "Kill Sound Type", "wt_killsound", "KillSoundType"
 	StaticText ""
 	SafeCommand "Reset all statistics", "netevent wt_resettally"
@@ -22,6 +22,7 @@ OptionMenu "WT_ScorecardMenu"
 	Submenu "Scorecard Keys", "WT_ScorecardKeysMenu"
 	StaticText ""
 	Control "Toggle Scorecard", "ToggleScorecard"
+	Option "Theme", "wt_scorecard_theme", "ScorecardTheme"
 	Slider "Scale", "wt_scorecard_scale", 0.1, 3.0, 0.1, 1
 	Option "Use Darker Displays", "wt_scorecard_blackdisplays", "YesNo"
 }
@@ -188,11 +189,17 @@ OptionValue "LiteHudType"
 	3, "Show All"
 }
 
-OptionValue "WTFont"
+OptionValue "UiFont"
 {
 	0, "Simply Unreal"
 	1, "Teevee Gold"
 	2, "Jenocide"
+}
+
+OptionValue "ScorecardTheme"
+{
+	0, "WarTrophies"
+	1, "FragTrak"
 }
 
 // [Ace] See LANGUAGE.txt

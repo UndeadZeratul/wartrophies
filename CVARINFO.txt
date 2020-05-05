@@ -9,6 +9,7 @@ user int wt_filter_iwad_monsters = 5;
 user int wt_ui_font = 0;
 
 // [Ace] Scorecard stuff.
+user int wt_scorecard_theme = 0;
 user bool wt_scorecard_blackdisplays = false;
 user float wt_scorecard_scale = 1.0;
 
