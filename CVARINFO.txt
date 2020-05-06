@@ -1,19 +1,19 @@
-// [Ace] These are only used to store data.
+// These are only used to store data.
 nosave string wt_stats_weapons_kills = "";
 nosave int wt_stats_experience = 0;
 nosave int wt_stats_prestige = 0;
 
-// [Ace] Shared.
+// Shared.
 user int wt_filter_iwad_weapons = 5;
 user int wt_filter_iwad_monsters = 5;
 user int wt_ui_font = 0;
 
-// [Ace] Scorecard stuff.
+// Scorecard stuff.
 user int wt_scorecard_theme = 0;
-user bool wt_scorecard_blackdisplays = false;
+user bool wt_scorecard_blackdisplays = false; // [Ace] Not technically black.
 user float wt_scorecard_scale = 1.0;
 
-// [Ace] Lite HUD stuff.
+// Lite HUD stuff.
 user int wt_showlite = 3;
 user int wt_lite_orientation = 0;
 user float wt_lite_scale = 1.0;
@@ -32,8 +32,8 @@ user int wt_lite_color_weaponname = 0;
 user int wt_lite_color_weaponrank = 0;
 user int wt_lite_color_weaponkills = 0;
 
-// [Ace] Blacklist.
+// Blacklist.
 user bool wt_blacklist_enable = true;
 
-// [Ace] Misc.
+// Misc.
 user int wt_killsound = 0;

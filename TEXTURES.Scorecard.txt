@@ -61,4 +61,35 @@ Graphic "WTSTM2B", 360, 281
 	Patch "WTST2B", -822, 0
 }
 
+Graphic "WTSTP3N", 460, 281
+{
+	Patch "WTST3N", 0, 0
+}
+
+Graphic "WTSTP3B", 460, 281
+{
+	Patch "WTST3B", 0, 0
+}
+
+Graphic "WTSTW3N", 360, 281
+{
+	Patch "WTST3N", -461, 0
+}
+
+Graphic "WTSTW3B", 360, 281
+{
+	Patch "WTST3B", -461, 0
+}
+
+Graphic "WTSTM3N", 360, 281
+{
+	Patch "WTST3N", -822, 0
+}
+
+Graphic "WTSTM3B", 360, 281
+{
+	Patch "WTST3B", -822, 0
+}
+
+
 // End of texture definitions

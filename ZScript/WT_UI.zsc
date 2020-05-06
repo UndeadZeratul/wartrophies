@@ -61,7 +61,7 @@ extend class WT_MainHandler
 
 	private transient CVar ScorecardTheme;
 	private transient CVar ScorecardScale;
-	private transient CVar BlackDisplay;
+	private transient CVar DarkerDisplays;
 
 	private transient CVar LiteHudType;
 	private transient CVar LiteHudOrientation;
@@ -1048,9 +1048,9 @@ extend class WT_MainHandler
 		int Theme = ScorecardTheme.GetInt() + 1;
 		switch (page)
 		{
-			case Page_Main: return BlackDisplay.GetBool() ? "WTSTP"..Theme.."B" : "WTSTP"..Theme.."N";
-			case Page_Weapons: return BlackDisplay.GetBool() ? "WTSTW"..Theme.."B" : "WTSTW"..Theme.."N";
-			case Page_Monsters: return BlackDisplay.GetBool() ? "WTSTM"..Theme.."B" : "WTSTM"..Theme.."N";
+			case Page_Main: return DarkerDisplays.GetBool() ? "WTSTP"..Theme.."B" : "WTSTP"..Theme.."N";
+			case Page_Weapons: return DarkerDisplays.GetBool() ? "WTSTW"..Theme.."B" : "WTSTW"..Theme.."N";
+			case Page_Monsters: return DarkerDisplays.GetBool() ? "WTSTM"..Theme.."B" : "WTSTM"..Theme.."N";
 		}
 
 		return "Invalid";
@@ -1081,29 +1081,34 @@ extend class WT_MainHandler
 		int Theme = ScorecardTheme.GetInt();
 		switch (element)
 		{
+			// [Ace] The default values are the colors for the classic WarTrophies scorecard.
 			case SElement_Labels:
 				switch (Theme)
 				{
-					case 0: return "WT_Old_FadedBrown";
+					default: return "WT_Old_FadedBrown";
 					case 1: return "WT_LightSteelBlue";
+					case 2: return "WT_Old_Orange";
 				}
 			case SElement_WeaponList:
 				switch (Theme)
 				{
-					case 0: return "WT_Old_FadedBrown";
+					default: return "WT_Old_FadedBrown";
 					case 1: return "WT_SlateGray";
+					case 2: return "WT_Old_FadedOrange";
 				}
 			case SElement_WeaponListAlt:
 				switch (Theme)
 				{
-					case 0: return "WT_Old_FadedBrownAlt";
+					default: return "WT_Old_FadedBrownAlt";
 					case 1: return "WT_LightSteelBlue";
+					case 2: return "WT_Old_FadedOrangeAlt";
 				}
 			case SElement_SelectedWeapon:
 				switch (Theme)
 				{
-					case 0: return "WT_Old_OrangeRed";
+					default: return "WT_Old_OrangeRed";
 					case 1: return "WT_LightSteelBlue";
+					case 2: return "WT_Old_Orange";
 				}
 		}
 

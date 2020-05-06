@@ -201,6 +201,7 @@ OptionValue "ScorecardTheme"
 {
 	0, "WarTrophies"
 	1, "FragTrak"
+	2, "20 Monsters Challenge"
 }
 
 // [Ace] See LANGUAGE.txt

@@ -179,7 +179,7 @@ class WT_MainHandler : EventHandler
 
 		ScorecardTheme = CVar.FindCVar('wt_scorecard_theme');
 		ScorecardScale = CVar.FindCVar('wt_scorecard_scale');
-		BlackDisplay = CVar.FindCVar('wt_scorecard_blackdisplays');
+		DarkerDisplays = CVar.FindCVar('wt_scorecard_blackdisplays');
 
 		LiteHudType = CVar.FindCVar('wt_showlite');
 		LiteHudOrientation = CVar.FindCVar('wt_lite_orientation');
