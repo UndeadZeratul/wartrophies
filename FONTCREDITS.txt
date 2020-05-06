@@ -12,6 +12,7 @@ Idea Base: Full font based on short bit of custom text on the CREDIT pic of Thom
 			Only glyphs changed from original are A and L. Numbers and symbols all custom.
 
 // [Ace] WTFONT3
+JENOCIDE
 Author: Jimmy
 Original font: "Archery Black" by ShyFonts
 Idea Base: Based on my Jenocide smallfont. Has simpler shading and bolder glyphs.
