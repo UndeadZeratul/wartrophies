@@ -1,10 +1,32 @@
 extend class WT_MainHandler
 {
+	// [Ace] Method by m8f. Support for Nomina.
+	private bool, String GetCustomName(String className) const
+	{
+		String NominaName = "NominaAPI";
+		class<Actor> NominaClass = NominaName;
+
+		if (NominaClass == NULL)
+		{
+			return false, "";
+		}
+
+		let NominaAPI = GetDefaultByType(NominaClass); // [Ace] This is magic.
+		String CustomName = NominaAPI.GetObituary(null, null, className, false);
+		bool NameExists = (CustomName.length() != 0);
+
+		return NameExists, CustomName;
+	}
+
 	private ui string GetCustomTag(class<Actor> cls)
 	{
 		switch (cls.GetClassName())
 		{
-			default: return "";
+			// [Ace] Maybe Nomina has the answer to the universe?
+			default:
+				bool Exists; string CustomName;
+				[Exists, CustomName] = GetCustomName(cls.GetClassName());
+				return Exists ? CustomName : "";
 
 			// DRLA
 			case 'RLFormerHumanPistol':				return "Former Human (Pistol)";
