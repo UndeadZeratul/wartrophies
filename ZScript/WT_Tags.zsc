@@ -1,187 +1,176 @@
 extend class WT_MainHandler
 {
-	// [Ace] Works for both weapons and monsters.
-	static const string TagDefs[] =
-	{
-		// Class							// Custom tag
-		// DoomRL Arsenal
-		"RLFormerHumanPistol",				"Former Human (Pistol)",
-		"RLFormerHumanBattleRifle",			"Former Human (Rifle)",
-		"RLFormerHumanBattleRifle2",		"Former Human (Rifle, Alt)",
-		"RLFormerHumanBattleRifle3",		"Former Female Human",
-		"RLLostSoulNPE",					"Lost Soul (N. Elemental)",
-		"RLNightmareLostSoulNPE",			"Nightmare Soul (Elemental)",
-		"RLNightmareRevenantReborn",		"Nightmare Revenant (Reborn)",
-		"RLCyberneticDemonReborn",			"Mechdemon (Reborn)",
-		"RLCyberneticBaronofHellreborn",	"Techno-lord (Reborn)",
-		"RLBruiserBrother",					"Elder Bruiser Brother",
-		"RLBruiserBrother2",				"Younger Bruiser Brother",
-		"RLAbominantArtifactGuardian",		"Abominant Guardian",
-		"RLLostSoulAgony",					"Agony Lost Soul",
-		"RLLostSoulAgonyspawner",			"Agonizing Lost Soul",
-		"RLLostSoulDeathAgonySpawner",		"Agony Soul",
-		"RLFormerSergeantCombatShotgun",	"Former Human Sergeant (C. Shotgun)",
-		"RLEliteHumanBattleRifle",			"Elite Human (Rifle)",
-		"RLEliteHumanCombatPistol",			"Elite Human(C. Pistol)",
-		"RLEliteHumanHandCannon",			"Elite Human(Handcannon)",
-		"RLEliteHumanBattleRifle2",			"Elite Human(Rifle, Alt)",
-		"RLEliteSergeantPlasmaShotgun",		"Elite Sergeant(P.Shotgun)",
-		"RLEliteSergeantAssaultShotgun",	"Elite Sergeant(A.Shotgun)",
-		"RLEliteSergeantDoubleShotgun",		"Elite Sergeant(D. Shotgun)",
-		"RLFormerCommandoBattleRifle",		"Former Commando(Rifle)",
-		"RLIscream",						"Vanilla Ice Cream",
-		"RLIscreamC",						"Chocolate Ice Cream",
-		"RLIscreamS",						"Strawberry Ice Cream",
-
-		// Bullet-Eye
-		"FrostSnapValnos",					"Frost Snap (Slot 1)",
-		"FrostSnapValnoss2",				"Frost Snap (Slot 2)",
-		"FrostSnapValnoss3",				"Frost Snap (Slot 3)",
-		"FrostSnapValnoss4",				"Frost Snap (Slot 4)",
-		"SpitfireWeapon",					"Spitfire (Slot 1)",
-		"SpitfireWeaponS2",					"Spitfire (Slot 2)",
-		"SpitfireWeaponS3",					"Spitfire (Slot 3)",
-		"SpreadShotWeapon",					"Spread Shot (Slot 1)",
-		"SpreadShotWeaponS2",				"Spread Shot (Slot 2)",
-		"SpreadShotWeaponS3",				"Spread Shot (Slot 3)",
-		"BusterWeapon",						"Buster (Slot 1)",
-		"BusterWeaponS2",					"Buster (Slot 2)",
-		"BusterWeaponS3",					"Buster (Slot 3)",
-		"BlazeStreamWeapon",				"Blaze Stream (Slot 1)",
-		"BlazeStreamWeaponS2",				"Blaze Stream (Slot 2)",
-		"BlazeStreamWeaponS3",				"Blaze Stream (Slot 3)",
-		"ChaserMissileWeapon",				"Chaser Missile (Slot 1)",
-		"ChaserMissileWeaponS2",			"Chaser Missile (Slot 2)",
-		"ChaserMissileWeaponS3",			"Chaser Missile (Slot 3)",
-		"CrushBlastWeapon",					"Crush Blast (Slot 1)",
-		"CrushBlastWeaponS2",				"Crush Blast (Slot 2)",
-		"CrushBlastWeaponS3",				"Crush Blast (Slot 3)",
-		"ScrapLauncherWeapon",				"Scrap Launcher (Slot 1)",
-		"ScrapLauncherWeaponS2",			"Scrap Launcher (Slot 2)",
-		"ScrapLauncherWeaponS3",			"Scrap Launcher (Slot 3)",
-		"QuickStrikeWeapon",				"Quick Strike (Slot 1)",
-		"QuickStrikeWeaponS2",				"Quick Strike (Slot 2)",
-		"QuickStrikeWeaponS3",				"Quick Strike (Slot 3)",
-		"HuntingLaserWeapon",				"Hunting Laser (Slot 1)",
-		"HuntingLaserWeaponS2",				"Hunting Laser (Slot 2)",
-		"HuntingLaserWeaponS3",				"Hunting Laser (Slot 3)",
-		"RapidVulcanWeapon",				"Rapid Vulcan (Slot 1)",
-		"RapidVulcanWeaponS2",				"Rapid Vulcan (Slot 2)",
-		"RapidVulcanWeaponS3",				"Rapid Vulcan (Slot 3)",
-		"StormGrenadeWeapon",				"Storm Grenade (Slot 1)",
-		"StormGrenadeWeaponS2",				"Storm Grenade (Slot 2)",
-		"StormGrenadeWeaponS3",				"Storm Grenade (Slot 3)",
-		"VolleyShotWeapon",					"Volley Shot (Slot 1)",
-		"VolleyShotWeaponS2",				"Volley Shot (Slot 2)",
-		"VolleyShotWeaponS3",				"Volley Shot (Slot 3)",
-		"ViperWaveWeapon",					"Viper Wave (Slot 1)",
-		"ViperWaveWeaponS2",				"Viper Wave (Slot 2)",
-		"ViperWaveWeaponS3",				"Viper Wave (Slot 3)",
-		"RepeaterWeapon",					"Repeater (Slot 1)",
-		"RepeaterWeaponS2",					"Repeater (Slot 2)",
-		"RepeaterWeaponS3",					"Repeater (Slot 3)",
-		"TripleWyvernWeapon",				"Triple Wyvern (Slot 1)",
-		"TripleWyvernWeaponS2",				"Triple Wyvern (Slot 2)",
-		"TripleWyvernWeaponS3",				"Triple Wyvern (Slot 3)",
-		"WingedReaverWeapon",				"Winged Reaver (Slot 1)",
-		"WingedReaverWeaponS2",				"Winged Reaver (Slot 2)",
-		"WingedReaverWeaponS3",				"Winged Reaver (Slot 3)",
-		"ShotwaveWeapon",					"Shotwave (Slot 1)",
-		"ShotwaveWeaponS2",					"Shotwave (Slot 2)",
-		"ShotwaveWeaponS3",					"Shotwave (Slot 3)",
-		"GrindHalberdWeapon",				"Grind Halberd (Slot 1)",
-		"GrindHalberdWeaponS2",				"Grind Halberd (Slot 2)",
-		"GrindHalberdWeaponS3",				"Grind Halberd (Slot 3)",
-		"VampiricGauntletsWeapon",			"Vampiric Gauntlets (Slot 1)",
-		"VampiricGauntletsWeaponS2",		"Vampiric Gauntlets (Slot 2)",
-		"VampiricGauntletsWeaponS3",		"Vampiric Gauntlets (Slot 3)",
-		"SniperCannonWeapon",				"Sniper Cannon (Slot 1)",
-		"SniperCannonWeaponS2",				"Sniper Cannon (Slot 2)",
-		"SniperCannonWeaponS3",				"Sniper Cannon (Slot 3)",
-		"MetalMonstrosityWeapon",			"Metal Monstrosity (Slot 1)",
-		"MetalMonstrosityWeaponS2",			"Metal Monstrosity (Slot 2)",
-		"MetalMonstrosityWeaponS3",			"Metal Monstrosity (Slot 3)",
-
-		// Compendium
-		"SCI2_scientistbase",				"The Scientist",
-		"Obituary_Bazookaman",				"Bazooka Man",
-		"Obituary_harderImp",				"Super Imp",
-		"Obituary_hitechguy",				"Hi-Tech Guy",
-		"CommanderKeen",					"Commander Keen",
-		"TVRprop1",							"Chained Zombieman",
-		"Biowarthundersounds",				"Lightning Itself",
-		"Holobotinvisable",					"Camouflaged Holobot",
-		"Cyberdemonjr",						"Cyberdemon Jr.",
-		"SCI2_Scientistboss",				"The Scientist (Boss)",
-		"TTPEvilTrooper",					"Evil Trooper",
-		"POSTProp15",						"Coniferous Tree",
-		"bfgtrooper",						"BFG Trooper",
-		"Fastimp",							"Fast Imp",
-		"HTP_Enemy1",						"Hell Guard",
-		"HTP_Enemy2",						"HTP Robot",
-		"HTP_Enemy3",						"Liquid Metal Orb",
-		"HTP_Enemy4",						"HTP Fireball Robot",
-		"HTP_Enemy5",						"Master Metal Orb",
-		"HTP_Enemy6",						"HTP Heavy Robot",
-		"HTP_Prop1",						"HTP Core",
-		"talosmarine",						"Talos Marine",
-		"allhelldemon",						"Demon (on fire)",
-		"allhelltwoface",					"Two headed Chaingunner",
-		"allhellarachnotron",				"Mounted Arachnotron",
-		"allhellflyingbaron",				"Flying Baron",
-		"allhellevilmarine",				"Evil Marine",
-		"allhellhelicopter",				"Attack Helicopter",
-		"allhellwingeddemon1",				"Winged Demon",
-		"allhellhugecyber",					"Huge Cyberdemon",
-		"rebirthsnowman",					"Evil Snowman",
-		"hangedmario",						"It's a me, Mario!",
-		"CoDPossessed",						"Possessed Zombie",
-		"CoDSergeant",						"Possessed Sergeant",
-		"CoDChaingunGuy",					"Possessed Commando",
-		"CoDKnight",						"Invisible Hellknight",
-		"CoDCyber",							"BFG Cyberdemon",
-		"CoDVile",							"Arch-Invocator",
-		"HardAss",							"Hard Ass Zombie",
-		"CoDSpider",						"Mother Spiderdemon",
-		"MarsDoomTurret",					"Mars Turret",
-		"Spectreimp",						"Spectral Imp",
-		"Spectrehellknight",				"Spectral Knight",
-		"MarsDoomSecurityDrone",			"Mars Security Drone",
-		"MarsDoomMissile",					"Missile",
-		"MarsDoomMarineShotgun",			"Space Marine",
-		"MarsDoomMarinePlasma",				"Plasma Space Marine",
-		"MarsDoomMarineRocket",				"Rocket Space Marine",
-		"MarsDoomGargoyle",					"Martian Gargoyle",
-		"OSIRISBat",						"Goddamned Bat",
-		"OSIRISArcheologist",				"Archaeologist",
-		"OSIRISAnubis",						"Anubis"
-		"OSIRISReaper",						"Reaper",
-		"OSIRISPharaoh",					"Pharaoh",
-		"EnjaySuperImp",					"New kind of imp",
-		"EnjayZombieGunner",				"New kind of zombie",
-		"CleimosRobot",						"Cleimos Robot",
-		"EnslaveEnemy1",					"Enslaved Demon",
-		"EnslaveEnemy2",					"Robotic Skull",
-		"BioTechEnemy1",					"Prisoner",
-		"BioTechEnemy2",					"Shotgun Prisoner",
-		"BioTechEnemy3",					"Biotech Imp",
-		"BioTechEnemy4",					"Biotech Demon",
-		"BioTechEnemy5",					"Biotech Spider",
-		"BioTechEnemy6",					"Sec Droid",
-		"BioTechEnemy7",					"Biotech Stalker"
-	}; 
-
 	private ui string GetCustomTag(class<Actor> cls)
 	{
-		string CustomTag = "";
-		for (int i = 0; i < TagDefs.Size(); i += 2)
+		switch (cls.GetClassName())
 		{
-			class<Actor> a = TagDefs[i];
-			if (cls == a)
-			{
-				CustomTag = TagDefs[i + 1];
-			}
+			default: return "";
+
+			// DRLA
+			case 'RLFormerHumanPistol':				return "Former Human (Pistol)";
+			case 'RLFormerHumanBattleRifle':		return "Former Human (Rifle)";
+			case 'RLFormerHumanBattleRifle2':		return "Former Human (Rifle, Alt)";
+			case 'RLFormerHumanBattleRifle3':		return "Former Female Human";
+			case 'RLLostSoulNPE':					return "Lost Soul (N. Elemental)";
+			case 'RLNightmareLostSoulNPE':			return "Nightmare Soul (Elemental)";
+			case 'RLNightmareRevenantReborn':		return "Nightmare Revenant (Reborn)";
+			case 'RLCyberneticDemonReborn':			return "Mechdemon (Reborn)";
+			case 'RLCyberneticBaronofHellreborn':	return "Techno-lord (Reborn)";
+			case 'RLBruiserBrother':				return "Elder Bruiser Brother";
+			case 'RLBruiserBrother2':				return "Younger Bruiser Brother";
+			case 'RLAbominantArtifactGuardian':		return "Abominant Guardian";
+			case 'RLLostSoulAgony':					return "Agony Lost Soul";
+			case 'RLLostSoulAgonyspawner':			return "Agonizing Lost Soul";
+			case 'RLLostSoulDeathAgonySpawner':		return "Agony Soul";
+			case 'RLFormerSergeantCombatShotgun':	return "Former Human Sergeant (C. Shotgun)";
+			case 'RLEliteHumanBattleRifle':			return "Elite Human (Rifle)";
+			case 'RLEliteHumanCombatPistol':		return "Elite Human(C. Pistol)";
+			case 'RLEliteHumanHandCannon':			return "Elite Human(Handcannon)";
+			case 'RLEliteHumanBattleRifle2':		return "Elite Human(Rifle, Alt)";
+			case 'RLEliteSergeantPlasmaShotgun':	return "Elite Sergeant(P.Shotgun)";
+			case 'RLEliteSergeantAssaultShotgun':	return "Elite Sergeant(A.Shotgun)";
+			case 'RLEliteSergeantDoubleShotgun':	return "Elite Sergeant(D. Shotgun)";
+			case 'RLFormerCommandoBattleRifle':		return "Former Commando(Rifle)";
+			case 'RLIscream':						return "Vanilla Ice Cream";
+			case 'RLIscreamC':						return "Chocolate Ice Cream";
+			case 'RLIscreamS':						return "Strawberry Ice Cream";
+
+			// Bullet-Eye
+			case 'FrostSnapValnos':					return "Frost Snap (Slot 1)";
+			case 'FrostSnapValnoss2':				return "Frost Snap (Slot 2)";
+			case 'FrostSnapValnoss3':				return "Frost Snap (Slot 3)";
+			case 'FrostSnapValnoss4':				return "Frost Snap (Slot 4)";
+			case 'SpitfireWeapon':					return "Spitfire (Slot 1)";
+			case 'SpitfireWeaponS2':				return "Spitfire (Slot 2)";
+			case 'SpitfireWeaponS3':				return "Spitfire (Slot 3)";
+			case 'SpreadShotWeapon':				return "Spread Shot (Slot 1)";
+			case 'SpreadShotWeaponS2':				return "Spread Shot (Slot 2)";
+			case 'SpreadShotWeaponS3':				return "Spread Shot (Slot 3)";
+			case 'BusterWeapon':					return "Buster (Slot 1)";
+			case 'BusterWeaponS2':					return "Buster (Slot 2)";
+			case 'BusterWeaponS3':					return "Buster (Slot 3)";
+			case 'BlazeStreamWeapon':				return "Blaze Stream (Slot 1)";
+			case 'BlazeStreamWeaponS2':				return "Blaze Stream (Slot 2)";
+			case 'BlazeStreamWeaponS3':				return "Blaze Stream (Slot 3)";
+			case 'ChaserMissileWeapon':				return "Chaser Missile (Slot 1)";
+			case 'ChaserMissileWeaponS2':			return "Chaser Missile (Slot 2)";
+			case 'ChaserMissileWeaponS3':			return "Chaser Missile (Slot 3)";
+			case 'CrushBlastWeapon':				return "Crush Blast (Slot 1)";
+			case 'CrushBlastWeaponS2':				return "Crush Blast (Slot 2)";
+			case 'CrushBlastWeaponS3':				return "Crush Blast (Slot 3)";
+			case 'ScrapLauncherWeapon':				return "Scrap Launcher (Slot 1)";
+			case 'ScrapLauncherWeaponS2':			return "Scrap Launcher (Slot 2)";
+			case 'ScrapLauncherWeaponS3':			return "Scrap Launcher (Slot 3)";
+			case 'QuickStrikeWeapon':				return "Quick Strike (Slot 1)";
+			case 'QuickStrikeWeaponS2':				return "Quick Strike (Slot 2)";
+			case 'QuickStrikeWeaponS3':				return "Quick Strike (Slot 3)";
+			case 'HuntingLaserWeapon':				return "Hunting Laser (Slot 1)";
+			case 'HuntingLaserWeaponS2':			return "Hunting Laser (Slot 2)";
+			case 'HuntingLaserWeaponS3':			return "Hunting Laser (Slot 3)";
+			case 'RapidVulcanWeapon':				return "Rapid Vulcan (Slot 1)";
+			case 'RapidVulcanWeaponS2':				return "Rapid Vulcan (Slot 2)";
+			case 'RapidVulcanWeaponS3':				return "Rapid Vulcan (Slot 3)";
+			case 'StormGrenadeWeapon':				return "Storm Grenade (Slot 1)";
+			case 'StormGrenadeWeaponS2':			return "Storm Grenade (Slot 2)";
+			case 'StormGrenadeWeaponS3':			return "Storm Grenade (Slot 3)";
+			case 'VolleyShotWeapon':				return "Volley Shot (Slot 1)";
+			case 'VolleyShotWeaponS2':				return "Volley Shot (Slot 2)";
+			case 'VolleyShotWeaponS3':				return "Volley Shot (Slot 3)";
+			case 'ViperWaveWeapon':					return "Viper Wave (Slot 1)";
+			case 'ViperWaveWeaponS2':				return "Viper Wave (Slot 2)";
+			case 'ViperWaveWeaponS3':				return "Viper Wave (Slot 3)";
+			case 'RepeaterWeapon':					return "Repeater (Slot 1)";
+			case 'RepeaterWeaponS2':				return "Repeater (Slot 2)";
+			case 'RepeaterWeaponS3':				return "Repeater (Slot 3)";
+			case 'TripleWyvernWeapon':				return "Triple Wyvern (Slot 1)";
+			case 'TripleWyvernWeaponS2':			return "Triple Wyvern (Slot 2)";
+			case 'TripleWyvernWeaponS3':			return "Triple Wyvern (Slot 3)";
+			case 'WingedReaverWeapon':				return "Winged Reaver (Slot 1)";
+			case 'WingedReaverWeaponS2':			return "Winged Reaver (Slot 2)";
+			case 'WingedReaverWeaponS3':			return "Winged Reaver (Slot 3)";
+			case 'ShotwaveWeapon':					return "Shotwave (Slot 1)";
+			case 'ShotwaveWeaponS2':				return "Shotwave (Slot 2)";
+			case 'ShotwaveWeaponS3':				return "Shotwave (Slot 3)";
+			case 'GrindHalberdWeapon':				return "Grind Halberd (Slot 1)";
+			case 'GrindHalberdWeaponS2':			return "Grind Halberd (Slot 2)";
+			case 'GrindHalberdWeaponS3':			return "Grind Halberd (Slot 3)";
+			case 'VampiricGauntletsWeapon':			return "Vampiric Gauntlets (Slot 1)";
+			case 'VampiricGauntletsWeaponS2':		return "Vampiric Gauntlets (Slot 2)";
+			case 'VampiricGauntletsWeaponS3':		return "Vampiric Gauntlets (Slot 3)";
+			case 'SniperCannonWeapon':				return "Sniper Cannon (Slot 1)";
+			case 'SniperCannonWeaponS2':			return "Sniper Cannon (Slot 2)";
+			case 'SniperCannonWeaponS3':			return "Sniper Cannon (Slot 3)";
+			case 'MetalMonstrosityWeapon':			return "Metal Monstrosity (Slot 1)";
+			case 'MetalMonstrosityWeaponS2':		return "Metal Monstrosity (Slot 2)";
+			case 'MetalMonstrosityWeaponS3':		return "Metal Monstrosity (Slot 3)";
+
+			// Compendium.
+			case 'SCI2_scientistbase':				return "The Scientist";
+			case 'Obituary_Bazookaman':				return "Bazooka Man";
+			case 'Obituary_harderImp':				return "Super Imp";
+			case 'Obituary_hitechguy':				return "Hi-Tech Guy";
+			case 'CommanderKeen':					return "Commander Keen";
+			case 'TVRprop1':						return "Chained Zombieman";
+			case 'Biowarthundersounds':				return "Lightning Itself";
+			case 'Holobotinvisable':				return "Camouflaged Holobot";
+			case 'Cyberdemonjr':					return "Cyberdemon Jr.";
+			case 'SCI2_Scientistboss':				return "The Scientist (Boss)";
+			case 'TTPEvilTrooper':					return "Evil Trooper";
+			case 'POSTProp15':						return "Coniferous Tree";
+			case 'bfgtrooper':						return "BFG Trooper";
+			case 'Fastimp':							return "Fast Imp";
+			case 'HTP_Enemy1':						return "Hell Guard";
+			case 'HTP_Enemy2':						return "HTP Robot";
+			case 'HTP_Enemy3':						return "Liquid Metal Orb";
+			case 'HTP_Enemy4':						return "HTP Fireball Robot";
+			case 'HTP_Enemy5':						return "Master Metal Orb";
+			case 'HTP_Enemy6':						return "HTP Heavy Robot";
+			case 'HTP_Prop1':						return "HTP Core";
+			case 'talosmarine':						return "Talos Marine";
+			case 'allhelldemon':					return "Demon (on fire)";
+			case 'allhelltwoface':					return "Two headed Chaingunner";
+			case 'allhellarachnotron':				return "Mounted Arachnotron";
+			case 'allhellflyingbaron':				return "Flying Baron";
+			case 'allhellevilmarine':				return "Evil Marine";
+			case 'allhellhelicopter':				return "Attack Helicopter";
+			case 'allhellwingeddemon1':				return "Winged Demon";
+			case 'allhellhugecyber':				return "Huge Cyberdemon";
+			case 'rebirthsnowman':					return "Evil Snowman";
+			case 'hangedmario':						return "It's a me, Mario!";
+			case 'CoDPossessed':					return "Possessed Zombie";
+			case 'CoDSergeant':						return "Possessed Sergeant";
+			case 'CoDChaingunGuy':					return "Possessed Commando";
+			case 'CoDKnight':						return "Invisible Hellknight";
+			case 'CoDCyber':						return "BFG Cyberdemon";
+			case 'CoDVile':							return "Arch-Invocator";
+			case 'HardAss':							return "Hard Ass Zombie";
+			case 'CoDSpider':						return "Mother Spiderdemon";
+			case 'MarsDoomTurret':					return "Mars Turret";
+			case 'Spectreimp':						return "Spectral Imp";
+			case 'Spectrehellknight':				return "Spectral Knight";
+			case 'MarsDoomSecurityDrone':			return "Mars Security Drone";
+			case 'MarsDoomMissile':					return "Missile";
+			case 'MarsDoomMarineShotgun':			return "Space Marine";
+			case 'MarsDoomMarinePlasma':			return "Plasma Space Marine";
+			case 'MarsDoomMarineRocket':			return "Rocket Space Marine";
+			case 'MarsDoomGargoyle':				return "Martian Gargoyle";
+			case 'OSIRISBat':						return "Goddamned Bat";
+			case 'OSIRISArcheologist':				return "Archaeologist";
+			case 'OSIRISAnubis':					return "Anubi";
+			case 'OSIRISReaper':					return "Reaper";
+			case 'OSIRISPharaoh':					return "Pharaoh";
+			case 'EnjaySuperImp':					return "New kind of imp";
+			case 'EnjayZombieGunner':				return "New kind of zombie";
+			case 'CleimosRobot':					return "Cleimos Robot";
+			case 'EnslaveEnemy1':					return "Enslaved Demon";
+			case 'EnslaveEnemy2':					return "Robotic Skull";
+			case 'BioTechEnemy1':					return "Prisoner";
+			case 'BioTechEnemy2':					return "Shotgun Prisoner";
+			case 'BioTechEnemy3':					return "Biotech Imp";
+			case 'BioTechEnemy4':					return "Biotech Demon";
+			case 'BioTechEnemy5':					return "Biotech Spider";
+			case 'BioTechEnemy6':					return "Sec Droid";
+			case 'BioTechEnemy7':					return "Biotech Stalker";
 		}
-		return CustomTag;
 	}
 }
