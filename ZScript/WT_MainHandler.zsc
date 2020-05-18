@@ -168,6 +168,8 @@ class WT_MainHandler : EventHandler
 	// --------------------------------------------------
 
 	// [Ace] OnRegister is called when save games are loaded.
+	// 18.5.2020: So TIL this isn't supposed to do what it does. The workaround is to use a static event handler, but I'm not sure how dangerous that is.
+	// I guess someday I'll convert it to one in an experimental branch and see what happens.
 	override void OnRegister()
 	{
 		WeaponStorage = CVar.FindCVar("wt_stats_weapons_kills");
@@ -202,6 +204,8 @@ class WT_MainHandler : EventHandler
 		BlacklistEnabled = CVar.FindCVar('wt_blacklist_enable');
 
 		Initialize(false);
+
+		self.IsUiProcessor = false;
 	}
 
 	void Initialize(bool reset)
