@@ -11,6 +11,10 @@ OptionMenu "WarTrophiesMenu"
 	Option "UI Font", "wt_ui_font", "UiFont"
 	Option "Kill Sound Type", "wt_killsound", "KillSoundType"
 	StaticText ""
+	Option "Rank Set - Weapons", "wt_rankset_weapons", "RankSetWeapons"
+	Option "Rank Set - Player", "wt_rankset_player", "RankSetPlayer"
+	Option "Rank Set - Genocide", "wt_rankset_genocide", "RankSetGenocide"
+	StaticText ""
 	SafeCommand "Reset all statistics", "netevent wt_resettally"
 	SafeCommand "Reset stats for equipped weapon", "netevent wt_resetweapon"
 }
@@ -202,6 +206,23 @@ OptionValue "ScorecardTheme"
 	0, "WarTrophies"
 	1, "FragTrak"
 	2, "20 Monsters Challenge"
+}
+
+OptionValue "RankSetWeapons"
+{
+	0, "Default"
+	1, "Alternate"
+	2, "Festive"
+}
+
+OptionValue "RankSetPlayer"
+{
+	0, "Default"
+}
+
+OptionValue "RankSetGenocide"
+{
+	0, "Default"
 }
 
 // [Ace] See LANGUAGE.txt

@@ -8,6 +8,10 @@ user int wt_filter_iwad_weapons = 5;
 user int wt_filter_iwad_monsters = 5;
 user int wt_ui_font = 0;
 
+user int wt_rankset_weapons = 0;
+user int wt_rankset_player = 0;
+user int wt_rankset_genocide = 0;
+
 // Scorecard stuff.
 user int wt_scorecard_theme = 0;
 user bool wt_scorecard_blackdisplays = false; // [Ace] Not technically black.
