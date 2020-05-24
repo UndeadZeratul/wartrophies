@@ -804,7 +804,7 @@ extend class WT_MainHandler
 		}
 	}
 
-	private ui void GetAvailableWeapons(out Array<class<Weapon> > arr)
+	private ui void GetAvailableWeapons(Array<class<Weapon> > arr)
 	{
 		arr.Clear();
 		int WFilter = IWADWeaponFilter.GetInt();
@@ -858,7 +858,7 @@ extend class WT_MainHandler
 		}
 	}
 
-	private ui void GetMonstersForWeapon(string weapon, out Array<class<Actor> > mArr)
+	private ui void GetMonstersForWeapon(string weapon, Array<class<Actor> > mArr)
 	{
 		mArr.Clear();
 		int MFilter = IWADMonsterFilter.GetInt();
@@ -881,7 +881,7 @@ extend class WT_MainHandler
 		SortMonsterArray(mArr);
 	}
 
-	private ui void GetAllMonsters(Array<class<Weapon> > wArr, out Array<class<Actor> > mArr)
+	private ui void GetAllMonsters(Array<class<Weapon> > wArr, Array<class<Actor> > mArr)
 	{
 		mArr.Clear();
 		int MFilter = IWADMonsterFilter.GetInt();
@@ -907,7 +907,7 @@ extend class WT_MainHandler
 		SortMonsterArray(mArr);
 	}
 
-	private ui void SortMonsterArray(out Array<class<Actor> > mArr)
+	private ui void SortMonsterArray(Array<class<Actor> > mArr)
 	{
 		// [Ace] Yes. Bubble sort again.
 		for (int i = 0; i < mArr.Size() - 1; ++i)
@@ -970,7 +970,7 @@ extend class WT_MainHandler
 		}
 	}
 
-	private ui string GetWeaponName(class<Weapon> wpn, bool useFolder)
+	private ui string GetWeaponName(class<Weapon> wpn, bool useFolder) const
 	{
 		string WpnName = wpn.GetClassName();
 		string WeaponFolder = FolderBindings.At(WpnName.MakeLower());
@@ -1069,7 +1069,7 @@ extend class WT_MainHandler
 		return max(1, int(ceil(totalEntries / double(maxEntries))));
 	}
 
-	private ui string GetScorecardGraphic(WT_ScorecardPages page)
+	private ui string GetScorecardGraphic(WT_ScorecardPages page) const
 	{
 		int Theme = ScorecardTheme.GetInt() + 1;
 		switch (page)
@@ -1082,7 +1082,7 @@ extend class WT_MainHandler
 		return "Invalid";
 	}
 
-	private ui string GetLiteColor(WT_LiteHudColor element)
+	private ui string GetLiteColor(WT_LiteHudColor element) const
 	{
 		int CvarValue = LiteHudColors[element].GetInt();
 		if (CvarValue == 0)
@@ -1102,7 +1102,7 @@ extend class WT_MainHandler
 		return StringTable.Localize("$HUD_COLOR_"..CvarValue); // [Ace] Invalid colors = black.
 	}
 
-	private ui string GetScorecardColor(WT_ScorecardColor element)
+	private ui string GetScorecardColor(WT_ScorecardColor element) const
 	{
 		int Theme = ScorecardTheme.GetInt();
 		switch (element)
@@ -1142,7 +1142,7 @@ extend class WT_MainHandler
 	}
 
 
-	private ui string GetTruncatedText(string text, int length)
+	private ui string GetTruncatedText(string text, int length) const
 	{
 		if (text.Length() > length)
 		{
@@ -1159,7 +1159,7 @@ extend class WT_MainHandler
 	}
 
 	// [Ace] Checks if there's a custom tag. If not, gets the tag. If no tag is present either, get class name.
-	private ui string GetActorTag(class<Actor> a)
+	private ui string GetActorTag(class<Actor> a) const
 	{
 		string Tag = GetDefaultByType(a).GetTag();
 		string CustomTag = GetCustomTag(a);
