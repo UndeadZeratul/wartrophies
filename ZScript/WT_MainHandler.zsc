@@ -193,9 +193,9 @@ class WT_MainHandler : StaticEventHandler
 		ScorecardScale = CVar.FindCVar('wt_scorecard_scale');
 		DarkerDisplays = CVar.FindCVar('wt_scorecard_blackdisplays');
 
-		RankSets[Set_Weapons] = CVar.FindCVar('wt_rankset_weapons');
-		RankSets[Set_Player] = CVar.FindCVar('wt_rankset_player');
-		RankSets[Set_Genocide] = CVar.FindCVar('wt_rankset_genocide');
+		RankSets[Type_Genocide] = CVar.FindCVar('wt_rankset_genocide');
+		RankSets[Type_Player] = CVar.FindCVar('wt_rankset_player');
+		RankSets[Type_Weapons] = CVar.FindCVar('wt_rankset_weapons');
 
 		LiteHudType = CVar.FindCVar('wt_showlite');
 		LiteHudOrientation = CVar.FindCVar('wt_lite_orientation');

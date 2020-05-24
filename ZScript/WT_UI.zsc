@@ -53,11 +53,11 @@ extend class WT_MainHandler
 		Stats_All
 	}
 
-	enum WT_RankSet
+	enum WT_RankType
 	{
-		Set_Weapons,
-		Set_Player,
-		Set_Genocide
+		Type_Genocide,
+		Type_Player,
+		Type_Weapons
 	}
 
 	// --------------------------------------------------
@@ -81,7 +81,14 @@ extend class WT_MainHandler
 	private transient CVar LiteHudAlpha;
 	private transient CVar LiteHudVisibilityFlags;
 
-	static const int XPReq[] = { 5000, 8500, 12500, 16000, 20000, 25000, 31000, 37000, 45000, 60000, 85000, 100000, 125000, 175000, 250000, 400000, 600000, 900000, 1150000, 1400000, 1900000, 2850000, 4000000, 5000000 };
+	static const int GenocideReqs[] = { 0, 50, 100, 250, 500, 1000, 1500, 2500, 3500, 4500, 6000, 7500, 9000, 11111, 13333, 16666, 20000, 25000, 30000, 35000, 50000, 70000, 99999, 125000, 175000, 250000, 350000, 500000, 750000, 1000000 };
+	static const string GenocideRanks[] =
+	{
+		"Pacifist", "Innocent", "Craven", "Unbloodied", "Gun-shy", "Rank-and-file", "Basic Grunt", "Diablophobe", "Grave Digger", "Butcher", "Spree Killer", "Bounty Hunter", "Master Gunman", "Elite Warrior", "Mass Assassin", "Basically Mor'Ladim", "Ludicrous", "The Cleaner", "Psychopath", "Warlord", "Bloodthirsty", "Anti-Army Weapon", "Okuplok", "Unstoppable Force", "Carnage Elemental", "Grim Reaper", "Icon of Slay", "Death Incarnate", "Doomslayer", "Origin Exstinctum",
+		"Destitute", "Sad", "Morose", "Unfun", "Groveling", "Ambivalent", "Silly", "Pleased", "Happy", "Cheerful", "Delighted", "Joyous", "Bold", "Proud", "Dignified", "Honored", "Noble", "Exalted", "Breathtaking", "Awe-Inspiring", "Outrageous", "Extravagant", "Spectacular", "Majestic", "Magnificient", "Sublime", "Icon of Festivity", "Generosity Incarnate", "Dourslayer", "Origin Gaudium"
+	};
+
+	static const int XPReq[] = { 0, 5000, 8500, 12500, 16000, 20000, 25000, 31000, 37000, 45000, 60000, 85000, 100000, 125000, 175000, 250000, 400000, 600000, 900000, 1150000, 1400000, 1900000, 2850000, 4000000, 5000000 };
 	static const string XPRanks[] =
 	{
 		"Private", "Private 1st Class", "Corporal", "Sergeant", "Staff Sergeant", "Sergeant 1st Class", "Master Sergeant", "First Sergeant", "Sergeant Major", "Cmd. Sergeant Major", "Master Chief Sergeant", "2nd Lieutenant", "1st Lieutenant", "Captain", "Major", "Lieutenant Colonel", "Colonel", "Brigadier General", "Major General", "Lieutenant General", "General", "General of the Army", "Field Marshal", "Force Of Freedom", "Savior of Humanity",
@@ -89,19 +96,12 @@ extend class WT_MainHandler
 	};
 	const RankImagesPrefix = "RANK";
 
-	static const int WeapKillReq[] = { 50, 100, 250, 400, 550, 700, 900, 1000, 1300, 1650, 2000, 2500, 3000, 4000, 5000, 6500, 8000, 10000, 12500, 15000, 20000, 25000 };
+	static const int WeapKillReq[] = { 0,  50, 100, 250, 400, 550, 700, 900, 1000, 1300, 1650, 2000, 2500, 3000, 4000, 5000, 6500, 8000, 10000, 12500, 15000, 20000, 25000 };
 	static const string WeapRanks[] =
 	{
 		"Strange", "Uninteresting", "Barely Threatening", "Slightly Scary", "Unfriendly", "Not Too Rough", "Plenty Hurtful", "Perfectly Ordinary", "Face-Gibbing", "Agitating", "Map-clearing", "Barbaric", "Megawad-purging", "Ultraviolent", "Absolutely Barbaric", "Nightmare-inducing", "Epic", "Legendary", "American", "id Select", "Hall's Custom", "Carmack's Prized", "Romero's Own",
 		"Neophyte", "Beginner", "Rookie", "Trainee", "Disciple", "Adept", "Regular User", "Operator", "Skilled Handler", "Aficionado", "Enthusiast", "Connoisseur", "Whizkid", "Specialist", "Professional", "Expert", "Veteran", "Master", "Ace", "Virtuoso", "Supreme Talent", "Godlike", "Transcended",
 		"Sad", "Unmerry", "Barely Mirthful", "Slightly Enjoyed", "Unboxed", "Not Too Festive", "Plenty Pleasant", "Perfectly Giftable", "Face-Smiling", "Exciting", "Map-blessing", "Beautiful", "Megawad-prettying", "Ultralovable", "Absolutely Bountiful", "Nightmare-reducing", "Frown-Annihilating", "Epically Enjoyable", "Legendarily Lively", "Christmas Select", "Krampus Select", "Nick's Favorite", "Santa's Own"
-	};
-
-	static const int GenocideReqs[] = { 50, 100, 250, 500, 1000, 1500, 2500, 3500, 4500, 6000, 7500, 9000, 11111, 13333, 16666, 20000, 25000, 30000, 35000, 50000, 70000, 99999, 125000, 175000, 250000, 350000, 500000, 750000, 1000000 };
-	static const string GenocideRanks[] =
-	{
-		"Pacifist", "Innocent", "Craven", "Unbloodied", "Gun-shy", "Rank-and-file", "Basic Grunt", "Diablophobe", "Grave Digger", "Butcher", "Spree Killer", "Bounty Hunter", "Master Gunman", "Elite Warrior", "Mass Assassin", "Basically Mor'Ladim", "Ludicrous", "The Cleaner", "Psychopath", "Warlord", "Bloodthirsty", "Anti-Army Weapon", "Okuplok", "Unstoppable Force", "Carnage Elemental", "Grim Reaper", "Icon of Slay", "Death Incarnate", "Doomslayer", "Origin Exstinctum",
-		"Destitute", "Sad", "Morose", "Unfun", "Groveling", "Ambivalent", "Silly", "Pleased", "Happy", "Cheerful", "Delighted", "Joyous", "Bold", "Proud", "Dignified", "Honored", "Noble", "Exalted", "Breathtaking", "Awe-Inspiring", "Outrageous", "Extravagant", "Spectacular", "Majestic", "Magnificient", "Sublime", "Icon of Festivity", "Generosity Incarnate", "Dourslayer", "Origin Gaudium"
 	};
 
 	static const int WeaponNameLengths[] =
@@ -300,7 +300,7 @@ extend class WT_MainHandler
 		}
 
 		// Genocide rank.
-		[GenocideRank, GenocideRankString] = GetGenocideRank(TotalKillsAll);
+		GetRank(Type_Genocide, TotalKillsAll, GenocideRank, GenocideRankString);
 		if (visFlags & VF_GenocideRank)
 		{
 			sbar.DrawString(MainHudFont, GenocideRankString, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetLiteColor(LElement_GenocideRank)), alpha);
@@ -316,7 +316,7 @@ extend class WT_MainHandler
 		}
 
 		// Player rank & prestige.
-		[PlayerRank, PlayerRankString] = GetPlayerRank();
+		GetRank(Type_Player, Experience, PlayerRank, PlayerRankString);
 		if (visFlags & VF_PlayerRank)
 		{
 			if (Prestige > 0)
@@ -405,7 +405,7 @@ extend class WT_MainHandler
 		}
 		
 		// Weapon rank.
-		[WeaponRank, WeaponRankString] = GetWeaponRank(WeaponKills);
+		GetRank(Type_Weapons, WeaponKills, WeaponRank, WeaponRankString);
 		if (visFlags & VF_WeaponRank)
 		{
 			sbar.DrawString(MainHudFont, WeaponRankString, (pos.x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetLiteColor(LElement_WeaponRank)), alpha);
@@ -483,14 +483,14 @@ extend class WT_MainHandler
 		sbar.DrawString(MainHudFont, sbar.FormatNumber(TotalKillsAll, 1, 10), (-42, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Red"));
 
 		// Genocide rank.
-		[GenocideRank, GenocideRankString] = GetGenocideRank(TotalKillsAll);
+		GetRank(Type_Genocide, TotalKillsAll, GenocideRank, GenocideRankString);
 		sbar.DrawString(MainHudFont, GenocideRankString, (-223, -60), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_FadedRed"));
 
 		// Genocide medal.
 		sbar.DrawImage("GRANK"..GenocideRank, (-206, 77), DI_CENTER);
 
 		// Player rank.
-		[PlayerRank, PlayerRankString] = GetPlayerRank();
+		GetRank(Type_Player, Experience, PlayerRank, PlayerRankString);
 		sbar.DrawString(MainHudFont, PlayerRankString, (-223, -36), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_DarkGreen"));
 
 		// Player prestige.
@@ -535,7 +535,7 @@ extend class WT_MainHandler
 			sbar.DrawString(MainHudFont, GetTruncatedText(GetActorTag(WeaponListSel), WeaponNameLengths[1 + 3 * UiFont.GetInt()]), (-7, -132), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_White"));
 
 			// Weapon rank.
-			[WeaponRank, WeaponRankString] = GetWeaponRank(WeaponKills);
+			GetRank(Type_Weapons, WeaponKills, WeaponRank, WeaponRankString);
 			sbar.DrawString(MainHudFont, WeaponRankString, (-7, -108), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_Gold"));
 			sbar.DrawString(MainHudFont, WeaponRank.."/"..WeapKillReq.Size(), (223, -108), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Gold"));
 
@@ -930,62 +930,44 @@ extend class WT_MainHandler
 	// INFORMATION
 	// --------------------------------------------------
 
-	private ui int, string GetGenocideRank(int kills) const
+	private ui void GetRank(WT_RankType type, int currAmount, out int rank, out string rankString)
 	{
-		// [Ace] The + 1 is to account for the beginner rank. Same in the other methods.
-		int TotalRanks = GenocideReqs.Size() + 1;
-		int Set = RankSets[Set_Genocide].GetInt();
+		int Set = RankSets[type].GetInt();
 
-		int GenRank = 0;
-		string GenRankString = GenocideRanks[TotalRanks * Set];
-		for (int i = 0; i < GenocideReqs.Size(); ++i)
+		switch (type)
 		{
-			if (kills >= GenocideReqs[i])
-			{
-				GenRank = i + 1;
-				GenRankString = GenocideRanks[TotalRanks * Set + GenRank];
-			}
+			case Type_Genocide:
+				// [Ace] The + 1 is to account for the beginner rank. Same in the other cases.
+				for (int i = 0; i < GenocideReqs.Size(); ++i)
+				{
+					if (currAmount >= GenocideReqs[i])
+					{
+						rank = i;
+						rankString = GenocideRanks[GenocideReqs.Size() * Set + rank];
+					}
+				}
+				break;
+			case Type_Player:
+				for (int i = 0; i < XPReq.Size(); ++i)
+				{
+					if (currAmount >= XPReq[i])
+					{
+						rank = i;
+						rankString = XPRanks[XPReq.Size() * Set + rank];
+					}
+				}
+				break;
+			case Type_Weapons:
+				for (int i = 0; i < WeapKillReq.Size(); ++i)
+				{
+					if (currAmount >= WeapKillReq[i])
+					{
+						rank = i;
+						rankString = WeapRanks[WeapKillReq.Size() * Set + rank];
+					}
+				}
+				break;
 		}
-
-		return GenRank, GenRankString;
-	}
-
-	private ui int, string GetPlayerRank() const
-	{
-		int TotalRanks = XPReq.Size() + 1;
-		int Set = RankSets[Set_Player].GetInt();
-
-		int PlrRank = 0;
-		string PlrRankStr = XPRanks[TotalRanks * Set];
-		for (int i = 0; i < XPReq.Size(); ++i)
-		{
-			if (Experience >= XPReq[i])
-			{
-				PlrRank = i + 1;
-				PlrRankStr = XPRanks[TotalRanks * Set + PlrRank];
-			}
-		}
-
-		return PlrRank, PlrRankStr;
-	}
-
-	private ui int, string GetWeaponRank(int kills) const
-	{
-		int TotalRanks = WeapKillReq.Size() + 1;
-		int Set = RankSets[Set_Weapons].GetInt();
-
-		int WpnRank = 0;
-		string WpnRankStr = WeapRanks[TotalRanks * Set];
-		for (int i = 0; i < WeapKillReq.Size(); ++i)
-		{
-			if (kills >= WeapKillReq[i])
-			{
-				WpnRank = i + 1;
-				WpnRankStr = WeapRanks[TotalRanks * Set + WpnRank];
-			}
-		}
-
-		return WpnRank, WpnRankStr;
 	}
 
 	private ui string GetWeaponName(class<Weapon> wpn, bool useFolder)
@@ -1290,7 +1272,7 @@ extend class WT_MainHandler
 					// It really bothers me that I'm doing such logic checks in the UI. I'd have to completely mess up the scoping otherwise.
 					case 80:
 					case 112:
-						if (GetPlayerRank() == XPReq.Size() && Prestige < 3)
+						if (PlayerRank == XPReq.Size() && Prestige < 3)
 						{
 							EventHandler.SendNetworkEvent("WT_UpgradePrestige");
 						}
