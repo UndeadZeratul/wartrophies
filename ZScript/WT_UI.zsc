@@ -94,7 +94,7 @@ extend class WT_MainHandler
 	{
 		"Uninteresting", "Barely Threatening", "Slightly Scary", "Unfriendly", "Not Too Rough", "Plenty Hurtful", "Perfectly Ordinary", "Face-Gibbing", "Agitating", "Map-clearing", "Barbaric", "Megawad-purging", "Ultraviolent", "Absolutely Barbaric", "Nightmare-inducing", "Epic", "Legendary", "American", "id Select", "Hall's Custom", "Carmack's Prized", "Romero's Own",
 		"Neophyte", "Beginner", "Rookie", "Trainee", "Disciple", "Adept", "Regular User", "Operator", "Skilled Handler", "Aficionado", "Enthusiast", "Connoisseur", "Whizkid", "Specialist", "Professional", "Expert", "Veteran", "Master", "Ace", "Virtuoso", "Supreme Talent", "Godlike", "Transcended",
-		"Unmerry", "Barely Mirthful", "Slightly Enjoyed", "Unboxed", "Not Too Festive", "Plenty Pleasant", "Perfectly Giftable", "Face-Smiling", "Exciting", "Map-blessing", "Beautiful", "Megawad-prettying", "Ultralovable", "Absolutely Bountiful", "Nightmare-reducing", "Altruistic", "Philantropic", "Humanitarian", "Christmas Select", "Selfless Samaritan's", "Generous General's", "Santa's Own"
+		"Unmerry", "Barely Mirthful", "Slightly Enjoyed", "Unboxed", "Not Too Festive", "Plenty Pleasant", "Perfectly Giftable", "Face-Smiling", "Exciting", "Map-blessing", "Beautiful", "Megawad-prettying", "Ultralovable", "Absolutely Bountiful", "Nightmare-reducing", "Frown-Annihilating", "Epically Enjoyable", "Legendarily Lively", "Christmas Select", "Krampus Select", "Nick's Favorite", "Santa's Own"
 	};
 
 	static const int GenocideReqs[] = { 50, 100, 250, 500, 1000, 1500, 2500, 3500, 4500, 6000, 7500, 9000, 11111, 13333, 16666, 20000, 25000, 30000, 35000, 50000, 70000, 99999, 125000, 175000, 250000, 350000, 500000, 750000, 1000000 };
