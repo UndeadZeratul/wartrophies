@@ -210,7 +210,7 @@ extend class WT_MainHandler
 
 			if (NeedsUpdating & Update_Lite)
 			{
-				SendNetworkEvent("WT_MarkUpdated", Update_Lite);
+				EventHandler.SendNetworkEvent("WT_ChangeStatus", true, Update_Lite);
 			}
 		}
 
@@ -226,15 +226,24 @@ extend class WT_MainHandler
 			{
 				case Page_Main:
 					DrawScorecardMain(StatusBar);
-					if (NeedsUpdating & Update_Scorecard_Main) SendNetworkEvent("WT_MarkUpdated", Update_Scorecard_Main);
+					if (NeedsUpdating & Update_Scorecard_Main)
+					{
+						EventHandler.SendNetworkEvent("WT_ChangeStatus", true, Update_Scorecard_Main);
+					}
 					break;
 				case Page_Weapons:
 					DrawScorecardWeapons(StatusBar);
-					if (NeedsUpdating & Update_Scorecard_Weapons) SendNetworkEvent("WT_MarkUpdated", Update_Scorecard_Weapons);
+					if (NeedsUpdating & Update_Scorecard_Weapons)
+					{
+						EventHandler.SendNetworkEvent("WT_ChangeStatus", true, Update_Scorecard_Weapons);
+					}
 					break;
 				case Page_Monsters:
 					DrawScorecardMonsters(StatusBar);
-					if (NeedsUpdating & Update_Scorecard_Monsters) SendNetworkEvent("WT_MarkUpdated", Update_Scorecard_Monsters);
+					if (NeedsUpdating & Update_Scorecard_Monsters)
+					{
+						EventHandler.SendNetworkEvent("WT_ChangeStatus", true, Update_Scorecard_Monsters);
+					}
 					break;
 			}
 		}
@@ -1171,7 +1180,7 @@ extend class WT_MainHandler
 	private ui void OnChangeWeaponSelection()
 	{
 		SubPage = 0;
-		SendNetworkEvent("WT_MarkNotUpdated", Update_Scorecard_Main);
+		EventHandler.SendNetworkEvent("WT_ChangeStatus", false, Update_Scorecard_Main);
 		S_StartSound("WT/SelectWeapon", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 	}
 
@@ -1242,8 +1251,8 @@ extend class WT_MainHandler
 					// Exit menu.
 					case UiEvent.Key_Escape:
 						SearchFilter = "";
-						SendNetworkEvent("WT_ToggleUi");
-						SendNetworkEvent("WT_MarkNotUpdated", Update_Lite);
+						EventHandler.SendNetworkEvent("WT_ToggleUi");
+						EventHandler.SendNetworkEvent("WT_ChangeStatus", false, Update_Lite);
 						break;
 
 					// Enter search mode. Chars: Space
@@ -1264,7 +1273,7 @@ extend class WT_MainHandler
 					case 112:
 						if (GetPlayerRank() == XPReq.Size() && Prestige < 3)
 						{
-							SendNetworkEvent("WT_UpgradePrestige");
+							EventHandler.SendNetworkEvent("WT_UpgradePrestige");
 						}
 						break;
 

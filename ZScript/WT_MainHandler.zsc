@@ -1,4 +1,4 @@
-class WT_MainHandler : EventHandler
+class WT_MainHandler : StaticEventHandler
 {
 	enum WT_IwadFilter
 	{
@@ -47,6 +47,19 @@ class WT_MainHandler : EventHandler
 	// --------------------------------------------------
 	// FUNCTIONS
 	// --------------------------------------------------
+
+	private void ChangeStatus(bool status, WT_UpdateElement which)
+	{
+		// [Ace] True = Updated.
+		if (status)
+		{
+			NeedsUpdating &= ~which;	
+		}
+		else
+		{
+			NeedsUpdating |= which;
+		}
+	}
 
 	void UpdateTallyFor(string weapon, string victim)
 	{
@@ -167,10 +180,7 @@ class WT_MainHandler : EventHandler
 	// INITIALIZATION
 	// --------------------------------------------------
 
-	// [Ace] OnRegister is called when save games are loaded.
-	// 18.5.2020: So TIL this isn't supposed to do what it does. The workaround is to use a static event handler, but I'm not sure how dangerous that is.
-	// I guess someday I'll convert it to one in an experimental branch and see what happens.
-	override void OnRegister()
+	override void WorldLoaded(WorldEvent e)
 	{
 		WeaponStorage = CVar.FindCVar("wt_stats_weapons_kills");
 		ExperienceStorage = CVar.FindCVar('wt_stats_experience');
@@ -336,15 +346,9 @@ class WT_MainHandler : EventHandler
 			Console.Printf("Kill saving "..(DisableSaving ? "disabled" : "enabled")..".");
 		}
 
-		// [Ace] These are here if they need to be called from UI scope.
-		if (e.Name ~== "WT_MarkUpdated" && !e.IsManual)
+		if (e.Name ~== "WT_ChangeStatus" && !e.IsManual)
 		{
-			NeedsUpdating &= ~e.Args[0];
-		}
-
-		if (e.Name ~== "WT_MarkNotUpdated" && !e.IsManual)
-		{
-			NeedsUpdating |= e.Args[0];
+			ChangeStatus(e.Args[0], e.Args[1]);
 		}
 
 		if (e.Name ~== "WT_FolderInit" && !e.IsManual)
