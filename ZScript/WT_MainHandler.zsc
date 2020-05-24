@@ -291,14 +291,18 @@ class WT_MainHandler : StaticEventHandler
 	// PROGRESS ERASING
 	// --------------------------------------------------
 
-	private void ResetTally()
+	private void ResetTally(int player)
 	{
+		if (player != consoleplayer) return;
+		
 		Initialize(true);
 		Console.Printf("All statistics successfully reset!");
 	}
 
-	private void ResetWeapon()
+	private void ResetWeapon(int player)
 	{
+		if (player != consoleplayer) return;
+
 		if (WeaponStats)
 		{
 			WeaponStats.Remove(ReadyWeapon.GetClassName());
@@ -314,13 +318,13 @@ class WT_MainHandler : StaticEventHandler
 	{
 		if (e.Name ~== "WT_ResetTally")
 		{
-			ResetTally();
+			ResetTally(e.Player);
 			NeedsUpdating = Update_All;
 		}
 
 		if (e.Name ~== "WT_ResetWeapon")
 		{
-			ResetWeapon();
+			ResetWeapon(e.Player);
 			NeedsUpdating = Update_All;
 		}
 
