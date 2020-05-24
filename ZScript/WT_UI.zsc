@@ -100,7 +100,8 @@ extend class WT_MainHandler
 	static const int GenocideReqs[] = { 50, 100, 250, 500, 1000, 1500, 2500, 3500, 4500, 6000, 7500, 9000, 11111, 13333, 16666, 20000, 25000, 30000, 35000, 50000, 70000, 99999, 125000, 175000, 250000, 350000, 500000, 750000, 1000000 };
 	static const string GenocideRanks[] =
 	{
-		"Pacifist", "Innocent", "Craven", "Unbloodied", "Gun-shy", "Rank-and-file", "Basic Grunt", "Diablophobe", "Grave Digger", "Butcher", "Spree Killer", "Bounty Hunter", "Master Gunman", "Elite Warrior", "Mass Assassin", "Basically Mor'Ladim", "Ludicrous", "The Cleaner", "Psychopath", "Warlord", "Bloodthirsty", "Anti-Army Weapon", "Okuplok", "Unstoppable Force", "Carnage Elemental", "Grim Reaper", "Icon of Slay", "Death Incarnate", "Doomslayer", "Origin Exstinctum"
+		"Pacifist", "Innocent", "Craven", "Unbloodied", "Gun-shy", "Rank-and-file", "Basic Grunt", "Diablophobe", "Grave Digger", "Butcher", "Spree Killer", "Bounty Hunter", "Master Gunman", "Elite Warrior", "Mass Assassin", "Basically Mor'Ladim", "Ludicrous", "The Cleaner", "Psychopath", "Warlord", "Bloodthirsty", "Anti-Army Weapon", "Okuplok", "Unstoppable Force", "Carnage Elemental", "Grim Reaper", "Icon of Slay", "Death Incarnate", "Doomslayer", "Origin Exstinctum",
+		"Destitute", "Sad", "Morose", "Unfun", "Groveling", "Ambivalent", "Silly", "Pleased", "Happy", "Cheerful", "Delighted", "Joyous", "Bold", "Proud", "Dignified", "Honored", "Noble", "Exalted", "Breathtaking", "Awe-Inspiring", "Outrageous", "Extravagant", "Spectacular", "Majestic", "Magnificient", "Sublime", "Icon of Festivity", "Generosity Incarnate", "Dourslayer", "Origin Gaudium"
 	};
 
 	static const int WeaponNameLengths[] =
