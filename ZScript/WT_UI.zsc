@@ -84,21 +84,24 @@ extend class WT_MainHandler
 	static const int XPReq[] = { 5000, 8500, 12500, 16000, 20000, 25000, 31000, 37000, 45000, 60000, 85000, 100000, 125000, 175000, 250000, 400000, 600000, 900000, 1150000, 1400000, 1900000, 2850000, 4000000, 5000000 };
 	static const string XPRanks[] =
 	{
-		"Private 1st Class", "Corporal", "Sergeant", "Staff Sergeant", "Sergeant 1st Class", "Master Sergeant", "First Sergeant", "Sergeant Major", "Cmd. Sergeant Major", "Master Chief Sergeant", "2nd Lieutenant", "1st Lieutenant", "Captain", "Major", "Lieutenant Colonel", "Colonel", "Brigadier General", "Major General", "Lieutenant General", "General", "General of the Army", "Field Marshal", "Force Of Freedom", "Savior of Humanity",
-		"Basic Benefactor", "Competent Contributor", "Adequate Altruist", "Satisfactory Santa", "Sufficient Samaritan", "Distinguished Donator", "Dynamic Do-gooder", "Consummate Conferrer", "Bequeathment Baron", "Lord of Largesses", "Chieftain of Charity", "General of Generosity", "Bigshot Backer", "Caesar of Pleasers", "First-class Philanthropist", "Humanitarian Hotshot", "Selfless Subscriber", "Epic Endorser", "Legendary Lender", "Awe-inspiry Ally", "Champion Collaborator", "Fabulous Friend", "Perfect Partner", "Seriously Santa"
+		"Private", "Private 1st Class", "Corporal", "Sergeant", "Staff Sergeant", "Sergeant 1st Class", "Master Sergeant", "First Sergeant", "Sergeant Major", "Cmd. Sergeant Major", "Master Chief Sergeant", "2nd Lieutenant", "1st Lieutenant", "Captain", "Major", "Lieutenant Colonel", "Colonel", "Brigadier General", "Major General", "Lieutenant General", "General", "General of the Army", "Field Marshal", "Force Of Freedom", "Savior of Humanity",
+		"Elf", "Basic Benefactor", "Competent Contributor", "Adequate Altruist", "Satisfactory Santa", "Sufficient Samaritan", "Distinguished Donator", "Dynamic Do-gooder", "Consummate Conferrer", "Bequeathment Baron", "Lord of Largesses", "Chieftain of Charity", "General of Generosity", "Bigshot Backer", "Caesar of Pleasers", "First-class Philanthropist", "Humanitarian Hotshot", "Selfless Subscriber", "Epic Endorser", "Legendary Lender", "Awe-inspiry Ally", "Champion Collaborator", "Fabulous Friend", "Perfect Partner", "Seriously Santa"
 	};
 	const RankImagesPrefix = "RANK";
 
 	static const int WeapKillReq[] = { 50, 100, 250, 400, 550, 700, 900, 1000, 1300, 1650, 2000, 2500, 3000, 4000, 5000, 6500, 8000, 10000, 12500, 15000, 20000, 25000 };
 	static const string WeapRanks[] =
 	{
-		"Uninteresting", "Barely Threatening", "Slightly Scary", "Unfriendly", "Not Too Rough", "Plenty Hurtful", "Perfectly Ordinary", "Face-Gibbing", "Agitating", "Map-clearing", "Barbaric", "Megawad-purging", "Ultraviolent", "Absolutely Barbaric", "Nightmare-inducing", "Epic", "Legendary", "American", "id Select", "Hall's Custom", "Carmack's Prized", "Romero's Own",
+		"Strange", "Uninteresting", "Barely Threatening", "Slightly Scary", "Unfriendly", "Not Too Rough", "Plenty Hurtful", "Perfectly Ordinary", "Face-Gibbing", "Agitating", "Map-clearing", "Barbaric", "Megawad-purging", "Ultraviolent", "Absolutely Barbaric", "Nightmare-inducing", "Epic", "Legendary", "American", "id Select", "Hall's Custom", "Carmack's Prized", "Romero's Own",
 		"Neophyte", "Beginner", "Rookie", "Trainee", "Disciple", "Adept", "Regular User", "Operator", "Skilled Handler", "Aficionado", "Enthusiast", "Connoisseur", "Whizkid", "Specialist", "Professional", "Expert", "Veteran", "Master", "Ace", "Virtuoso", "Supreme Talent", "Godlike", "Transcended",
-		"Unmerry", "Barely Mirthful", "Slightly Enjoyed", "Unboxed", "Not Too Festive", "Plenty Pleasant", "Perfectly Giftable", "Face-Smiling", "Exciting", "Map-blessing", "Beautiful", "Megawad-prettying", "Ultralovable", "Absolutely Bountiful", "Nightmare-reducing", "Frown-Annihilating", "Epically Enjoyable", "Legendarily Lively", "Christmas Select", "Krampus Select", "Nick's Favorite", "Santa's Own"
+		"Sad", "Unmerry", "Barely Mirthful", "Slightly Enjoyed", "Unboxed", "Not Too Festive", "Plenty Pleasant", "Perfectly Giftable", "Face-Smiling", "Exciting", "Map-blessing", "Beautiful", "Megawad-prettying", "Ultralovable", "Absolutely Bountiful", "Nightmare-reducing", "Frown-Annihilating", "Epically Enjoyable", "Legendarily Lively", "Christmas Select", "Krampus Select", "Nick's Favorite", "Santa's Own"
 	};
 
 	static const int GenocideReqs[] = { 50, 100, 250, 500, 1000, 1500, 2500, 3500, 4500, 6000, 7500, 9000, 11111, 13333, 16666, 20000, 25000, 30000, 35000, 50000, 70000, 99999, 125000, 175000, 250000, 350000, 500000, 750000, 1000000 };
-	static const string GenocideRanks[] = { "Innocent", "Craven", "Unbloodied", "Gun-shy", "Rank-and-file", "Basic Grunt", "Diablophobe", "Grave Digger", "Butcher", "Spree Killer", "Bounty Hunter", "Master Gunman", "Elite Warrior", "Mass Assassin", "Basically Mor'Ladim", "Ludicrous", "The Cleaner", "Psychopath", "Warlord", "Bloodthirsty", "Anti-Army Weapon", "Okuplok", "Unstoppable Force", "Carnage Elemental", "Grim Reaper", "Icon of Slay", "Death Incarnate", "Doomslayer", "Origin Exstinctum" };
+	static const string GenocideRanks[] =
+	{
+		"Pacifist", "Innocent", "Craven", "Unbloodied", "Gun-shy", "Rank-and-file", "Basic Grunt", "Diablophobe", "Grave Digger", "Butcher", "Spree Killer", "Bounty Hunter", "Master Gunman", "Elite Warrior", "Mass Assassin", "Basically Mor'Ladim", "Ludicrous", "The Cleaner", "Psychopath", "Warlord", "Bloodthirsty", "Anti-Army Weapon", "Okuplok", "Unstoppable Force", "Carnage Elemental", "Grim Reaper", "Icon of Slay", "Death Incarnate", "Doomslayer", "Origin Exstinctum"
+	};
 
 	static const int WeaponNameLengths[] =
 	{
@@ -151,12 +154,12 @@ extend class WT_MainHandler
 	private transient ui Array<int> MonsterKills; // [Ace] For the currently selected weapon.
 	private transient ui Array<int> AllMonsterKills; // [Ace] For every monster, regardless of weapon.
 
+	private transient ui int GenocideRank;
+	private transient ui string GenocideRankString;
 	private transient ui int PlayerRank;
 	private transient ui string PlayerRankString;
 	private transient ui int WeaponRank;
 	private transient ui string WeaponRankString;
-	private transient ui int GenocideRank;
-	private transient ui string GenocideRankString;
 
 	override void RenderOverlay(RenderEvent e)
 	{
@@ -928,14 +931,18 @@ extend class WT_MainHandler
 
 	private ui int, string GetGenocideRank(int kills) const
 	{
+		// [Ace] The + 1 is to account for the beginner rank. Same in the other methods.
+		int TotalRanks = GenocideReqs.Size() + 1;
+		int Set = RankSets[Set_Genocide].GetInt();
+
 		int GenRank = 0;
-		string GenRankString = "Pacifist";
+		string GenRankString = GenocideRanks[TotalRanks * Set];
 		for (int i = 0; i < GenocideReqs.Size(); ++i)
 		{
 			if (kills >= GenocideReqs[i])
 			{
 				GenRank = i + 1;
-				GenRankString = GenocideRanks[GenocideReqs.Size() * RankSets[Set_Genocide].GetInt() + i];
+				GenRankString = GenocideRanks[TotalRanks * Set + GenRank];
 			}
 		}
 
@@ -944,18 +951,40 @@ extend class WT_MainHandler
 
 	private ui int, string GetPlayerRank() const
 	{
-		int PlayerRank = 0;
-		string PlayerRankString = "Private";
+		int TotalRanks = XPReq.Size() + 1;
+		int Set = RankSets[Set_Player].GetInt();
+
+		int PlrRank = 0;
+		string PlrRankStr = XPRanks[TotalRanks * Set];
 		for (int i = 0; i < XPReq.Size(); ++i)
 		{
 			if (Experience >= XPReq[i])
 			{
-				PlayerRank = i + 1;
-				PlayerRankString = XPRanks[XPReq.Size() * RankSets[Set_Player].GetInt() + i];
+				PlrRank = i + 1;
+				PlrRankStr = XPRanks[TotalRanks * Set + PlrRank];
 			}
 		}
 
-		return PlayerRank, PlayerRankString;
+		return PlrRank, PlrRankStr;
+	}
+
+	private ui int, string GetWeaponRank(int kills) const
+	{
+		int TotalRanks = WeapKillReq.Size() + 1;
+		int Set = RankSets[Set_Weapons].GetInt();
+
+		int WpnRank = 0;
+		string WpnRankStr = WeapRanks[TotalRanks * Set];
+		for (int i = 0; i < WeapKillReq.Size(); ++i)
+		{
+			if (kills >= WeapKillReq[i])
+			{
+				WpnRank = i + 1;
+				WpnRankStr = WeapRanks[TotalRanks * Set + WpnRank];
+			}
+		}
+
+		return WpnRank, WpnRankStr;
 	}
 
 	private ui string GetWeaponName(class<Weapon> wpn, bool useFolder)
@@ -965,21 +994,6 @@ extend class WT_MainHandler
 		return useFolder && WeaponFolder != "" ? WeaponFolder : GetActorTag(wpn);
 	}
 
-	private ui int, string GetWeaponRank(int kills) const
-	{
-		int WeaponRank = 0;
-		string WeaponRankString = "Strange";
-		for (int i = 0; i < WeapKillReq.Size(); ++i)
-		{
-			if (kills >= WeapKillReq[i])
-			{
-				WeaponRank = i + 1;
-				WeaponRankString = WeapRanks[WeapKillReq.Size() * RankSets[Set_Weapons].GetInt() + i];
-			}
-		}
-
-		return WeaponRank, WeaponRankString;
-	}
 
 	private ui int GetKillsForWeapon(string weapon, bool useFolder) const
 	{
