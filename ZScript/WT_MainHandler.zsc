@@ -186,36 +186,36 @@ class WT_MainHandler : StaticEventHandler
 		ExperienceStorage = CVar.FindCVar('wt_stats_experience');
 		PrestigeStorage = CVar.FindCVar('wt_stats_prestige');
 
-		IWADWeaponFilter = CVar.FindCVar('wt_filter_iwad_weapons');
-		IWADMonsterFilter = CVar.FindCVar('wt_filter_iwad_monsters');
+		IWADWeaponFilter = CVar.GetCVar('wt_filter_iwad_weapons', players[consoleplayer]);
+		IWADMonsterFilter = CVar.GetCVar('wt_filter_iwad_monsters', players[consoleplayer]);
 
-		ScorecardTheme = CVar.FindCVar('wt_scorecard_theme');
-		ScorecardScale = CVar.FindCVar('wt_scorecard_scale');
-		DarkerDisplays = CVar.FindCVar('wt_scorecard_blackdisplays');
+		ScorecardTheme = CVar.GetCVar('wt_scorecard_theme', players[consoleplayer]);
+		ScorecardScale = CVar.GetCVar('wt_scorecard_scale', players[consoleplayer]);
+		DarkerDisplays = CVar.GetCVar('wt_scorecard_blackdisplays', players[consoleplayer]);
 
-		RankSets[Type_Genocide] = CVar.FindCVar('wt_rankset_genocide');
-		RankSets[Type_Player] = CVar.FindCVar('wt_rankset_player');
-		RankSets[Type_Weapons] = CVar.FindCVar('wt_rankset_weapons');
+		RankSets[Type_Genocide] = CVar.GetCVar('wt_rankset_genocide', players[consoleplayer]);
+		RankSets[Type_Player] = CVar.GetCVar('wt_rankset_player', players[consoleplayer]);
+		RankSets[Type_Weapons] = CVar.GetCVar('wt_rankset_weapons', players[consoleplayer]);
 
-		LiteHudType = CVar.FindCVar('wt_showlite');
-		LiteHudOrientation = CVar.FindCVar('wt_lite_orientation');
-		LiteHudScale = CVar.FindCVar('wt_lite_scale');
-		LiteHudOffsetX = CVar.FindCVar('wt_lite_offset_x');
-		LiteHudOffsetY = CVar.FindCVar('wt_lite_offset_y');
-		LiteHudAlpha = CVar.FindCVar('wt_lite_alpha');
-		LiteFolderView = CVar.FindCVar('wt_lite_usefolders');
-		LiteHudColors[LElement_Labels] = CVar.FindCVar('wt_lite_color_labels');
-		LiteHudColors[LElement_TotalKills] = CVar.FindCVar('wt_lite_color_totalkills');
-		LiteHudColors[LElement_GenocideRank] = CVar.FindCVar('wt_lite_color_genociderank');
-		LiteHudColors[LElement_PlayerRank] = CVar.FindCVar('wt_lite_color_playerrank');
-		LiteHudColors[LElement_WeaponName] = CVar.FindCVar('wt_lite_color_weaponname');
-		LiteHudColors[LElement_WeaponRank] = CVar.FindCVar('wt_lite_color_weaponrank');
-		LiteHudColors[LElement_WeaponKills] = CVar.FindCVar('wt_lite_color_weaponkills');
-		LiteHudVisibilityFlags = CVar.FindCVar('wt_lite_adv_visibility');
+		LiteHudType = CVar.GetCVar('wt_showlite', players[consoleplayer]);
+		LiteHudOrientation = CVar.GetCVar('wt_lite_orientation', players[consoleplayer]);
+		LiteHudScale = CVar.GetCVar('wt_lite_scale', players[consoleplayer]);
+		LiteHudOffsetX = CVar.GetCVar('wt_lite_offset_x', players[consoleplayer]);
+		LiteHudOffsetY = CVar.GetCVar('wt_lite_offset_y', players[consoleplayer]);
+		LiteHudAlpha = CVar.GetCVar('wt_lite_alpha', players[consoleplayer]);
+		LiteFolderView = CVar.GetCVar('wt_lite_usefolders', players[consoleplayer]);
+		LiteHudColors[LElement_Labels] = CVar.GetCVar('wt_lite_color_labels', players[consoleplayer]);
+		LiteHudColors[LElement_TotalKills] = CVar.GetCVar('wt_lite_color_totalkills', players[consoleplayer]);
+		LiteHudColors[LElement_GenocideRank] = CVar.GetCVar('wt_lite_color_genociderank', players[consoleplayer]);
+		LiteHudColors[LElement_PlayerRank] = CVar.GetCVar('wt_lite_color_playerrank', players[consoleplayer]);
+		LiteHudColors[LElement_WeaponName] = CVar.GetCVar('wt_lite_color_weaponname', players[consoleplayer]);
+		LiteHudColors[LElement_WeaponRank] = CVar.GetCVar('wt_lite_color_weaponrank', players[consoleplayer]);
+		LiteHudColors[LElement_WeaponKills] = CVar.GetCVar('wt_lite_color_weaponkills', players[consoleplayer]);
+		LiteHudVisibilityFlags = CVar.GetCVar('wt_lite_adv_visibility', players[consoleplayer]);
 
-		UiFont = CVar.FindCVar('wt_ui_font');
-		KillSoundType = CVar.FindCVar('wt_killsound');
-		BlacklistEnabled = CVar.FindCVar('wt_blacklist_enable');
+		UiFont = CVar.GetCVar('wt_ui_font', players[consoleplayer]);
+		KillSoundType = CVar.GetCVar('wt_killsound', players[consoleplayer]);
+		BlacklistEnabled = CVar.GetCVar('wt_blacklist_enable', players[consoleplayer]);
 
 		Initialize(false);
 
