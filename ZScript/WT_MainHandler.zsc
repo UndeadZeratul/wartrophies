@@ -293,16 +293,12 @@ class WT_MainHandler : StaticEventHandler
 
 	private void ResetTally(int player)
 	{
-		if (player != consoleplayer) return;
-		
 		Initialize(true);
 		Console.Printf("All statistics successfully reset!");
 	}
 
 	private void ResetWeapon(int player)
 	{
-		if (player != consoleplayer) return;
-
 		if (WeaponStats)
 		{
 			WeaponStats.Remove(ReadyWeapon.GetClassName());
@@ -316,6 +312,8 @@ class WT_MainHandler : StaticEventHandler
 
 	override void NetworkProcess(ConsoleEvent e)
 	{
+		if (e.Player != consoleplayer) return;
+
 		if (e.Name ~== "WT_ResetTally")
 		{
 			ResetTally(e.Player);
