@@ -1,0 +1,572 @@
+enum WT_RankType
+{
+	Type_Genocide,
+	Type_Player,
+	Type_Weapons
+}
+
+enum WT_ScorecardPage
+{
+	Page_Main,
+	Page_Weapons,
+	Page_Monsters
+}
+
+class WT_WeaponData
+{
+	class<Weapon> Object;
+	string FolderName;
+	string DictionaryName;
+	Array<WT_MonsterData> Monsters;
+
+	WT_MonsterData FindMonster(class<Actor> monster)
+	{
+		for (int i = 0; i < Monsters.Size(); ++i)
+		{
+			if (Monsters[i].Object == monster)
+			{
+				return Monsters[i];
+			}
+		}
+
+		return null;
+	}
+
+	int GetKills()
+	{
+		int TotalKills = 0;
+		for (int i = 0; i < Monsters.Size(); ++i)
+		{
+			TotalKills += Monsters[i].Kills;
+		}
+
+		return TotalKills;
+	}
+
+	void Reset()
+	{
+		Monsters.Clear();
+	}
+}
+
+class WT_MonsterData
+{
+	class<Actor> Object;
+	string DictionaryName;
+	int Kills;
+}
+
+extend class WT_MainHandler
+{
+	static const int WeapKillReq[] = { 0, 50, 100, 250, 400, 550, 700, 900, 1000, 1300, 1650, 2000, 2500, 3000, 4000, 5000, 6500, 8000, 10000, 12500, 15000, 20000, 25000 };
+	static const string WeapRanks[] =
+	{
+		"Strange", "Uninteresting", "Barely Threatening", "Slightly Scary", "Unfriendly", "Not Too Rough", "Plenty Hurtful", "Perfectly Ordinary", "Face-Gibbing", "Agitating", "Map-clearing", "Barbaric", "Megawad-purging", "Ultraviolent", "Absolutely Barbaric", "Nightmare-inducing", "Epic", "Legendary", "American", "id Select", "Hall's Custom", "Carmack's Prized", "Romero's Own",
+		"Neophyte", "Beginner", "Rookie", "Trainee", "Disciple", "Adept", "Regular User", "Operator", "Skilled Handler", "Aficionado", "Enthusiast", "Connoisseur", "Whizkid", "Specialist", "Professional", "Expert", "Veteran", "Master", "Ace", "Virtuoso", "Supreme Talent", "Godlike", "Transcended",
+		"Sad", "Unmerry", "Barely Mirthful", "Slightly Enjoyed", "Unboxed", "Not Too Festive", "Plenty Pleasant", "Perfectly Giftable", "Face-Smiling", "Exciting", "Map-blessing", "Beautiful", "Megawad-prettying", "Ultralovable", "Absolutely Bountiful", "Nightmare-reducing", "Frown-Annihilating", "Epically Enjoyable", "Legendarily Lively", "Christmas Select", "Krampus Select", "Nick's Favorite", "Santa's Own"
+	};
+
+	static const int GenocideReqs[] = { 0, 50, 100, 250, 500, 1000, 1500, 2500, 3500, 4500, 6000, 7500, 9000, 11111, 13333, 16666, 20000, 25000, 30000, 35000, 50000, 70000, 99999, 125000, 175000, 250000, 350000, 500000, 750000, 1000000 };
+	static const string GenocideRanks[] =
+	{
+		"Pacifist", "Innocent", "Craven", "Unbloodied", "Gun-shy", "Rank-and-file", "Basic Grunt", "Diablophobe", "Grave Digger", "Butcher", "Spree Killer", "Bounty Hunter", "Master Gunman", "Elite Warrior", "Mass Assassin", "Basically Mor'Ladim", "Ludicrous", "The Cleaner", "Psychopath", "Warlord", "Bloodthirsty", "Anti-Army Weapon", "Okuplok", "Unstoppable Force", "Carnage Elemental", "Grim Reaper", "Icon of Slay", "Death Incarnate", "Doomslayer", "Origin Exstinctum",
+		"Destitute", "Sad", "Morose", "Unfun", "Groveling", "Ambivalent", "Silly", "Pleased", "Happy", "Cheerful", "Delighted", "Joyous", "Bold", "Proud", "Dignified", "Honored", "Noble", "Exalted", "Breathtaking", "Awe-Inspiring", "Outrageous", "Extravagant", "Spectacular", "Majestic", "Magnificient", "Sublime", "Icon of Festivity", "Generosity Incarnate", "Dourslayer", "Origin Gaudium"
+	};
+
+	static const int XPReq[] = { 0, 5000, 8500, 12500, 16000, 20000, 25000, 31000, 37000, 45000, 60000, 85000, 100000, 125000, 175000, 250000, 400000, 600000, 900000, 1150000, 1400000, 1900000, 2850000, 4000000, 5000000 };
+	static const string XPRanks[] =
+	{
+		"Private", "Private 1st Class", "Corporal", "Sergeant", "Staff Sergeant", "Sergeant 1st Class", "Master Sergeant", "First Sergeant", "Sergeant Major", "Cmd. Sergeant Major", "Master Chief Sergeant", "2nd Lieutenant", "1st Lieutenant", "Captain", "Major", "Lieutenant Colonel", "Colonel", "Brigadier General", "Major General", "Lieutenant General", "General", "General of the Army", "Field Marshal", "Force Of Freedom", "Savior of Humanity",
+		"Elf", "Basic Benefactor", "Competent Contributor", "Adequate Altruist", "Satisfactory Santa", "Sufficient Samaritan", "Distinguished Donator", "Dynamic Do-gooder", "Consummate Conferrer", "Bequeathment Baron", "Lord of Largesses", "Chieftain of Charity", "General of Generosity", "Bigshot Backer", "Caesar of Pleasers", "First-class Philanthropist", "Humanitarian Hotshot", "Selfless Subscriber", "Epic Endorser", "Legendary Lender", "Awe-inspiry Ally", "Champion Collaborator", "Fabulous Friend", "Perfect Partner", "Seriously Santa"
+	};
+
+	private transient Dictionary ProjectileBinds; // [Ace] Key - projectile, value - weapon.
+
+	private bool DrawUi;
+	private bool DisableSaving;
+
+	private transient string SearchFilter;
+
+	private transient CVar WeaponStorage;
+	private transient CVar ExperienceStorage;
+	private transient CVar PrestigeStorage;
+
+	private transient CVar UiFont;
+	private transient CVar RankSets[3];
+
+	private transient CVar KillSoundType;
+
+	private transient CVar ScorecardTheme;
+	private transient CVar ScorecardScale;
+	private transient CVar DarkerDisplays;
+
+	private transient CVar LiteHudType;
+	private transient CVar LiteHudOrientation;
+	private transient CVar LiteHudScale;
+	private transient CVar LiteHudOffsetX;
+	private transient CVar LiteHudOffsetY;
+	private transient CVar LiteHudColors[7];
+	private transient CVar LiteHudAlpha;
+	private transient CVar LiteHudVisibilityFlags;
+
+	private transient int SelectedPage;
+
+	private transient class<Weapon> SelectedWeaponWorld;
+	private transient WT_WeaponData SelectedWeaponLite;
+
+	private transient int SelectedWeaponListIndex;
+	private transient WT_WeaponData SelectedWeaponList;
+
+	private transient Array<WT_WeaponData> AllWeapons;
+
+	private transient Array<WT_WeaponData> AvailableWeapons;
+	private transient Array<WT_MonsterData> AvailableMonsters; // [Ace] This is used for two things: monster list for current weapon and full monster list.
+
+	private transient int Experience;
+	private transient int Prestige;
+
+	// [Ace] Global cache. These are here so they don't get reset all the time. With some exceptions. Part of the memory leak patch. Also boosts performance.
+	private transient int TotalKillsEver;
+	private transient int TotalKillsAvailable;
+	private transient int SelWeaponKills;
+	private transient int MaxRankMedals;
+
+	// --------------------------------------------------
+	// SAVING
+	// --------------------------------------------------
+
+	private void SaveData()
+	{
+		Dictionary WeaponStats = Dictionary.Create();
+		for (int i = 0; i < AllWeapons.Size(); ++i)
+		{
+			WT_WeaponData CurrWeapon = AllWeapons[i];
+			Dictionary MonsterStats = Dictionary.Create();
+			for (int j = 0; j < CurrWeapon.Monsters.Size(); ++j)
+			{
+				WT_MonsterData CurrMonster = CurrWeapon.Monsters[j];
+				MonsterStats.Insert(CurrMonster.DictionaryName, String.Format("%i", CurrMonster.Kills));
+			}
+			WeaponStats.Insert(CurrWeapon.DictionaryName, MonsterStats.ToString());
+		}
+		
+		WeaponStorage.SetString(WeaponStats.ToString());
+		ExperienceStorage.SetInt(Experience);
+		PrestigeStorage.SetInt(Prestige);
+	}
+
+	override void WorldUnloaded(WorldEvent e)
+	{
+		SaveData();
+	}
+
+	override void OnUnregister()
+	{
+		SaveData();
+	}
+
+	// --------------------------------------------------
+	// INITIALIZATION
+	// --------------------------------------------------
+
+	override void WorldLoaded(WorldEvent e)
+	{
+		WeaponStorage = CVar.FindCVar('wt_stats_weapons_kills');
+		ExperienceStorage = CVar.FindCVar('wt_stats_experience');
+		PrestigeStorage = CVar.FindCVar('wt_stats_prestige');
+
+		IWADWeaponFilter = CVar.GetCVar('wt_filter_iwad_weapons', players[consoleplayer]);
+		IWADMonsterFilter = CVar.GetCVar('wt_filter_iwad_monsters', players[consoleplayer]);
+
+		ScorecardTheme = CVar.GetCVar('wt_scorecard_theme', players[consoleplayer]);
+		ScorecardScale = CVar.GetCVar('wt_scorecard_scale', players[consoleplayer]);
+		DarkerDisplays = CVar.GetCVar('wt_scorecard_blackdisplays', players[consoleplayer]);
+
+		RankSets[Type_Genocide] = CVar.GetCVar('wt_rankset_genocide', players[consoleplayer]);
+		RankSets[Type_Player] = CVar.GetCVar('wt_rankset_player', players[consoleplayer]);
+		RankSets[Type_Weapons] = CVar.GetCVar('wt_rankset_weapons', players[consoleplayer]);
+
+		LiteHudType = CVar.GetCVar('wt_showlite', players[consoleplayer]);
+		LiteHudOrientation = CVar.GetCVar('wt_lite_orientation', players[consoleplayer]);
+		LiteHudScale = CVar.GetCVar('wt_lite_scale', players[consoleplayer]);
+		LiteHudOffsetX = CVar.GetCVar('wt_lite_offset_x', players[consoleplayer]);
+		LiteHudOffsetY = CVar.GetCVar('wt_lite_offset_y', players[consoleplayer]);
+		LiteHudAlpha = CVar.GetCVar('wt_lite_alpha', players[consoleplayer]);
+		LiteFolderView = CVar.GetCVar('wt_lite_usefolders', players[consoleplayer]);
+		LiteHudColors[LElement_Labels] = CVar.GetCVar('wt_lite_color_labels', players[consoleplayer]);
+		LiteHudColors[LElement_TotalKills] = CVar.GetCVar('wt_lite_color_totalkills', players[consoleplayer]);
+		LiteHudColors[LElement_GenocideRank] = CVar.GetCVar('wt_lite_color_genociderank', players[consoleplayer]);
+		LiteHudColors[LElement_PlayerRank] = CVar.GetCVar('wt_lite_color_playerrank', players[consoleplayer]);
+		LiteHudColors[LElement_WeaponName] = CVar.GetCVar('wt_lite_color_weaponname', players[consoleplayer]);
+		LiteHudColors[LElement_WeaponRank] = CVar.GetCVar('wt_lite_color_weaponrank', players[consoleplayer]);
+		LiteHudColors[LElement_WeaponKills] = CVar.GetCVar('wt_lite_color_weaponkills', players[consoleplayer]);
+		LiteHudVisibilityFlags = CVar.GetCVar('wt_lite_adv_visibility', players[consoleplayer]);
+
+		UiFont = CVar.GetCVar('wt_ui_font', players[consoleplayer]);
+		KillSoundType = CVar.GetCVar('wt_killsound', players[consoleplayer]);
+		BlacklistEnabled = CVar.GetCVar('wt_blacklist_enable', players[consoleplayer]);
+
+		Initialize(false);
+
+		IsUiProcessor = false;
+		DrawUi = false;
+	}
+
+	void Initialize(bool reset)
+	{
+		ProjectileBinds = Dictionary.Create();
+
+		if (reset)
+		{
+			WeaponStorage.ResetToDefault();
+			ExperienceStorage.ResetToDefault();
+			PrestigeStorage.ResetToDefault();
+
+			Experience = 0;
+			Prestige = 0;
+
+			AllWeapons.Clear();
+
+			TotalKillsEver = 0;
+			TotalKillsAvailable = 0;
+		}
+		else
+		{
+			Experience = ExperienceStorage.GetInt();
+			Prestige = PrestigeStorage.GetInt();
+
+			InitAllWeapons();
+			InitWeaponFolders();
+			TotalKillsEver = GetTotalKillsEver();
+			TotalKillsAvailable = GetTotalKillsAvailable();
+		}
+
+		InitWeaponFolders();
+	}
+
+	private void InitAllWeapons()
+	{
+		AllWeapons.Clear();
+
+		let it1 = DictionaryIterator.Create(Dictionary.FromString(WeaponStorage.GetString()));
+		while (it1.Next())
+		{
+			class<Weapon> wpn = it1.Key();
+
+			WT_WeaponData WeaponData = new("WT_WeaponData");
+			WeaponData.DictionaryName = it1.Key();
+			WeaponData.Object = wpn;
+				
+			// Monsters.
+			Array<WT_MonsterData> MonsterList;
+			let it2 = DictionaryIterator.Create(Dictionary.FromString(it1.Value()));
+			while (it2.Next())
+			{
+				class<Actor> mon = it2.Key();
+				
+				WT_MonsterData MonsterData = new("WT_MonsterData");
+				MonsterData.DictionaryName = it2.Key();
+				MonsterData.Object = mon;
+				MonsterData.Kills = int(it2.Value().ToDouble());
+
+				MonsterList.Push(MonsterData);
+			}
+
+			WeaponData.Monsters.Move(MonsterList);
+			AllWeapons.Push(WeaponData);
+		}
+
+		// Sort weapon array.
+		for (int i = 0; i < AllWeapons.Size() - 1; ++i)
+		{
+			for (int j = i + 1; j < AllWeapons.Size(); ++j)
+			{
+				if (!AllWeapons[i].Object || !AllWeapons[j].Object) continue;
+
+				let CurrWeapon = GetDefaultByType(AllWeapons[i].Object);
+				let NextWeapon = GetDefaultByType(AllWeapons[j].Object);
+
+				// [Ace] Sort by numbers first, then by first letter if the numbers match.
+				if (CurrWeapon.SlotNumber >= NextWeapon.SlotNumber || (CurrWeapon.SlotNumber == NextWeapon.SlotNumber && String.Format("%s", CurrWeapon.GetClassName()).ByteAt(0) >= String.Format("%s", NextWeapon.GetClassName()).ByteAt(0)))
+				{
+					let Swap = AllWeapons[i];
+					AllWeapons[i] = AllWeapons[j];
+					AllWeapons[j] = Swap;
+				}
+			}
+		}
+	}
+
+	private void InitScorecard(WT_ScorecardPage page)
+	{
+		switch (page)
+		{
+			case Page_Main:
+				InitAvailableWeapons();
+				SelectScorecardWeapon();
+				MaxRankMedals = GetMaxRankMedalCount();
+				break;
+			case Page_Weapons:
+				InitAvailableWeapons();
+				break;
+			case Page_Monsters:
+				InitAllAvailableMonsters();
+				break;
+		}
+	}
+
+	private void InitLiteHud()
+	{
+		InitAvailableWeapons();
+		SelectLiteWeapon();
+		TotalKillsEver = GetTotalKillsEver();
+	}
+
+	private void InitAvailableWeapons()
+	{
+		AvailableWeapons.Clear();
+		int WFilter = IWADWeaponFilter.GetInt();
+
+		for (int i = 0; i < AllWeapons.Size(); ++i)
+		{
+			WT_WeaponData wpn = AllWeapons[i];
+			int IwadTypeWpn = GetIwadType(Search_Weapons, wpn.Object);
+			if (wpn.Object && ((WFilter == Filter_All || WFilter == IWadTypeWpn || IwadTypeWpn == Filter_None) && SearchFilter == "" || GetActorTag(wpn.Object).MakeLower().IndexOf(SearchFilter.MakeLower()) != -1))
+			{
+				AvailableWeapons.Push(AllWeapons[i]);
+			}
+		}
+	}
+
+	private void InitAvailableMonsters(WT_WeaponData wpn)
+	{
+		AvailableMonsters.Clear();
+		int MFilter = IWADMonsterFilter.GetInt();
+
+		for (int i = 0; wpn && i < wpn.Monsters.Size(); ++i)
+		{
+			WT_MonsterData mon = wpn.Monsters[i];
+			int IwadTypeMon = GetIwadType(Search_Monsters, mon.Object);
+			if (mon.Object && (MFilter == Filter_All || MFilter == IWadTypeMon || IwadTypeMon == Filter_None))
+			{
+				AvailableMonsters.Push(wpn.Monsters[i]);
+			}
+		}
+	}
+
+	private void InitAllAvailableMonsters()
+	{
+		InitAvailableWeapons();
+		AvailableMonsters.Clear();
+
+		for (int i = 0; i < AvailableWeapons.Size(); ++i)
+		{
+			let CurrWeapon = AvailableWeapons[i];
+
+			for (int j = 0; j < CurrWeapon.Monsters.Size(); ++j)
+			{
+				let CurrMonster = CurrWeapon.Monsters[j];
+				
+				if (CurrMonster.Object && !MonsterExists(AvailableMonsters, CurrMonster))
+				{
+					WT_MonsterData NewMonster = new("WT_MonsterData");
+					NewMonster.Object = CurrMonster.Object;
+					NewMonster.DictionaryName = CurrMonster.DictionaryName;
+					NewMonster.Kills = GetTotalKillsForMonster(CurrMonster.Object);
+
+					AvailableMonsters.Push(NewMonster);
+				}
+			}
+		}
+	}
+
+	private void InitWeaponFolders()
+	{
+		CreateFolderBindings();
+		for (int i = 0; i < AllWeapons.Size(); ++i)
+		{
+			AllWeapons[i].FolderName = FolderBindings.At(AllWeapons[i].DictionaryName); // [Ace] DictionaryName is guaranteed to be lower case. If it's not, see a doctor.
+		}
+	}
+
+	// --------------------------------------------------
+	// FUNCTIONS
+	// --------------------------------------------------
+
+	private void SwitchScorecardPage(int page)
+	{
+		SelectedPage = page > Page_Monsters ? Page_Main : (page < 0 ? Page_Monsters : page);
+		InitScorecard(SelectedPage);
+	}
+
+	private void SelectScorecardWeapon()
+	{
+		if (AvailableWeapons.Size() == 0)
+		{
+			SelectWeaponInList(-1);
+			return;
+		}
+
+		for (int i = 0; i < AvailableWeapons.Size(); ++i)
+		{
+			if (AvailableWeapons[i].Object == SelectedWeaponWorld)
+			{
+				SelectWeaponInList(i);
+				return;
+			}
+
+			SelectWeaponInList(0);
+		}
+	}
+
+	private void SelectLiteWeapon()
+	{
+		SelectedWeaponLite = FindWeapon(SelectedWeaponWorld);
+		if (SelectedWeaponLite)
+		{
+			int FolderKills = -1;
+			if (LiteFolderView.GetInt() > 0)
+			{
+				FolderKills = GetFolderKills(SelectedWeaponLite.FolderName);
+			}
+			SelWeaponKills = FolderKills > -1 ? FolderKills : SelectedWeaponLite.GetKills();
+		}
+	}
+
+	// [Ace] If the list suddenly goes blank, reset the index to 0. It also prevents out-of-index exceptions if you've selected the last weapon in the list and apply a filter which will reduce the total count.
+	private void SelectWeaponInList(int index)
+	{
+		if (index == -1)
+		{
+			SelectedWeaponList = null;
+			return;
+		}
+
+		SelectedWeaponListIndex = clamp(index, 0, AvailableWeapons.Size() - 1);
+
+		if (AvailableWeapons.Size() > 0)
+		{
+			SelectedWeaponList = AvailableWeapons[SelectedWeaponListIndex];
+			InitAvailableMonsters(SelectedWeaponList);
+			SelWeaponKills = SelectedWeaponList.GetKills();
+			return;
+		}
+
+		SelectedWeaponListIndex = 0;
+	}
+
+	private WT_WeaponData FindWeapon(class<Weapon> wpn)
+	{
+		if (!wpn)
+		{
+			return null;
+		}
+
+		for (int i = 0; i < AllWeapons.Size(); ++i)
+		{
+			if (AllWeapons[i].Object == wpn)
+			{
+				return AllWeapons[i];
+			}
+		}
+
+		return null;
+	}
+
+	// --------------------------------------------------
+	// INFORMATION
+	// --------------------------------------------------
+
+	// [Ace] Checks if there's a custom tag. If not, gets the tag. If no tag is present either, get class name.
+	private string GetActorTag(class<Actor> a) const
+	{
+		string Tag = GetDefaultByType(a).GetTag();
+		string CustomTag = GetCustomTag(a);
+		
+		return CustomTag != "" ? CustomTag : Tag; // [Ace] Tag will be class name if it doesn't exist.
+	}
+
+	private int GetFolderKills(string folder)
+	{
+		if (folder == "")
+		{
+			return -1;
+		}
+
+		int TotalKills = 0;
+		for (int i = 0; i < AllWeapons.Size(); ++i)
+		{
+			if (AllWeapons[i].FolderName ~== folder)
+			{
+				TotalKills += AllWeapons[i].GetKills();
+			}
+		}
+		return TotalKills;
+	}
+
+	private int GetTotalKillsEver()
+	{
+		int TotalKills = 0;
+		for (int i = 0; i < AllWeapons.Size(); ++i)
+		{
+			TotalKills += AllWeapons[i].GetKills();
+		}
+		return TotalKills;
+	}
+
+	// [Ace] This doesn't use the AvailableMonsters array because it needs to be independent from search filter, as the filter affects what gets put in that array.
+	// This is only used to get the preference percentage for the available weapons.
+	private int GetTotalKillsAvailable()
+	{
+		int TotalKills = 0;
+		for (int i = 0; i < AllWeapons.Size(); ++i)
+		{
+			let CurrWeapon = AllWeapons[i];
+			if (CurrWeapon.Object)
+			{
+				TotalKills += CurrWeapon.GetKills();
+			}
+		}
+		return TotalKills;
+	}
+
+	private int GetTotalKillsForMonster(class<Actor> monster)
+	{
+		int TotalKills = 0;
+		for (int i = 0; i < AvailableWeapons.Size(); ++i)
+		{
+			WT_MonsterData Mon;
+			if (Mon = AvailableWeapons[i].FindMonster(monster))
+			{
+				TotalKills += Mon.Kills;
+			}
+		}
+		return TotalKills;
+	}
+
+	private int GetMaxRankMedalCount()
+	{
+		int Count = 0;
+		for (int i = 0; i < AvailableWeapons.Size(); ++i)
+		{
+			if (AvailableWeapons[i].GetKills() >= WeapKillReq[WeapKillReq.Size() - 1])
+			{
+				Count++;
+			}
+		}
+		return Count;
+	}
+
+	private bool MonsterExists(Array<WT_MonsterData> arr, WT_MonsterData monster)
+	{
+		for (int i = 0; i < arr.Size(); ++i)
+		{
+			if (arr[i].Object == monster.Object)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+}

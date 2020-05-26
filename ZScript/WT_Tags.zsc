@@ -18,7 +18,7 @@ extend class WT_MainHandler
 		return NameExists, CustomName;
 	}
 
-	private ui string GetCustomTag(class<Actor> cls)
+	private string GetCustomTag(class<Actor> cls) const
 	{
 		switch (cls.GetClassName())
 		{

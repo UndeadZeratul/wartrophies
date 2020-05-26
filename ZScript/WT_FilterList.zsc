@@ -243,6 +243,11 @@ extend class WT_MainHandler
 
 	private WT_IwadFilter GetIwadType(SearchType type, class<Actor> a) const
 	{
+		if (!a)
+		{
+			return Filter_None;
+		}
+
 		// [Ace] Unfortunately it needs to go through all of these.
 		switch (type)
 		{

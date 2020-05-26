@@ -5,9 +5,8 @@ extend class WT_MainHandler
 	// [Ace] Works for both weapons and monsters. Inheritance is also taken into account.
 	static const string BlacklistDefs[] =
 	{
-		// Mod					// Class			// Fancy name
+		// Mod			// Class			// Fancy name
 		"Hid. Destr.",	"HDWoundFixer",		"Healing Items",
-		"Hid. Destr.",	"NullWeapon",		"Sprinting",
 		"Hid. Destr.",	"MagManager",		"Mag Manager",
 		"Hid. Destr.",	"PickupManager",	"Item Manager",
 		"Hid. Destr.",	"HDBackpack",		"Backpack",
