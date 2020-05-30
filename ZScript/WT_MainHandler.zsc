@@ -48,6 +48,7 @@ class WT_MainHandler : StaticEventHandler
 
 			Weapon.DictionaryName = WeaponName;
 			Weapon.Object = wpn;
+			Weapon.FolderName = FolderBindings.At(WeaponName);
 
 				WT_MonsterData Monster = new("WT_MonsterData");
 
