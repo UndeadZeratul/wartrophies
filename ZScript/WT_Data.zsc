@@ -248,7 +248,7 @@ extend class WT_MainHandler
 	{
 		AllWeapons.Clear();
 
-		let it1 = DictionaryIterator.Create(Dictionary.FromString(WeaponStorage.GetString()));
+		let it1 = DictionaryIterator.Create(Dictionary.FromString(WeaponStorage.GetString().MakeLower()));
 		while (it1.Next())
 		{
 			class<Weapon> wpn = it1.Key();
