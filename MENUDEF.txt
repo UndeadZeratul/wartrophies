@@ -8,6 +8,8 @@ OptionMenu "WarTrophiesMenu"
 	Submenu "Blacklist Options", "WT_BlacklistMenu"
 	StaticText ""
 	StaticText "----- Miscellaneous -----", "Teal"
+	Control "Save Stats", "SaveStats"
+	StaticText ""
 	Option "UI Font", "wt_ui_font", "UiFont"
 	Option "Kill Sound Type", "wt_killsound", "KillSoundType"
 	StaticText ""
@@ -66,17 +68,18 @@ OptionMenu "WT_LiteHudMenu"
 	Slider "Opacity", "wt_lite_alpha", 0.1, 1.0, 0.05, 2
 	StaticText ""
 	StaticText "----- Visibility Options -----", "Teal"
-	VisibilityOption "Total Kills", "wt_lite_adv_visibility", "OnOff", 0
-	VisibilityOption "Genocide Rank", "wt_lite_adv_visibility", "OnOff", 1
-	VisibilityOption "Genocide Medal", "wt_lite_adv_visibility", "OnOff", 2
-	VisibilityOption "Player Rank", "wt_lite_adv_visibility", "OnOff", 3
-	VisibilityOption "Player Experience", "wt_lite_adv_visibility", "OnOff", 4
-	VisibilityOption "Player Medal", "wt_lite_adv_visibility", "OnOff", 5
+	VisibilityOption "Player Name", "wt_lite_adv_visibility", "OnOff", 0
+	VisibilityOption "Total Kills", "wt_lite_adv_visibility", "OnOff", 1
+	VisibilityOption "Genocide Rank", "wt_lite_adv_visibility", "OnOff", 2
+	VisibilityOption "Genocide Medal", "wt_lite_adv_visibility", "OnOff", 3
+	VisibilityOption "Player Rank", "wt_lite_adv_visibility", "OnOff", 4
+	VisibilityOption "Player Experience", "wt_lite_adv_visibility", "OnOff", 5
+	VisibilityOption "Player Medal", "wt_lite_adv_visibility", "OnOff", 6
 	StaticText ""
-	VisibilityOption "Weapon Name", "wt_lite_adv_visibility", "OnOff", 6
-	VisibilityOption "Weapon Rank", "wt_lite_adv_visibility", "OnOff", 7
-	VisibilityOption "Weapon Kills", "wt_lite_adv_visibility", "OnOff", 8
-	VisibilityOption "Weapon Medals", "wt_lite_adv_visibility", "OnOff", 9
+	VisibilityOption "Weapon Name", "wt_lite_adv_visibility", "OnOff", 7
+	VisibilityOption "Weapon Rank", "wt_lite_adv_visibility", "OnOff", 8
+	VisibilityOption "Weapon Kills", "wt_lite_adv_visibility", "OnOff", 9
+	VisibilityOption "Weapon Medals", "wt_lite_adv_visibility", "OnOff", 10
 }
 
 OptionMenu "WT_LiteHudFoldersMenu"

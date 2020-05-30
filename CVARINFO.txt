@@ -25,7 +25,7 @@ user int wt_lite_offset_x = 0;
 user int wt_lite_offset_y = 0;
 user float wt_lite_alpha = 1.0;
 
-user int wt_lite_adv_visibility = 1023; // [Ace] Show all.
+user int wt_lite_adv_visibility = 2047; // [Ace] Show all.
 
 user int wt_lite_usefolders = 0;
 user int wt_lite_color_labels = 0;

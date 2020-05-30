@@ -23,26 +23,20 @@ extend class WT_MainHandler
 	// [Ace] Currently used for visibility toggles.
 	enum WT_LiteHudVisibilityFlags
 	{
-		VF_TotalKills		= 1 << 0,
-		VF_GenocideRank		= 1 << 1,
-		VF_GenocideMedal	= 1 << 2,
-		VF_PlayerRank		= 1 << 3,
-		VF_PlayerExperience	= 1 << 4,
-		VF_PlayerMedal		= 1 << 5,
-		VF_Player_All		= VF_TotalKills | VF_GenocideRank | VF_GenocideMedal | VF_PlayerRank | VF_PlayerExperience | VF_PlayerMedal,
+		VF_PlayerName		= 1 << 0,
+		VF_TotalKills		= 1 << 1,
+		VF_GenocideRank		= 1 << 2,
+		VF_GenocideMedal	= 1 << 3,
+		VF_PlayerRank		= 1 << 4,
+		VF_PlayerExperience	= 1 << 5,
+		VF_PlayerMedal		= 1 << 6,
+		VF_Player_All		= VF_PlayerName | VF_TotalKills | VF_GenocideRank | VF_GenocideMedal | VF_PlayerRank | VF_PlayerExperience | VF_PlayerMedal,
 
-		VF_WeaponName		= 1 << 6,
-		VF_WeaponRank		= 1 << 7,
-		VF_WeaponKills		= 1 << 8,
-		VF_WeaponMedals		= 1 << 9,
+		VF_WeaponName		= 1 << 7,
+		VF_WeaponRank		= 1 << 8,
+		VF_WeaponKills		= 1 << 9,
+		VF_WeaponMedals		= 1 << 10,
 		VF_Weapon_All		= VF_WeaponName | VF_WeaponRank | VF_WeaponKills | VF_WeaponMedals
-	}
-
-	enum WT_ScorecardPages
-	{
-		Page_Main,
-		Page_Weapons,
-		Page_Monsters
 	}
 
 	enum WT_LiteHudStats
@@ -53,56 +47,11 @@ extend class WT_MainHandler
 		Stats_All
 	}
 
-	enum WT_RankType
-	{
-		Type_Genocide,
-		Type_Player,
-		Type_Weapons
-	}
-
 	// --------------------------------------------------
 	// MAIN
 	// --------------------------------------------------
 
-	private transient CVar UiFont;
-
-	private transient CVar ScorecardTheme;
-	private transient CVar ScorecardScale;
-	private transient CVar DarkerDisplays;
-
-	private transient CVar RankSets[3];
-
-	private transient CVar LiteHudType;
-	private transient CVar LiteHudOrientation;
-	private transient CVar LiteHudScale;
-	private transient CVar LiteHudOffsetX;
-	private transient CVar LiteHudOffsetY;
-	private transient CVar LiteHudColors[7];
-	private transient CVar LiteHudAlpha;
-	private transient CVar LiteHudVisibilityFlags;
-
-	static const int GenocideReqs[] = { 0, 50, 100, 250, 500, 1000, 1500, 2500, 3500, 4500, 6000, 7500, 9000, 11111, 13333, 16666, 20000, 25000, 30000, 35000, 50000, 70000, 99999, 125000, 175000, 250000, 350000, 500000, 750000, 1000000 };
-	static const string GenocideRanks[] =
-	{
-		"Pacifist", "Innocent", "Craven", "Unbloodied", "Gun-shy", "Rank-and-file", "Basic Grunt", "Diablophobe", "Grave Digger", "Butcher", "Spree Killer", "Bounty Hunter", "Master Gunman", "Elite Warrior", "Mass Assassin", "Basically Mor'Ladim", "Ludicrous", "The Cleaner", "Psychopath", "Warlord", "Bloodthirsty", "Anti-Army Weapon", "Okuplok", "Unstoppable Force", "Carnage Elemental", "Grim Reaper", "Icon of Slay", "Death Incarnate", "Doomslayer", "Origin Exstinctum",
-		"Destitute", "Sad", "Morose", "Unfun", "Groveling", "Ambivalent", "Silly", "Pleased", "Happy", "Cheerful", "Delighted", "Joyous", "Bold", "Proud", "Dignified", "Honored", "Noble", "Exalted", "Breathtaking", "Awe-Inspiring", "Outrageous", "Extravagant", "Spectacular", "Majestic", "Magnificient", "Sublime", "Icon of Festivity", "Generosity Incarnate", "Dourslayer", "Origin Gaudium"
-	};
-
-	static const int XPReq[] = { 0, 5000, 8500, 12500, 16000, 20000, 25000, 31000, 37000, 45000, 60000, 85000, 100000, 125000, 175000, 250000, 400000, 600000, 900000, 1150000, 1400000, 1900000, 2850000, 4000000, 5000000 };
-	static const string XPRanks[] =
-	{
-		"Private", "Private 1st Class", "Corporal", "Sergeant", "Staff Sergeant", "Sergeant 1st Class", "Master Sergeant", "First Sergeant", "Sergeant Major", "Cmd. Sergeant Major", "Master Chief Sergeant", "2nd Lieutenant", "1st Lieutenant", "Captain", "Major", "Lieutenant Colonel", "Colonel", "Brigadier General", "Major General", "Lieutenant General", "General", "General of the Army", "Field Marshal", "Force Of Freedom", "Savior of Humanity",
-		"Elf", "Basic Benefactor", "Competent Contributor", "Adequate Altruist", "Satisfactory Santa", "Sufficient Samaritan", "Distinguished Donator", "Dynamic Do-gooder", "Consummate Conferrer", "Bequeathment Baron", "Lord of Largesses", "Chieftain of Charity", "General of Generosity", "Bigshot Backer", "Caesar of Pleasers", "First-class Philanthropist", "Humanitarian Hotshot", "Selfless Subscriber", "Epic Endorser", "Legendary Lender", "Awe-inspiry Ally", "Champion Collaborator", "Fabulous Friend", "Perfect Partner", "Seriously Santa"
-	};
 	const RankImagesPrefix = "RANK";
-
-	static const int WeapKillReq[] = { 0,  50, 100, 250, 400, 550, 700, 900, 1000, 1300, 1650, 2000, 2500, 3000, 4000, 5000, 6500, 8000, 10000, 12500, 15000, 20000, 25000 };
-	static const string WeapRanks[] =
-	{
-		"Strange", "Uninteresting", "Barely Threatening", "Slightly Scary", "Unfriendly", "Not Too Rough", "Plenty Hurtful", "Perfectly Ordinary", "Face-Gibbing", "Agitating", "Map-clearing", "Barbaric", "Megawad-purging", "Ultraviolent", "Absolutely Barbaric", "Nightmare-inducing", "Epic", "Legendary", "American", "id Select", "Hall's Custom", "Carmack's Prized", "Romero's Own",
-		"Neophyte", "Beginner", "Rookie", "Trainee", "Disciple", "Adept", "Regular User", "Operator", "Skilled Handler", "Aficionado", "Enthusiast", "Connoisseur", "Whizkid", "Specialist", "Professional", "Expert", "Veteran", "Master", "Ace", "Virtuoso", "Supreme Talent", "Godlike", "Transcended",
-		"Sad", "Unmerry", "Barely Mirthful", "Slightly Enjoyed", "Unboxed", "Not Too Festive", "Plenty Pleasant", "Perfectly Giftable", "Face-Smiling", "Exciting", "Map-blessing", "Beautiful", "Megawad-prettying", "Ultralovable", "Absolutely Bountiful", "Nightmare-reducing", "Frown-Annihilating", "Epically Enjoyable", "Legendarily Lively", "Christmas Select", "Krampus Select", "Nick's Favorite", "Santa's Own"
-	};
 
 	static const int WeaponNameLengths[] =
 	{
@@ -133,27 +82,8 @@ extend class WT_MainHandler
 	private transient ui Font MainFont;
 	private transient ui HUDFont MainHudFont;
 
-	private transient ui int WeaponListSelIndex;
-	private transient ui int FolderListSelIndex;
 	private transient ui int SubPage;
-	private transient ui bool AutoSelected;
 	private transient ui bool InSearchMode;
-	private transient ui string SearchFilter;
-	private transient bool DrawUi;
-	private transient ui int SelectedPage;
-
-	// [Ace] Global cache. These are here so they don't get reset all the time. With some exceptions. Part of the memory leak patch. Also boosts performance.
-	private transient ui Array<class<Weapon> > AvailableWeapons;
-	private transient ui Array<class<Actor> > AvailableMonsters;
-	private transient ui Array<class<Actor> > AllMonsters;
-
-	private transient ui int MaxRankMedals;
-	private transient ui int TotalKillsAll;
-	private transient ui int TotalKillsAvailable;
-	private transient ui int WeaponKills; // [Ace] The total kills for the selected weapon.
-	private transient ui Array<int> AvailableWeaponsKills; // [Ace] Total kills for each available weapon.
-	private transient ui Array<int> MonsterKills; // [Ace] For the currently selected weapon.
-	private transient ui Array<int> AllMonsterKills; // [Ace] For every monster, regardless of weapon.
 
 	private transient ui int GenocideRank;
 	private transient ui string GenocideRankString;
@@ -198,11 +128,7 @@ extend class WT_MainHandler
 			// [Ace] Don't update available weapons if the weapon stats aren't visible. It'd be a waste of VM time.
 			if (LiteHud != Stats_Player && VisiblityFlags & VF_Weapon_All != 0)
 			{
-				GetAvailableWeapons(AvailableWeapons);
-				AutoSelectCurrentWeapon();
-				class<Weapon> WeaponListSel = GetSelectedWeaponInList();
-
-				if (WeaponListSel && WeaponListSel == ReadyWeapon)
+				if (SelectedWeaponLite)
 				{
 					vector2 Pos = (2, 2);
 
@@ -212,13 +138,8 @@ extend class WT_MainHandler
 						case 1: Pos.X += PlayerStatsSize.X; break;
 					}
 
-					DrawLiteHudWeaponStats(StatusBar, WeaponListSel, (Pos.X + LiteHudOffsetX.GetInt(), Pos.Y + LiteHudOffsetY.GetInt()), VisiblityFlags, Alpha);
+					DrawLiteHudWeaponStats(StatusBar, SelectedWeaponLite, (Pos.X + LiteHudOffsetX.GetInt(), Pos.Y + LiteHudOffsetY.GetInt()), VisiblityFlags, Alpha);
 				}
-			}
-
-			if (NeedsUpdating & Update_Lite)
-			{
-				EventHandler.SendNetworkEvent("WT_ChangeStatus", true, Update_Lite);
 			}
 		}
 
@@ -234,30 +155,14 @@ extend class WT_MainHandler
 			{
 				case Page_Main:
 					DrawScorecardMain(StatusBar);
-					if (NeedsUpdating & Update_Scorecard_Main)
-					{
-						EventHandler.SendNetworkEvent("WT_ChangeStatus", true, Update_Scorecard_Main);
-					}
 					break;
 				case Page_Weapons:
 					DrawScorecardWeapons(StatusBar);
-					if (NeedsUpdating & Update_Scorecard_Weapons)
-					{
-						EventHandler.SendNetworkEvent("WT_ChangeStatus", true, Update_Scorecard_Weapons);
-					}
 					break;
 				case Page_Monsters:
 					DrawScorecardMonsters(StatusBar);
-					if (NeedsUpdating & Update_Scorecard_Monsters)
-					{
-						EventHandler.SendNetworkEvent("WT_ChangeStatus", true, Update_Scorecard_Monsters);
-					}
 					break;
 			}
-		}
-		else
-		{
-			AutoSelected = false;
 		}
 
 		if (!AutomapActive && DisableSaving)
@@ -284,15 +189,20 @@ extend class WT_MainHandler
 		int DI_TL_CENTER_TEXT_CENTER = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
 		int DI_TL_CENTER_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
 
-		if (NeedsUpdating & Update_Lite)
+		// Total kills.
+		if (visFlags & VF_PlayerName)
 		{
-			TotalKillsAll = GetTotalKillsForAllWeapons();
+			string PlayerName = sbar.CPlayer.GetUserName();
+			sbar.DrawString(MainHudFont, PlayerName, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
+
+			TotalSize.X = max(TotalSize.X, MainFont.StringWidth(PlayerName));
+			TotalSize.Y += 14;
 		}
 
 		// Total kills.
 		if (visFlags & VF_TotalKills)
 		{
-			string TotalKillsString = "\c["..GetLiteColor(LElement_Labels).."]Total: \c["..GetLiteColor(LElement_TotalKills).."]"..sbar.FormatNumber(TotalKillsAll, 1, 10).."\c-";
+			string TotalKillsString = "\c["..GetLiteColor(LElement_Labels).."]Total: \c["..GetLiteColor(LElement_TotalKills).."]"..sbar.FormatNumber(TotalKillsEver, 1, 10).."\c-";
 			sbar.DrawString(MainHudFont, TotalKillsString, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
 
 			TotalSize.X = max(TotalSize.X, MainFont.StringWidth(TotalKillsString));
@@ -300,7 +210,7 @@ extend class WT_MainHandler
 		}
 
 		// Genocide rank.
-		GetRank(Type_Genocide, TotalKillsAll, GenocideRank, GenocideRankString);
+		GetRank(Type_Genocide, TotalKillsEver, GenocideRank, GenocideRankString);
 		if (visFlags & VF_GenocideRank)
 		{
 			sbar.DrawString(MainHudFont, GenocideRankString, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetLiteColor(LElement_GenocideRank)), alpha);
@@ -371,30 +281,26 @@ extend class WT_MainHandler
 		TotalSize.X += 10;
 
 		return TotalSize;
+		
 	}
 
 	// --------------------------------------------------------------
 	// LITE HUD - WEAPON
 	// --------------------------------------------------------------
 
-	private ui void DrawLiteHudWeaponStats(BaseStatusBar sbar, class<Weapon> wpn, vector2 pos, int visFlags, double alpha)
+	private ui void DrawLiteHudWeaponStats(BaseStatusBar sbar, WT_WeaponData wpn, vector2 pos, int visFlags, double alpha)
 	{
 		int DI_TL = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_ITEM_LEFT_TOP;
 		int DI_TL_TEXT_LEFT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
 		int DI_TL_CENTER_TEXT_CENTER = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
 		int DI_TL_CENTER_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
 
-		bool UseFolderView = LiteFolderView.GetInt();
-		if (wpn && (NeedsUpdating & Update_Lite))
-		{
-			WeaponKills = GetKillsForWeapon(wpn.GetClassName(), UseFolderView);
-		}
 		double NextOffsetY = pos.y;
 
 		// Weapon name.
 		if (visFlags & VF_WeaponName)
 		{
-			BrokenLines MultilineName = MainFont.BreakLines(GetWeaponName(wpn, UseFolderView), LiteHudMaxStringWidth);
+			BrokenLines MultilineName = MainFont.BreakLines(GetWeaponName(wpn, LiteFolderView.GetInt()), LiteHudMaxStringWidth);
 			for (int i = 0; i < MultilineName.Count(); ++i)
 			{
 				NextOffsetY += 10 * i;
@@ -404,7 +310,7 @@ extend class WT_MainHandler
 		}
 		
 		// Weapon rank.
-		GetRank(Type_Weapons, WeaponKills, WeaponRank, WeaponRankString);
+		GetRank(Type_Weapons, SelWeaponKills, WeaponRank, WeaponRankString);
 		if (visFlags & VF_WeaponRank)
 		{
 			sbar.DrawString(MainHudFont, WeaponRankString, (pos.x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetLiteColor(LElement_WeaponRank)), alpha);
@@ -420,7 +326,7 @@ extend class WT_MainHandler
 		{
 			// Weapon kills.
 			sbar.DrawString(MainHudFont, "K:", (pos.x, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetLiteColor(LElement_Labels)), alpha);
-			sbar.DrawString(MainHudFont, sbar.FormatNumber(WeaponKills, 1, 6), (pos.x + 14, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetLiteColor(LElement_WeaponKills)), alpha);
+			sbar.DrawString(MainHudFont, sbar.FormatNumber(SelWeaponKills, 1, 6), (pos.x + 14, NextOffsetY), DI_TL_TEXT_LEFT, Font.FindFontColor(GetLiteColor(LElement_WeaponKills)), alpha);
 			NextOffsetY += 10;
 
 			// Weapon kills for next level.
@@ -433,7 +339,7 @@ extend class WT_MainHandler
 		// Weapon medals.
 		if (visFlags & VF_WeaponMedals)
 		{
-			DrawMedals("WMEDAL", WeaponKills, 3, 3, 11, 9, (pos.x, NextOffsetY), (11, 15), DI_TL, alpha);
+			DrawMedals("WMEDAL", SelWeaponKills, 3, 3, 11, 9, (pos.x, NextOffsetY), (11, 15), DI_TL, alpha);
 		}
 	}
 
@@ -448,41 +354,18 @@ extend class WT_MainHandler
 		int DI_TEXT_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
 		int DI_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
 
-		// --------------- MISCELLANEOUS ---------------
-
-		if (!InSearchMode) GetAvailableWeapons(AvailableWeapons);
-
-		// [Ace] Autoselect in the list your currently selected weapon in the world.
-		if (!AutoSelected)
-		{
-			AutoSelectCurrentWeapon();
-			AutoSelected = true;
-		}
-
-		// --------------- SHARED ---------------
-
-		class<Weapon> WeaponListSel = GetSelectedWeaponInList();
-
 		// --------------- GRAPHIC ---------------
 		
 		sbar.DrawImage(GetScorecardGraphic(Page_Main), (0, 0.5), DI_CENTER); // [Ace] 0.5 because nearest neighbour scaling is not your friend.
 
 		// --------------- MAIN STATS ---------------
 
-		if (WeaponListSel && (NeedsUpdating & Update_Scorecard_Main))
-		{
-			TotalKillsAll = GetTotalKillsForAllWeapons();
-			TotalKillsAvailable = GetTotalKillsForWeapons(AvailableWeapons);
-			WeaponKills = GetKillsForWeapon(WeaponListSel.GetClassName(), false);
-			MaxRankMedals = GetMaxWeaponRankCount(AvailableWeapons);
-		}
-
 		// Total kills.
 		sbar.DrawString(MainHudFont, "TOTAL:", (-223, -84), DI_TEXT_LEFT, Font.FindFontColor(GetScorecardColor(SElement_Labels)));
-		sbar.DrawString(MainHudFont, sbar.FormatNumber(TotalKillsAll, 1, 10), (-42, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Red"));
+		sbar.DrawString(MainHudFont, sbar.FormatNumber(TotalKillsEver, 1, 10), (-42, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Red"));
 
 		// Genocide rank.
-		GetRank(Type_Genocide, TotalKillsAll, GenocideRank, GenocideRankString);
+		GetRank(Type_Genocide, TotalKillsEver, GenocideRank, GenocideRankString);
 		sbar.DrawString(MainHudFont, GenocideRankString, (-223, -60), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_FadedRed"));
 
 		// Genocide medal.
@@ -512,8 +395,8 @@ extend class WT_MainHandler
 
 		// --------------- WEAPON LIST ---------------
 
-		int WeaponPagesTotal = max(1, int(ceil(AvailableWeapons.Size() / double(MaxListEntries[0]))));
-		int WeaponPage = WeaponListSelIndex / MaxListEntries[0];
+		int WeaponPagesTotal = GetPages(AvailableWeapons.Size(), MaxListEntries[0]);
+		int WeaponPage = SelectedWeaponListIndex / MaxListEntries[0];
 
 		string Title = InSearchMode ? SearchFilter.."_" : (SearchFilter != "" ? SearchFilter : "All Weapons");
 		sbar.DrawString(MainHudFont, Title, (-174, 12), DI_TEXT_LEFT, Font.FindFontColor(GetScorecardColor(SElement_Labels)));
@@ -523,24 +406,24 @@ extend class WT_MainHandler
 		{
 			let CurrWeapon = AvailableWeapons[MaxListEntries[0] * WeaponPage + i];
 			
-			sbar.DrawString(MainHudFont, GetTruncatedText(GetActorTag(CurrWeapon), WeaponNameLengths[0 + 3 * UiFont.GetInt()]), (-174, 36 + 9 * i), DI_TEXT_LEFT, WeaponListSel == CurrWeapon ? Font.FindFontColor(GetScorecardColor(SElement_SelectedWeapon)) : Font.FindFontColor(GetScorecardColor(SElement_WeaponList)));
+			sbar.DrawString(MainHudFont, GetTruncatedText(GetActorTag(CurrWeapon.Object), WeaponNameLengths[0 + 3 * UiFont.GetInt()]), (-174, 36 + 9 * i), DI_TEXT_LEFT, SelectedWeaponList == CurrWeapon ? Font.FindFontColor(GetScorecardColor(SElement_SelectedWeapon)) : Font.FindFontColor(GetScorecardColor(SElement_WeaponList)));
 		}
 
 		// --------------- WEAPON STATS ---------------
 
-		if (WeaponListSel)
+		if (SelectedWeaponList)
 		{
 			// Weapon name.
-			sbar.DrawString(MainHudFont, GetTruncatedText(GetActorTag(WeaponListSel), WeaponNameLengths[1 + 3 * UiFont.GetInt()]), (-7, -132), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_White"));
+			sbar.DrawString(MainHudFont, GetTruncatedText(GetActorTag(SelectedWeaponList.Object), WeaponNameLengths[1 + 3 * UiFont.GetInt()]), (-7, -132), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_White"));
 
 			// Weapon rank.
-			GetRank(Type_Weapons, WeaponKills, WeaponRank, WeaponRankString);
+			GetRank(Type_Weapons, SelWeaponKills, WeaponRank, WeaponRankString);
 			sbar.DrawString(MainHudFont, WeaponRankString, (-7, -108), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_Gold"));
 			sbar.DrawString(MainHudFont, WeaponRank.."/"..WeapKillReq.Size(), (223, -108), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Gold"));
 
 			// Weapon kills.
 			sbar.DrawString(MainHudFont, "K:", (-7, -84), DI_TEXT_LEFT, Font.FindFontColor(GetScorecardColor(SElement_Labels)));
-			sbar.DrawString(MainHudFont, sbar.FormatNumber(WeaponKills, 1, 6), (66, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Red"));
+			sbar.DrawString(MainHudFont, sbar.FormatNumber(SelWeaponKills, 1, 6), (66, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Red"));
 
 			// Weapon kills for next level.
 			sbar.DrawString(MainHudFont, "NX:", (80, -84), DI_TEXT_LEFT, Font.FindFontColor(GetScorecardColor(SElement_Labels)));
@@ -549,12 +432,12 @@ extend class WT_MainHandler
 
 			// Weapon preference.
 			sbar.DrawString(MainHudFont, "P:", (167, -84), DI_TEXT_LEFT, Font.FindFontColor(GetScorecardColor(SElement_Labels)));
-			double Pref = WeaponKills / double(TotalKillsAvailable) * 100;
+			double Pref = SelWeaponKills / double(TotalKillsAvailable) * 100;
 			sbar.DrawString(MainHudFont, (Pref < 100 ? String.Format("%.2f", Pref) : String.Format("%i", Pref)).."%", (223, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Grey"));
 
 			// Weapon icon.
 			string SpriteToDraw = "";
-			TextureID Icon = GetDefaultByType(WeaponListSel).Icon;
+			TextureID Icon = GetDefaultByType(SelectedWeaponList.Object).Icon;
 			if (Icon.IsValid())
 			{
 				SpriteToDraw = TexMan.GetName(Icon);
@@ -562,7 +445,7 @@ extend class WT_MainHandler
 			else
 			{
 				// [Ace] Loops either until NextState is null or until it starts back from the beginning.
-				State SpawnState = GetDefaultByType(WeaponListSel).SpawnState;
+				State SpawnState = GetDefaultByType(SelectedWeaponList.Object).SpawnState;
 				State CurrState = SpawnState;
 				for (int i = 0; i < 30 && CurrState != null; ++i)
 				{
@@ -584,24 +467,12 @@ extend class WT_MainHandler
 			sbar.DrawImage(SpriteToDraw, (40, -33), DI_CENTER, 1.0, Box);
 
 			// Weapon medals.
-			DrawMedals("WMEDAL", WeaponKills, 3, 3, 11, 9, (108, -53), (11, 15), DI_CENTER, 1.0);
+			DrawMedals("WMEDAL", SelWeaponKills, 3, 3, 11, 9, (108, -53), (11, 15), DI_CENTER, 1.0);
 
 			// --------------- MONSTER LIST & STATS ---------------
 
 			sbar.DrawString(MainHudFont, "Monsters", (-7, 12), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_FadedBlue"));
 			sbar.DrawString(MainHudFont, "Kills", (224, 12), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBlue"));
-
-			// [Ace] Filter the monsters and get all the necessary data for the selected weapon.
-			if (NeedsUpdating & Update_Scorecard_Main)
-			{
-				GetMonstersForWeapon(WeaponListSel.GetClassName(), AvailableMonsters);
-				MonsterKills.Clear();
-				for (int i = 0; i < AvailableMonsters.Size(); ++i)
-				{
-					let CurrMonster = AvailableMonsters[i];
-					MonsterKills.Push(GetKillsForMonster(WeaponListSel.GetClassName(), CurrMonster.GetClassName()));
-				}
-			}
 
 			// [Ace] Then display them.
 			sbar.DrawString(MainHudFont, (SubPage + 1).."/"..GetPages(AvailableMonsters.Size(), MaxListEntries[0]), (160, 12), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBlue"));
@@ -613,10 +484,10 @@ extend class WT_MainHandler
 				let CurrMonster = AvailableMonsters[i];
 
 				// Name.
-				sbar.DrawString(MainHudFont, GetTruncatedText(GetActorTag(CurrMonster), MonsterNameLengths[0 + 2 * UiFont.GetInt()]), (-7, 36 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_FadedBlue"));
+				sbar.DrawString(MainHudFont, GetTruncatedText(GetActorTag(CurrMonster.Object), MonsterNameLengths[0 + 2 * UiFont.GetInt()]), (-7, 36 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_FadedBlue"));
 
 				// Kills.
-				sbar.DrawString(MainHudFont, sbar.FormatNumber(MonsterKills[i], 1, 5), (224, 36 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBlue"));
+				sbar.DrawString(MainHudFont, sbar.FormatNumber(CurrMonster.Kills, 1, 5), (224, 36 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBlue"));
 				
 				mRow++;
 			}
@@ -634,10 +505,6 @@ extend class WT_MainHandler
 		int DI_TEXT_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
 		int DI_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
 
-		// --------------- MISCELLANEOUS ---------------
-
-		GetAvailableWeapons(AvailableWeapons);
-
 		// --------------- GRAPHIC ---------------
 		
 		sbar.DrawImage(GetScorecardGraphic(Page_Weapons), (0, 0.5), DI_CENTER);
@@ -649,16 +516,6 @@ extend class WT_MainHandler
 		sbar.DrawString(MainHudFont, "Kills", (116, -132), DI_TEXT_RIGHT, Font.FindFontColor(GetScorecardColor(SElement_Labels)));
 		sbar.DrawString(MainHudFont, "Pref.", (174, -132), DI_TEXT_RIGHT, Font.FindFontColor(GetScorecardColor(SElement_Labels)));
 
-		if (NeedsUpdating & Update_Scorecard_Weapons)
-		{
-			AvailableWeaponsKills.Clear();
-			for (int i = 0; i < AvailableWeapons.Size(); ++i)
-			{
-				AvailableWeaponsKills.Push(GetKillsForWeapon(AvailableWeapons[i].GetClassName(), false));
-			}
-			TotalKillsAvailable = GetTotalKillsForWeapons(AvailableWeapons);
-		}
-
 		// [Ace] Then display them.
 		sbar.DrawString(MainHudFont, (SubPage + 1).."/"..GetPages(AvailableWeapons.Size(), MaxListEntries[1]), (47, -132), DI_TEXT_RIGHT, Font.FindFontColor(GetScorecardColor(SElement_Labels)));
 
@@ -668,15 +525,16 @@ extend class WT_MainHandler
 		{
 			bool AlternateColor = i % 2;
 			let CurrWeapon = AvailableWeapons[i];
+			int WeaponKills = CurrWeapon.GetKills();
 
 			// Name.
-			sbar.DrawString(MainHudFont, GetTruncatedText(GetActorTag(CurrWeapon), WeaponNameLengths[2 + 3 * UiFont.GetInt()]), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? GetScorecardColor(SElement_WeaponListAlt) : GetScorecardColor(SElement_WeaponList)));
+			sbar.DrawString(MainHudFont, GetTruncatedText(GetActorTag(CurrWeapon.Object), WeaponNameLengths[2 + 3 * UiFont.GetInt()]), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? GetScorecardColor(SElement_WeaponListAlt) : GetScorecardColor(SElement_WeaponList)));
 
 			// Kills.
-			sbar.DrawString(MainHudFont, sbar.FormatNumber(AvailableWeaponsKills[i], 1, 5), (116, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? "WT_Old_FadedRedAlt" : "WT_Old_FadedRed"));
+			sbar.DrawString(MainHudFont, sbar.FormatNumber(WeaponKills, 1, 5), (116, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? "WT_Old_FadedRedAlt" : "WT_Old_FadedRed"));
 
 			// Preference.
-			double Pref = AvailableWeaponsKills[i] / double(TotalKillsAvailable) * 100;
+			double Pref = WeaponKills / double(TotalKillsAvailable) * 100;
 			sbar.DrawString(MainHudFont, (Pref < 100 ? String.Format("%.2f", Pref) : String.Format("%i", Pref)).."%", (174, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Grey"));
 
 			mRow++;
@@ -694,10 +552,6 @@ extend class WT_MainHandler
 		int DI_TEXT_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
 		int DI_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
 
-		// --------------- MISCELLANEOUS ---------------
-
-		GetAvailableWeapons(AvailableWeapons);
-
 		// --------------- GRAPHIC ---------------
 		
 		sbar.DrawImage(GetScorecardGraphic(Page_Monsters), (0, 0.5), DI_CENTER);
@@ -708,70 +562,29 @@ extend class WT_MainHandler
 		sbar.DrawString(MainHudFont, "Monsters", (-173, -132), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_FadedBlue"));
 		sbar.DrawString(MainHudFont, "T. Kills", (174, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBlue"));
 
-		// [Ace] Filter the monsters and get all of them for all filtered weapons.
-		if (NeedsUpdating & Update_Scorecard_Monsters)
-		{
-			GetAllMonsters(AvailableWeapons, AllMonsters);
-			AllMonsterKills.Clear();
-			for (int i = 0; i < AllMonsters.Size(); ++i)
-			{
-				let CurrMonster = AllMonsters[i];
-				AllMonsterKills.Push(GetTotalKillsForMonster(AvailableWeapons, CurrMonster.GetClassName()));
-			}
-		}
-
 		// [Ace] Then display them.
-		sbar.DrawString(MainHudFont, (SubPage + 1).."/"..GetPages(AllMonsters.Size(), MaxListEntries[1]), (110, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBlue"));
+		sbar.DrawString(MainHudFont, (SubPage + 1).."/"..GetPages(AvailableMonsters.Size(), MaxListEntries[1]), (110, -132), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBlue"));
 
 		int StartIndex = MaxListEntries[1] * SubPage;
 		int mRow = 0; // [Ace] Manually advance row so I don't have to do lots of modulus.
-		for (int i = StartIndex; i < AllMonsters.Size() && mRow < MaxListEntries[1]; ++i)
+		for (int i = StartIndex; i < AvailableMonsters.Size() && mRow < MaxListEntries[1]; ++i)
 		{
 			bool AlternateColor = i % 2;
-			let CurrMonster = AllMonsters[i];
+			let CurrMonster = AvailableMonsters[i];
 
 			// Name.
-			sbar.DrawString(MainHudFont, GetTruncatedText(GetActorTag(CurrMonster), MonsterNameLengths[1 + 2 * UiFont.GetInt()]), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? "WT_Old_FadedBlueAlt" : "WT_Old_FadedBlue"));
+			sbar.DrawString(MainHudFont, GetTruncatedText(GetActorTag(CurrMonster.Object), MonsterNameLengths[1 + 2 * UiFont.GetInt()]), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? "WT_Old_FadedBlueAlt" : "WT_Old_FadedBlue"));
 
 			// Kills.
-			sbar.DrawString(MainHudFont, sbar.FormatNumber(AllMonsterKills[i], 1, 5), (174, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? "WT_Old_FadedBlueAlt" : "WT_Old_FadedBlue"));
+			sbar.DrawString(MainHudFont, sbar.FormatNumber(CurrMonster.Kills, 1, 5), (174, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? "WT_Old_FadedBlueAlt" : "WT_Old_FadedBlue"));
 
 			mRow++;
 		}
 	}
 
-
 	// --------------------------------------------------
-	// SHARED
+	// FUNCTIONS
 	// --------------------------------------------------
-
-	private ui void AutoSelectCurrentWeapon()
-	{
-		for (int i = 0; i < AvailableWeapons.Size(); ++i)
-		{
-			if (AvailableWeapons[i] == ReadyWeapon)
-			{
-				WeaponListSelIndex = i;
-				break;
-			}
-		}
-	}
-
-	// [Ace] If the list suddenly goes blank, reset the index to 0. It also prevents out-of-index exceptions if you've selected the last weapon in the list and apply a filter which will reduce the total count.
-	private ui class<Weapon> GetSelectedWeaponInList()
-	{
-		if (AvailableWeapons.Size() > 0)
-		{
-			if (WeaponListSelIndex >= AvailableWeapons.Size())
-			{
-				WeaponListSelIndex = AvailableWeapons.Size() - 1;
-			}
-			return AvailableWeapons[WeaponListSelIndex];
-		}
-
-		WeaponListSelIndex = 0;
-		return null;
-	}
 
 	private ui void DrawMedals(string medalPrefix, int totalAmount, int amountPerMedal, int medalsPerUpgrade, int medalsPerLine,  int typeCount, vector2 pos, vector2 box, int flags, double alpha)
 	{
@@ -799,128 +612,6 @@ extend class WT_MainHandler
 				int TotalXOffset = int(box.x * (XOffset % medalsPerLine));
 				int WStatsOffsetY = int(box.y * (XOffset / medalsPerLine));
 				StatusBar.DrawImage(medalPrefix..(typeCount - i), (pos.x + TotalXOffset, pos.y + WStatsOffsetY), flags, alpha);
-			}
-		}
-	}
-
-	private ui void GetAvailableWeapons(Array<class<Weapon> > arr)
-	{
-		arr.Clear();
-		int WFilter = IWADWeaponFilter.GetInt();
-		
-		let it = DictionaryIterator.Create(WeaponStats);
-		while (it.Next())
-		{
-			class<Weapon> wpn;
-			class<WT_Weapon> wtWpn;
-			wpn = it.Key();
-			wtWpn = it.Key();
-
-			// [Ace] If the weapon is an internal WT class, it's probably a compatibility class. Check if the required actor exists, i.e. the mod it belongs to is loaded. If not, don't bother adding to list.
-			if (wtWpn)
-			{
-				string CheckedActorString = GetDefaultByType(wtWpn).CheckedActor;
-				if (CheckedActorString != "")
-				{
-					class<Actor> CheckedActorClass;
-					CheckedActorClass = CheckedActorString;
-					if (!CheckedActorClass) continue;
-				}
-			}
-
-			if (wpn)
-			{
-				int IwadType = GetIwadType(Search_Weapons, wpn);
-				if ((WFilter == Filter_All || WFilter == IWadType || IwadType == Filter_None) && !InSearchMode && (SearchFilter == "" || GetActorTag(wpn).MakeLower().IndexOf(SearchFilter.MakeLower()) != -1))
-				{
-					arr.Push(wpn);
-				}
-			}
-		}
-
-		// [Ace] Sort it.
-		for (int i = 0; i < arr.Size() - 1; ++i)
-		{
-			for (int j = i + 1; j < arr.Size(); ++j)
-			{
-				let CurrWeapon = GetDefaultByType(arr[i]);
-				let NextWeapon = GetDefaultByType(arr[j]);
-
-				// [Ace] Sort by numbers first, then by first letter if the numbers match.
-				if (CurrWeapon.SlotNumber >= NextWeapon.SlotNumber || (CurrWeapon.SlotNumber == NextWeapon.SlotNumber && String.Format("%s", CurrWeapon.GetClassName()).ByteAt(0) >= String.Format("%s", NextWeapon.GetClassName()).ByteAt(0)))
-				{
-					let Swap = arr[i];
-					arr[i] = arr[j];
-					arr[j] = Swap;
-				}
-			}
-		}
-	}
-
-	private ui void GetMonstersForWeapon(string weapon, Array<class<Actor> > mArr)
-	{
-		mArr.Clear();
-		int MFilter = IWADMonsterFilter.GetInt();
-
-		let it = DictionaryIterator.Create(Dictionary.FromString(WeaponStats.At(weapon)));
-		while (it.Next())
-		{
-			class<Actor> mon;
-			mon = it.Key();
-			if (mon)
-			{
-				int IwadType = GetIwadType(Search_Monsters, mon);
-				if (MFilter == Filter_All || MFilter == IWadType || IwadType == Filter_None)
-				{
-					mArr.Push(mon);
-				}
-			}
-		}
-
-		SortMonsterArray(mArr);
-	}
-
-	private ui void GetAllMonsters(Array<class<Weapon> > wArr, Array<class<Actor> > mArr)
-	{
-		mArr.Clear();
-		int MFilter = IWADMonsterFilter.GetInt();
-
-		for (int i = 0; i < wArr.Size(); ++i)
-		{
-			let it = DictionaryIterator.Create(Dictionary.FromString(WeaponStats.At(wArr[i].GetClassName())));
-			while (it.Next())
-			{
-				class<Actor> mon;
-				mon = it.Key();
-				if (mon && mArr.Find(mon) == mArr.Size())
-				{
-					int IwadType = GetIwadType(Search_Monsters, mon);
-					if (MFilter == Filter_All || MFilter == IWadType || IwadType == Filter_None)
-					{
-						mArr.Push(mon);
-					}
-				}
-			}
-		}
-
-		SortMonsterArray(mArr);
-	}
-
-	private ui void SortMonsterArray(Array<class<Actor> > mArr)
-	{
-		// [Ace] Yes. Bubble sort again.
-		for (int i = 0; i < mArr.Size() - 1; ++i)
-		{
-			for (int j = i + 1; j < mArr.Size(); ++j)
-			{
-				let CurrMonster = GetDefaultByType(mArr[i]);
-				let NextMonster = GetDefaultByType(mArr[j]);
-				if (CurrMonster.Health >= NextMonster.Health)
-				{
-					let Swap = mArr[i];
-					mArr[i] = mArr[j];
-					mArr[j] = Swap;
-				}
 			}
 		}
 	}
@@ -969,106 +660,12 @@ extend class WT_MainHandler
 		}
 	}
 
-	private ui string GetWeaponName(class<Weapon> wpn, bool useFolder) const
-	{
-		string WpnName = wpn.GetClassName();
-		string WeaponFolder = FolderBindings.At(WpnName.MakeLower());
-		return useFolder && WeaponFolder != "" ? WeaponFolder : GetActorTag(wpn);
-	}
-
-
-	private ui int GetKillsForWeapon(string weapon, bool useFolder) const
-	{
-		int TotalKills = 0;
-
-		// [Ace] The folder the weapon belongs to.
-		string WeaponFolder = FolderBindings.At(weapon.MakeLower());
-		if (useFolder && WeaponFolder != "")
-		{
-			Array<class<Weapon> > WeaponsInFolder;
-			GetWeaponsInFolder(WeaponFolder, WeaponsInFolder);
-
-			for (int i = 0; i < WeaponsInFolder.Size(); ++i)
-			{
-				TotalKills += GetKillsForWeapon(WeaponsInFolder[i].GetClassName(), false);
-			}
-		}
-		else
-		{
-			string Kills = WeaponStats.At(weapon);
-			if (Kills != "")
-			{
-				let it = DictionaryIterator.Create(Dictionary.FromString(Kills)); 
-				while(it.Next())
-				{
-					TotalKills += int(it.Value().ToDouble());
-				}
-			}
-		}
-
-		return TotalKills;
-	}
-
-	private ui int GetTotalKillsForAllWeapons() const
-	{
-		int TotalKills = 0;
-		let it = DictionaryIterator.Create(WeaponStats);
-		while (it.Next())
-		{
-			TotalKills += GetKillsForWeapon(it.Key(), false);
-		}
-		return TotalKills;
-	}
-
-	// [Ace] Used with weapon preference to only base the percentage on available weapons.
-	private ui int GetTotalKillsForWeapons(Array<class<Weapon> > weapons) const
-	{
-		int TotalKills = 0;
-		for (int i = 0; i < weapons.Size(); ++i)
-		{
-			TotalKills += GetKillsForWeapon(weapons[i].GetClassName(), false);
-		}
-		return TotalKills;
-	}
-
-	private ui int GetMaxWeaponRankCount(Array<class<Weapon> > weapons) const
-	{
-		int TotalCount = 0;
-		for (int i = 0; i < weapons.Size(); ++i)
-		{
-			if (GetKillsForWeapon(weapons[i].GetClassName(), false) >= WeapKillReq[WeapKillReq.Size() - 1])
-			{
-				TotalCount++;
-			}
-		}
-		return TotalCount;
-	}
-
-	private ui int GetKillsForMonster(string weapon, string monster) const
-	{
-		let Monsters = Dictionary.FromString(WeaponStats.At(weapon));
-		return int(Monsters.At(monster).ToDouble());
-	}
-
-	private ui int GetTotalKillsForMonster(Array<class<Weapon> > wArr, string monster) const
-	{
-		int TotalKills = 0;
-
-		for (int i = 0; i < wArr.Size(); ++i)
-		{
-			Dictionary MonstersForWeapon = Dictionary.FromString(WeaponStats.At(wArr[i].GetClassName()));
-			TotalKills += int(MonstersForWeapon.At(monster).ToDouble());
-		}
-
-		return TotalKills;
-	}
-
 	private ui int GetPages(int totalEntries, int maxEntries) const
 	{
 		return max(1, int(ceil(totalEntries / double(maxEntries))));
 	}
 
-	private ui string GetScorecardGraphic(WT_ScorecardPages page) const
+	private ui string GetScorecardGraphic(WT_ScorecardPage page) const
 	{
 		int Theme = ScorecardTheme.GetInt() + 1;
 		switch (page)
@@ -1157,13 +754,23 @@ extend class WT_MainHandler
 		return text;
 	}
 
-	// [Ace] Checks if there's a custom tag. If not, gets the tag. If no tag is present either, get class name.
-	private ui string GetActorTag(class<Actor> a) const
+	private ui string GetWeaponName(WT_WeaponData wpn, bool useFolder) const
 	{
-		string Tag = GetDefaultByType(a).GetTag();
-		string CustomTag = GetCustomTag(a);
-		
-		return CustomTag != "" ? CustomTag : Tag; // [Ace] Tag will be class name if it doesn't exist.
+		return useFolder && wpn.FolderName != "" ? wpn.FolderName : GetActorTag(wpn.Object);
+	}
+
+	private ui int GetAvailableWeaponsCount() const
+	{
+		int Count = 0;
+		for (int i = 0; i < AllWeapons.Size(); ++i)
+		{
+			if (AllWeapons[i].Object)
+			{
+				Count++;
+			}
+		}
+
+		return Count;
 	}
 
 	// --------------------------------------------------
@@ -1173,14 +780,13 @@ extend class WT_MainHandler
 	private ui void OnChangeScorecardPage()
 	{
 		SubPage = 0;
-		SearchFilter = "";
+		EventHandler.SendNetworkEvent("WT_ClearFilter");
 		S_StartSound("WT/ChangePage", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 	}
 
 	private ui void OnChangeWeaponSelection()
 	{
 		SubPage = 0;
-		EventHandler.SendNetworkEvent("WT_ChangeStatus", false, Update_Scorecard_Main);
 		S_StartSound("WT/SelectWeapon", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 	}
 
@@ -1194,37 +800,37 @@ extend class WT_MainHandler
 				{
 					// Cycle pages left.
 					case UiEvent.Key_Left:
+						EventHandler.SendNetworkEvent("WT_PreviousPage");
 						OnChangeScorecardPage();
-						if (--SelectedPage < 0) SelectedPage = Page_Monsters;
 						break;
 
 					// Cycle pages right.
 					case UiEvent.Key_Right:
+						EventHandler.SendNetworkEvent("WT_NextPage");
 						OnChangeScorecardPage();
-						++SelectedPage %= Page_Monsters + 1;
 						break;
 
 					// Move weapon selection up.
 					case UiEvent.Key_Up:
 						if (SelectedPage != Page_Main) break;
+						EventHandler.SendNetworkEvent("WT_PreviousWeapon");
 						OnChangeWeaponSelection();
-						WeaponListSelIndex = max(0, WeaponListSelIndex - 1);
 						break;
 
 					// Move weapon selection down.
 					case UiEvent.Key_Down:
 						if (SelectedPage != Page_Main) break;
+						EventHandler.SendNetworkEvent("WT_NextWeapon");
 						OnChangeWeaponSelection();
-						WeaponListSelIndex = min(WeaponListSelIndex + 1, AvailableWeapons.Size() - 1);
 						break;
 
-					// Previous monster page.
+					// Previous sub-page.
 					case UiEvent.Key_PgUp:
 						SubPage = max(0, SubPage - 1);
 						S_StartSound("WT/ChangeSubPage", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
 
-					// Next monster page.
+					// Next sub-page.
 					case UiEvent.Key_PgDn:
 						int TotalEntries = 1;
 						int MaxEntries = 1;
@@ -1239,7 +845,7 @@ extend class WT_MainHandler
 								MaxEntries = MaxListEntries[1];
 								break;
 							case Page_Monsters:
-								TotalEntries = AllMonsters.Size();
+								TotalEntries = AvailableMonsters.Size();
 								MaxEntries = MaxListEntries[1];
 								break;
 						}
@@ -1250,21 +856,21 @@ extend class WT_MainHandler
 
 					// Exit menu.
 					case UiEvent.Key_Escape:
-						SearchFilter = "";
+						EventHandler.SendNetworkEvent("WT_ClearFilter");
 						EventHandler.SendNetworkEvent("WT_ToggleUi");
-						EventHandler.SendNetworkEvent("WT_ChangeStatus", false, Update_Lite);
 						break;
 
 					// Enter search mode. Chars: Space
 					case 32:
 						if (SelectedPage != Page_Main) break;
-						SearchFilter = "";
 						InSearchMode = true;
+						EventHandler.SendNetworkEvent("WT_ClearFilter");
 						break;
 
 					// Clear filter.
 					case UiEvent.Key_Backspace:
-						SearchFilter = "";
+						EventHandler.SendNetworkEvent("WT_ClearFilter");
+						EventHandler.SendNetworkEvent("WT_ReInitialize");
 						break;
 
 					// [Ace] Upgrade prestige. Chars: 'p' or 'P'.
@@ -1290,23 +896,24 @@ extend class WT_MainHandler
 					// Apply filter.
 					case UiEvent.Key_Return:
 						InSearchMode = false;
+						EventHandler.SendNetworkEvent("WT_ReInitialize");
 						break;
 
 					// Exit search mode and don't apply filter.
 					case UiEvent.Key_Escape:
-						SearchFilter = "";
+						EventHandler.SendNetworkEvent("WT_ClearFilter");
 						InSearchMode = false;
 						break;
 
 					// Delete last character.
 					case UiEvent.Key_Backspace:
-						SearchFilter.DeleteLastCharacter();
+						EventHandler.SendNetworkEvent("WT_EraseLastFilterChar");
 						break;
 
 					default:
 						if (SearchFilter.Length() < 13 && e.KeyChar >= 32 && e.KeyChar <= 126) // [Ace] Only valid characters.
 						{
-							SearchFilter = SearchFilter..e.KeyString;
+							EventHandler.SendNetworkEvent("WT_AppendFilterChar", e.KeyChar);
 						}
 						break;
 				}

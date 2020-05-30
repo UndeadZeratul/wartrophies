@@ -10,81 +10,72 @@ class WT_MainHandler : StaticEventHandler
 		Filter_All
 	}
 
-	enum WT_UpdateElement
-	{
-		Update_Lite					= 1 << 0,
-		Update_Scorecard_Main		= 1 << 1,
-		Update_Scorecard_Weapons	= 1 << 2,
-		Update_Scorecard_Monsters	= 1 << 3,
-		Update_All					= Update_Lite | Update_Scorecard_Main | Update_Scorecard_Weapons | Update_Scorecard_Monsters
-	}
-
-	// --------------------------------------------------
-	// CVARS & GLOBAL VARS
-	// --------------------------------------------------
-
-	private transient int NeedsUpdating; // [Ace] Used to only update data when needed. This is here so the Lite HUD is also affected, as the only trigger for that is monster kills/weapon changes.
-
-	private transient CVar WeaponStorage;
-	private transient CVar ExperienceStorage;
-	private transient CVar PrestigeStorage;
-
-	private transient bool DisableSaving;
-	private transient CVar KillSoundType;
-
-	private transient int Experience;
-	private transient int Prestige;
-
-	// [Ace] I want to note, mainly to myself, that dictionaries are case-sensitive. Normally everything should Just Work(tm), but it may, and I mean ***MAY*** be possible for the planets to align and something to get fucked.
-	// That's because I didn't know this at the time and didn't make everything lowercase. Not changing it now because people would lose progress. If something gets screwed up someday, I'll fix it. So far that hasn't happened.
-	// Again, I underline that it MAY happen. Doesn't mean it WILL. MAY =/= WILL. Got it?
-
-	private transient Dictionary WeaponStats; // [Ace] The value of each key is the monster dictionary's JSON. The key is the weapon.
-	private transient Dictionary ProjectileBinds; // [Ace] Key - projectile, value - weapon.
-
-	private transient class<Weapon> ReadyWeapon;
-
 	// --------------------------------------------------
 	// FUNCTIONS
 	// --------------------------------------------------
 
-	private void ChangeStatus(bool status, WT_UpdateElement which)
+	void RegisterKill(class<Weapon> wpn, class<Actor> victim)
 	{
-		// [Ace] True = Updated.
-		if (status)
-		{
-			NeedsUpdating &= ~which;	
-		}
-		else
-		{
-			NeedsUpdating |= which;
-		}
-	}
+		WT_WeaponData Weapon = FindWeapon(wpn);
 
-	void UpdateTallyFor(string weapon, string victim)
-	{
 		// [Ace] If weapon exists, update info.
-		string CurrWeaponKills = WeaponStats.At(weapon);
-		if (CurrWeaponKills != "")
+		if (Weapon)
 		{
-			Dictionary KillStats = Dictionary.FromString(CurrWeaponKills);
+			WT_MonsterData Monster = Weapon.FindMonster(victim);
+			if (Monster)
+			{
+				Monster.Kills++;
+			}
+			else
+			{
+				Monster = new("WT_MonsterData");
 
-			string Kills = KillStats.At(victim);
-			KillStats.Insert(victim, Kills != "" ? String.Format("%i", int(Kills.ToDouble()) + 1) : "1");
+				string MonsterName = victim.GetClassName();
+				MonsterName = MonsterName.MakeLower();
 
-			WeaponStats.Insert(weapon, KillStats.ToString());
+				Monster.DictionaryName = MonsterName;
+				Monster.Object = victim;
+				Monster.Kills = 1;
+
+				Weapon.Monsters.Push(Monster);
+			}
 		}
-
-		// [Ace] Otherwise, create it and update info.
+		// [Ace] Otherwise create a new weapon.
 		else
 		{
-			Dictionary KillStats = Dictionary.Create();
-			KillStats.Insert(victim, "1");
+			Weapon = new ("WT_WeaponData");
 
-			WeaponStats.Insert(weapon, KillStats.ToString());
+			string WeaponName = wpn.GetClassName();
+			WeaponName = WeaponName.MakeLower();
+
+			Weapon.DictionaryName = WeaponName;
+			Weapon.Object = wpn;
+			Weapon.FolderName = FolderBindings.At(WeaponName);
+
+				WT_MonsterData Monster = new("WT_MonsterData");
+
+				string MonsterName = victim.GetClassName();
+				MonsterName = MonsterName.MakeLower();
+
+				Monster.DictionaryName = MonsterName;
+				Monster.Object = victim;
+				Monster.Kills = 1;
+
+			Weapon.Monsters.Push(Monster);
+
+			AllWeapons.Push(Weapon);
+			InitLiteHud();
 		}
 
-		NeedsUpdating = Update_All;
+		double FastMonstersMult = sv_fastmonsters || G_SkillPropertyInt(SKILLP_FastMonsters) ? 2.5 : 1;
+		int SkillNumber = min(4, (G_SkillPropertyInt(SKILLP_ACSReturn) + 1));
+		int ExperienceGained = int(min(12000, GetDefaultByType(victim).Health) * 0.05 * SkillNumber * FastMonstersMult);
+
+		// [Ace] Manually incremented, but those don't actually affect the data because they're only used in the UI.
+		SelWeaponKills++;
+		TotalKillsEver++;
+		TotalKillsAvailable++;
+		Experience += ExperienceGained;
 	}
 
 	private void PlayKillSound()
@@ -112,22 +103,15 @@ class WT_MainHandler : StaticEventHandler
 	{
 		if (e.Thing && e.Thing.bISMONSTER && e.DamageSource && e.DamageSource.player && players[consoleplayer] == e.DamageSource.player && e.Thing.Health <= 0 && !IsBlacklisted(e.Thing.GetClass()))
 		{
-			double FastMonstersMult = sv_fastmonsters || G_SkillPropertyInt(SKILLP_FastMonsters) ? 2.5 : 1;
-			int SkillNumber = min(4, (G_SkillPropertyInt(SKILLP_ACSReturn) + 1));
-			int ExperienceGained = int(min(12000, e.Thing.default.Health) * 0.05 * SkillNumber * FastMonstersMult);
-
 			// [Ace] Killer is a projectile that's also not a puff.
 			if (e.Inflictor && e.Inflictor.bMISSILE && !e.Inflictor.bALWAYSPUFF && !e.Inflictor.bPUFFONACTORS)
 			{
 				string WeaponUsed = ProjectileBinds.At(e.Inflictor.GetClassName());
 				if (WeaponUsed != "")
 				{
-					class<Actor> wpn = WeaponUsed;
-					if (!IsBlacklisted(wpn))
+					if (!IsBlacklisted(WeaponUsed))
 					{
-						UpdateTallyFor(WeaponUsed, e.Thing.GetClassName());
-						
-						Experience += ExperienceGained;
+						RegisterKill(WeaponUsed, e.Thing.GetClass());
 						PlayKillSound();
 					}
 				}
@@ -140,19 +124,16 @@ class WT_MainHandler : StaticEventHandler
 				{
 					switch (e.DamageType)
 					{
-						case 'Telefrag': UpdateTallyFor("WT_Telefrag", e.Thing.GetClassName()); break;
-						case 'GloryKill': UpdateTallyFor("WT_D4TGloryKills", e.Thing.GetClassName()); break;
+						case 'Telefrag': RegisterKill("WT_Telefrag", e.Thing.GetClass()); break;
+						case 'GloryKill': RegisterKill("WT_D4TGloryKills", e.Thing.GetClass()); break;
 						default:
-							if (ReadyWeapon && !IsBlacklisted(ReadyWeapon))
+							if (SelectedWeaponWorld && !IsBlacklisted(SelectedWeaponWorld))
 							{
-								string WeaponUsed = ReadyWeapon.GetClassName();
-								UpdateTallyFor(WeaponUsed, e.Thing.GetClassName());
+								RegisterKill(SelectedWeaponWorld, e.Thing.GetClass());
 							}
 							else return;
 							break;
 					}
-
-					Experience += ExperienceGained;
 					PlayKillSound();
 				}
 			}
@@ -169,82 +150,11 @@ class WT_MainHandler : StaticEventHandler
 		if (e.Thing && e.Thing.bMISSILE && !e.Thing.bALWAYSPUFF && !e.Thing.bPUFFONACTORS && e.Thing.target && e.Thing.target is "PlayerPawn")
 		{
 			let plr = PlayerPawn(e.Thing.target);
-			if (plr && ReadyWeapon)
+			if (plr && SelectedWeaponWorld)
 			{
-				ProjectileBinds.Insert(e.Thing.GetClassName(), ReadyWeapon.GetClassName());
+				ProjectileBinds.Insert(e.Thing.GetClassName(), SelectedWeaponWorld.GetClassName());
 			}
 		}
-	}
-
-	// --------------------------------------------------
-	// INITIALIZATION
-	// --------------------------------------------------
-
-	override void WorldLoaded(WorldEvent e)
-	{
-		WeaponStorage = CVar.FindCVar("wt_stats_weapons_kills");
-		ExperienceStorage = CVar.FindCVar('wt_stats_experience');
-		PrestigeStorage = CVar.FindCVar('wt_stats_prestige');
-
-		IWADWeaponFilter = CVar.GetCVar('wt_filter_iwad_weapons', players[consoleplayer]);
-		IWADMonsterFilter = CVar.GetCVar('wt_filter_iwad_monsters', players[consoleplayer]);
-
-		ScorecardTheme = CVar.GetCVar('wt_scorecard_theme', players[consoleplayer]);
-		ScorecardScale = CVar.GetCVar('wt_scorecard_scale', players[consoleplayer]);
-		DarkerDisplays = CVar.GetCVar('wt_scorecard_blackdisplays', players[consoleplayer]);
-
-		RankSets[Type_Genocide] = CVar.GetCVar('wt_rankset_genocide', players[consoleplayer]);
-		RankSets[Type_Player] = CVar.GetCVar('wt_rankset_player', players[consoleplayer]);
-		RankSets[Type_Weapons] = CVar.GetCVar('wt_rankset_weapons', players[consoleplayer]);
-
-		LiteHudType = CVar.GetCVar('wt_showlite', players[consoleplayer]);
-		LiteHudOrientation = CVar.GetCVar('wt_lite_orientation', players[consoleplayer]);
-		LiteHudScale = CVar.GetCVar('wt_lite_scale', players[consoleplayer]);
-		LiteHudOffsetX = CVar.GetCVar('wt_lite_offset_x', players[consoleplayer]);
-		LiteHudOffsetY = CVar.GetCVar('wt_lite_offset_y', players[consoleplayer]);
-		LiteHudAlpha = CVar.GetCVar('wt_lite_alpha', players[consoleplayer]);
-		LiteFolderView = CVar.GetCVar('wt_lite_usefolders', players[consoleplayer]);
-		LiteHudColors[LElement_Labels] = CVar.GetCVar('wt_lite_color_labels', players[consoleplayer]);
-		LiteHudColors[LElement_TotalKills] = CVar.GetCVar('wt_lite_color_totalkills', players[consoleplayer]);
-		LiteHudColors[LElement_GenocideRank] = CVar.GetCVar('wt_lite_color_genociderank', players[consoleplayer]);
-		LiteHudColors[LElement_PlayerRank] = CVar.GetCVar('wt_lite_color_playerrank', players[consoleplayer]);
-		LiteHudColors[LElement_WeaponName] = CVar.GetCVar('wt_lite_color_weaponname', players[consoleplayer]);
-		LiteHudColors[LElement_WeaponRank] = CVar.GetCVar('wt_lite_color_weaponrank', players[consoleplayer]);
-		LiteHudColors[LElement_WeaponKills] = CVar.GetCVar('wt_lite_color_weaponkills', players[consoleplayer]);
-		LiteHudVisibilityFlags = CVar.GetCVar('wt_lite_adv_visibility', players[consoleplayer]);
-
-		UiFont = CVar.GetCVar('wt_ui_font', players[consoleplayer]);
-		KillSoundType = CVar.GetCVar('wt_killsound', players[consoleplayer]);
-		BlacklistEnabled = CVar.GetCVar('wt_blacklist_enable', players[consoleplayer]);
-
-		Initialize(false);
-
-		self.IsUiProcessor = false;
-	}
-
-	void Initialize(bool reset)
-	{
-		FolderInit();
-		ProjectileBinds = Dictionary.Create();
-
-		if (reset)
-		{
-			WeaponStorage.ResetToDefault();
-			ExperienceStorage.ResetToDefault();
-			PrestigeStorage.ResetToDefault();
-
-			WeaponStats = Dictionary.Create();
-			Experience = 0;
-			Prestige = 0;
-		}
-		else
-		{
-			WeaponStats = Dictionary.FromString(WeaponStorage.GetString());
-			Experience = ExperienceStorage.GetInt();
-			Prestige = PrestigeStorage.GetInt();
-		}
-
-		NeedsUpdating = Update_All;
 	}
 
 	// --------------------------------------------------
@@ -253,55 +163,41 @@ class WT_MainHandler : StaticEventHandler
 
 	override void WorldTick()
 	{
-		// [Ace] 10 tics should be enough so that SetString doesn't shit the bed.
-		if (!DisableSaving && WeaponStats && level.time % 10 == 0)
-		{
-			WeaponStorage.SetString(WeaponStats.ToString());
-			ExperienceStorage.SetInt(Experience);
-			PrestigeStorage.SetInt(Prestige);
-		}
-
 		// [Ace] Update weapon.
 		if (level.time % 2 == 0)
 		{
 			let plr = PlayerPawn(players[consoleplayer].mo);
 			if (plr && plr.player && plr.player.ReadyWeapon)
 			{
-				class<Weapon> OldWeapon = ReadyWeapon;
+				class<Weapon> OldWeapon = SelectedWeaponWorld;
 
 				// [Ace] If the weapon is a powered up version, use the main one instead.
-				ReadyWeapon = plr.player.ReadyWeapon.bPOWERED_UP ? plr.Player.ReadyWeapon.SisterWeaponType : plr.player.ReadyWeapon.GetClass();
+				SelectedWeaponWorld = plr.player.ReadyWeapon.bPOWERED_UP ? plr.Player.ReadyWeapon.SisterWeaponType : plr.player.ReadyWeapon.GetClass();
 
-				// [Ace] Checks if the weapon selection has changed. Also update the scorecard upon opening it because of autoselect, otherwise the wrong stats will be displayed.
-				if (ReadyWeapon != OldWeapon)
+				if (SelectedWeaponWorld != OldWeapon)
 				{
-					NeedsUpdating |= Update_Lite | Update_Scorecard_Main;
-				} 
+					SelectLiteWeapon();
+				}
 			}
 		}
-	}
-
-	override void WorldUnloaded(WorldEvent e)
-	{
-		IsUiProcessor = false;
-		DrawUi = false;
 	}
 
 	// --------------------------------------------------
 	// PROGRESS ERASING
 	// --------------------------------------------------
 
-	private void ResetTally(int player)
+	private void ResetTally()
 	{
 		Initialize(true);
 		Console.Printf("All statistics successfully reset!");
 	}
 
-	private void ResetWeapon(int player)
+	private void ResetWeapon()
 	{
-		if (WeaponStats)
+		let wpn = FindWeapon(SelectedWeaponWorld);
+		if (wpn)
 		{
-			WeaponStats.Remove(ReadyWeapon.GetClassName());
+			wpn.Reset();
 		}
 		Console.Printf("Weapon statistics successfully reset!");
 	}
@@ -314,16 +210,51 @@ class WT_MainHandler : StaticEventHandler
 	{
 		if (e.Player != consoleplayer) return;
 
+		if (e.Name ~== "ForceSave")
+		{
+			SaveData();
+		}
+
+		if (e.Name ~== "WT_InitWeaponFolders")
+		{
+			InitWeaponFolders();
+			InitLiteHud();
+		}
+
+		if (e.Name ~== "WT_ReInitialize")
+		{
+			InitLiteHud();
+			InitScorecard(SelectedPage);
+		}
+
 		if (e.Name ~== "WT_ResetTally")
 		{
-			ResetTally(e.Player);
-			NeedsUpdating = Update_All;
+			ResetTally();
 		}
 
 		if (e.Name ~== "WT_ResetWeapon")
 		{
-			ResetWeapon(e.Player);
-			NeedsUpdating = Update_All;
+			ResetWeapon();
+		}
+
+		if (e.Name ~== "WT_PreviousPage")
+		{
+			SwitchScorecardPage(SelectedPage - 1);
+		}
+
+		if (e.Name ~== "WT_NextPage")
+		{
+			SwitchScorecardPage(SelectedPage + 1);
+		}
+
+		if (e.Name ~== "WT_PreviousWeapon")
+		{
+			SelectWeaponInList(SelectedWeaponListIndex - 1);
+		}
+
+		if (e.Name ~== "WT_NextWeapon")
+		{
+			SelectWeaponInList(SelectedWeaponListIndex + 1);
 		}
 
 		if (e.Name ~== "WT_ToggleUI")
@@ -331,6 +262,30 @@ class WT_MainHandler : StaticEventHandler
 			DrawUi = !DrawUi;
 			self.IsUiProcessor = !self.IsUiProcessor;
 			S_StartSound(DrawUi ? "WT/ScorecardOpen" : "WT/ScorecardClose", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
+
+			if (DrawUi)
+			{
+				SwitchScorecardPage(Page_Main);
+			}
+			else
+			{
+				SelectLiteWeapon();
+			}
+		}
+
+		if (e.Name ~== "WT_ClearFilter")
+		{
+			SearchFilter = "";
+		}
+
+		if (e.Name ~== "WT_EraseLastFilterChar")
+		{
+			SearchFilter.DeleteLastCharacter();
+		}
+
+		if (e.Name ~== "WT_AppendFilterChar")
+		{
+			SearchFilter = SearchFilter..String.Format("%c", e.Args[0]);
 		}
 
 		if (e.Name ~== "WT_UpgradePrestige" && !e.IsManual)
@@ -341,21 +296,15 @@ class WT_MainHandler : StaticEventHandler
 		if (e.Name ~== "WT_ToggleSaving")
 		{
 			DisableSaving = !DisableSaving;
-			if (!DisableSaving)
+			if (DisableSaving)
+			{
+				SaveData();
+			}
+			else
 			{
 				Initialize(false);
 			}
 			Console.Printf("Kill saving "..(DisableSaving ? "disabled" : "enabled")..".");
-		}
-
-		if (e.Name ~== "WT_ChangeStatus" && !e.IsManual)
-		{
-			ChangeStatus(e.Args[0], e.Args[1]);
-		}
-
-		if (e.Name ~== "WT_FolderInit" && !e.IsManual)
-		{
-			FolderInit();
 		}
 	}
 }

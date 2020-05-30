@@ -396,7 +396,7 @@ extend class WT_MainHandler
 		"rlwidowmakersmg",							"Rifle",				"Stock",				"Unique"
 	};
 
-	private void FolderInit()
+	private void CreateFolderBindings()
 	{
 		FolderBindings = Dictionary.Create();
 
@@ -411,24 +411,6 @@ extend class WT_MainHandler
 			case 5: for (int i = 0; i < DrlaDefs.Size(); i += 4) FolderBindings.Insert(DrlaDefs[i], DrlaDefs[i + 1]); break;
 			case 6: for (int i = 0; i < DrlaDefs.Size(); i += 4) FolderBindings.Insert(DrlaDefs[i], DrlaDefs[i + 2]); break;
 			case 7: for (int i = 0; i < DrlaDefs.Size(); i += 4) FolderBindings.Insert(DrlaDefs[i], DrlaDefs[i + 3]); break;
-		}
-	}
-
-	private ui void GetWeaponsInFolder(string folder, out Array<class<Weapon> > arr)
-	{
-		arr.Clear();
-
-		let it = DictionaryIterator.Create(FolderBindings);
-		while (it.Next())
-		{
-			if (it.Value() != folder) continue;
-
-			class<Weapon> wpn;
-			wpn = it.Key();
-			if (wpn && AvailableWeapons.Find(wpn) != AvailableWeapons.Size())
-			{
-				arr.Push(wpn);
-			}
 		}
 	}
 }

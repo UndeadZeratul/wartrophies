@@ -6,8 +6,7 @@ class OptionMenuItemFolderOption : OptionMenuItemOption
 	{
 		Super.SetSelection(Selection);
 
-		EventHandler.SendNetworkEvent("WT_FolderInit");
-		EventHandler.SendNetworkEvent("WT_ChangeStatus", false, WT_MainHandler.Update_Lite);
+		EventHandler.SendNetworkEvent("WT_InitWeaponFolders");
 	}
 } 
 
@@ -17,7 +16,7 @@ class OptionMenuItemFilterOption : OptionMenuItemOption
 	{
 		Super.SetSelection(Selection);
 
-		EventHandler.SendNetworkEvent("WT_ChangeStatus", false, WT_MainHandler.Update_All);
+		EventHandler.SendNetworkEvent("WT_ReInitialize");
 	}
 }
 
