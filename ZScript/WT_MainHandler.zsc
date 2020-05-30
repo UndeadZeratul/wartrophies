@@ -204,6 +204,11 @@ class WT_MainHandler : StaticEventHandler
 	{
 		if (e.Player != consoleplayer) return;
 
+		if (e.Name ~== "ForceSave")
+		{
+			SaveData();
+		}
+
 		if (e.Name ~== "WT_InitWeaponFolders")
 		{
 			InitWeaponFolders();
