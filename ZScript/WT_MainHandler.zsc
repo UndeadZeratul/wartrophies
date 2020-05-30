@@ -36,6 +36,8 @@ class WT_MainHandler : StaticEventHandler
 				Monster.DictionaryName = MonsterName;
 				Monster.Object = victim;
 				Monster.Kills = 1;
+
+				Weapon.Monsters.Push(Monster);
 			}
 		}
 		// [Ace] Otherwise create a new weapon.
@@ -60,6 +62,9 @@ class WT_MainHandler : StaticEventHandler
 				Monster.Kills = 1;
 
 			Weapon.Monsters.Push(Monster);
+
+			AllWeapons.Push(Weapon);
+			InitLiteHud();
 		}
 
 		double FastMonstersMult = sv_fastmonsters || G_SkillPropertyInt(SKILLP_FastMonsters) ? 2.5 : 1;
