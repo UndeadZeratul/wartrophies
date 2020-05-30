@@ -23,18 +23,19 @@ extend class WT_MainHandler
 	// [Ace] Currently used for visibility toggles.
 	enum WT_LiteHudVisibilityFlags
 	{
-		VF_TotalKills		= 1 << 0,
-		VF_GenocideRank		= 1 << 1,
-		VF_GenocideMedal	= 1 << 2,
-		VF_PlayerRank		= 1 << 3,
-		VF_PlayerExperience	= 1 << 4,
-		VF_PlayerMedal		= 1 << 5,
-		VF_Player_All		= VF_TotalKills | VF_GenocideRank | VF_GenocideMedal | VF_PlayerRank | VF_PlayerExperience | VF_PlayerMedal,
+		VF_PlayerName		= 1 << 0,
+		VF_TotalKills		= 1 << 1,
+		VF_GenocideRank		= 1 << 2,
+		VF_GenocideMedal	= 1 << 3,
+		VF_PlayerRank		= 1 << 4,
+		VF_PlayerExperience	= 1 << 5,
+		VF_PlayerMedal		= 1 << 6,
+		VF_Player_All		= VF_PlayerName | VF_TotalKills | VF_GenocideRank | VF_GenocideMedal | VF_PlayerRank | VF_PlayerExperience | VF_PlayerMedal,
 
-		VF_WeaponName		= 1 << 6,
-		VF_WeaponRank		= 1 << 7,
-		VF_WeaponKills		= 1 << 8,
-		VF_WeaponMedals		= 1 << 9,
+		VF_WeaponName		= 1 << 7,
+		VF_WeaponRank		= 1 << 8,
+		VF_WeaponKills		= 1 << 9,
+		VF_WeaponMedals		= 1 << 10,
 		VF_Weapon_All		= VF_WeaponName | VF_WeaponRank | VF_WeaponKills | VF_WeaponMedals
 	}
 
@@ -187,6 +188,16 @@ extend class WT_MainHandler
 		int DI_TL_TEXT_LEFT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
 		int DI_TL_CENTER_TEXT_CENTER = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
 		int DI_TL_CENTER_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_LEFT_TOP | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
+
+		// Total kills.
+		if (visFlags & VF_PlayerName)
+		{
+			string PlayerName = sbar.CPlayer.GetUserName();
+			sbar.DrawString(MainHudFont, PlayerName, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
+
+			TotalSize.X = max(TotalSize.X, MainFont.StringWidth(PlayerName));
+			TotalSize.Y += 14;
+		}
 
 		// Total kills.
 		if (visFlags & VF_TotalKills)
