@@ -28,6 +28,9 @@ extend class WT_MainHandler
 				[Exists, CustomName] = GetCustomName(cls.GetClassName());
 				return Exists ? CustomName : "";
 
+			// Hideous Destructor
+			case 'HDBossBrain':						return "The Tyrant";
+
 			// DRLA
 			case 'RLFormerHumanPistol':				return "Former Human (Pistol)";
 			case 'RLFormerHumanBattleRifle':		return "Former Human (Rifle)";
