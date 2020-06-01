@@ -39,6 +39,8 @@ class WT_MainHandler : StaticEventHandler
 
 				Weapon.Monsters.Push(Monster);
 			}
+			SelWeaponKills++;
+			TotalKillsEver++;
 		}
 		// [Ace] Otherwise create a new weapon.
 		else
@@ -72,9 +74,7 @@ class WT_MainHandler : StaticEventHandler
 		int ExperienceGained = int(min(12000, GetDefaultByType(victim).Health) * 0.05 * SkillNumber * FastMonstersMult);
 
 		// [Ace] Manually incremented, but those don't actually affect the data because they're only used in the UI.
-		SelWeaponKills++;
-		TotalKillsEver++;
-		TotalKillsAvailable++;
+		
 		Experience += ExperienceGained;
 	}
 
@@ -188,7 +188,7 @@ class WT_MainHandler : StaticEventHandler
 
 	private void ResetTally()
 	{
-		Initialize(true);
+		ResetProgress();
 		Console.Printf("All statistics successfully reset!");
 	}
 
@@ -198,6 +198,7 @@ class WT_MainHandler : StaticEventHandler
 		if (wpn)
 		{
 			wpn.Reset();
+			InitLiteHud();
 		}
 		Console.Printf("Weapon statistics successfully reset!");
 	}
@@ -302,7 +303,7 @@ class WT_MainHandler : StaticEventHandler
 			}
 			else
 			{
-				Initialize(false);
+				Initialize();
 			}
 			Console.Printf("Kill saving "..(DisableSaving ? "disabled" : "enabled")..".");
 		}

@@ -206,42 +206,37 @@ extend class WT_MainHandler
 		KillSoundType = CVar.GetCVar('wt_killsound', players[consoleplayer]);
 		BlacklistEnabled = CVar.GetCVar('wt_blacklist_enable', players[consoleplayer]);
 
-		Initialize(false);
+		Initialize();
 
 		IsUiProcessor = false;
 		DrawUi = false;
 	}
 
-	void Initialize(bool reset)
+	private void Initialize()
 	{
 		ProjectileBinds = Dictionary.Create();
 
-		if (reset)
-		{
-			WeaponStorage.ResetToDefault();
-			ExperienceStorage.ResetToDefault();
-			PrestigeStorage.ResetToDefault();
+		Experience = ExperienceStorage.GetInt();
+		Prestige = PrestigeStorage.GetInt();
 
-			Experience = 0;
-			Prestige = 0;
-
-			AllWeapons.Clear();
-
-			TotalKillsEver = 0;
-			TotalKillsAvailable = 0;
-		}
-		else
-		{
-			Experience = ExperienceStorage.GetInt();
-			Prestige = PrestigeStorage.GetInt();
-
-			InitAllWeapons();
-			InitWeaponFolders();
-			TotalKillsEver = GetTotalKillsEver();
-			TotalKillsAvailable = GetTotalKillsAvailable();
-		}
-
+		InitAllWeapons();
 		InitWeaponFolders();
+		TotalKillsEver = GetTotalKillsEver();
+		InitLiteHud();
+	}
+
+	private void ResetProgress()
+	{
+		WeaponStorage.ResetToDefault();
+		ExperienceStorage.ResetToDefault();
+		PrestigeStorage.ResetToDefault();
+
+		Experience = 0;
+		Prestige = 0;
+
+		AllWeapons.Clear();
+
+		Initialize();
 	}
 
 	private void InitAllWeapons()
@@ -304,6 +299,8 @@ extend class WT_MainHandler
 			case Page_Main:
 				InitAvailableWeapons();
 				SelectScorecardWeapon();
+				TotalKillsEver = GetTotalKillsEver();
+				TotalKillsAvailable = GetTotalKillsAvailable();
 				MaxRankMedals = GetMaxRankMedalCount();
 				break;
 			case Page_Weapons:
