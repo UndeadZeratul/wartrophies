@@ -221,7 +221,6 @@ extend class WT_MainHandler
 
 		InitAllWeapons();
 		InitWeaponFolders();
-		TotalKillsEver = GetTotalKillsEver();
 		InitLiteHud();
 	}
 
