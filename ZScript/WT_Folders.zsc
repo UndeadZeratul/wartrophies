@@ -1,7 +1,7 @@
 extend class WT_MainHandler
 {
-	private transient CVar LiteFolderView;
-	private transient Dictionary FolderBindings;
+	private CVar LiteFolderView;
+	private Dictionary FolderBindings;
 
 	static const string BulletEyeDefs[] =
 	{

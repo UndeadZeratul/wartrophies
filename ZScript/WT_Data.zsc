@@ -80,56 +80,56 @@ extend class WT_MainHandler
 		"Elf", "Basic Benefactor", "Competent Contributor", "Adequate Altruist", "Satisfactory Santa", "Sufficient Samaritan", "Distinguished Donator", "Dynamic Do-gooder", "Consummate Conferrer", "Bequeathment Baron", "Lord of Largesses", "Chieftain of Charity", "General of Generosity", "Bigshot Backer", "Caesar of Pleasers", "First-class Philanthropist", "Humanitarian Hotshot", "Selfless Subscriber", "Epic Endorser", "Legendary Lender", "Awe-inspiry Ally", "Champion Collaborator", "Fabulous Friend", "Perfect Partner", "Seriously Santa"
 	};
 
-	private transient Dictionary ProjectileBinds; // [Ace] Key - projectile, value - weapon.
+	private Dictionary ProjectileBinds; // [Ace] Key - projectile, value - weapon.
 
 	private bool DrawUi;
 	private bool DisableSaving;
 
-	private transient string SearchFilter;
+	private string SearchFilter;
 
-	private transient CVar WeaponStorage;
-	private transient CVar ExperienceStorage;
-	private transient CVar PrestigeStorage;
+	private CVar WeaponStorage;
+	private CVar ExperienceStorage;
+	private CVar PrestigeStorage;
 
-	private transient CVar UiFont;
-	private transient CVar RankSets[3];
+	private CVar UiFont;
+	private CVar RankSets[3];
 
-	private transient CVar KillSoundType;
+	private CVar KillSoundType;
 
-	private transient CVar ScorecardTheme;
-	private transient CVar ScorecardScale;
-	private transient CVar DarkerDisplays;
+	private CVar ScorecardTheme;
+	private CVar ScorecardScale;
+	private CVar DarkerDisplays;
 
-	private transient CVar LiteHudType;
-	private transient CVar LiteHudOrientation;
-	private transient CVar LiteHudScale;
-	private transient CVar LiteHudOffsetX;
-	private transient CVar LiteHudOffsetY;
-	private transient CVar LiteHudColors[7];
-	private transient CVar LiteHudAlpha;
-	private transient CVar LiteHudVisibilityFlags;
+	private CVar LiteHudType;
+	private CVar LiteHudOrientation;
+	private CVar LiteHudScale;
+	private CVar LiteHudOffsetX;
+	private CVar LiteHudOffsetY;
+	private CVar LiteHudColors[7];
+	private CVar LiteHudAlpha;
+	private CVar LiteHudVisibilityFlags;
 
-	private transient int SelectedPage;
+	private int SelectedPage;
 
-	private transient class<Weapon> SelectedWeaponWorld;
-	private transient WT_WeaponData SelectedWeaponLite;
+	private class<Weapon> SelectedWeaponWorld;
+	private WT_WeaponData SelectedWeaponLite;
 
-	private transient int SelectedWeaponListIndex;
-	private transient WT_WeaponData SelectedWeaponList;
+	private int SelectedWeaponListIndex;
+	private WT_WeaponData SelectedWeaponList;
 
-	private transient Array<WT_WeaponData> AllWeapons;
+	private Array<WT_WeaponData> AllWeapons;
 
-	private transient Array<WT_WeaponData> AvailableWeapons;
-	private transient Array<WT_MonsterData> AvailableMonsters; // [Ace] This is used for two things: monster list for current weapon and full monster list.
+	private Array<WT_WeaponData> AvailableWeapons;
+	private Array<WT_MonsterData> AvailableMonsters; // [Ace] This is used for two things: monster list for current weapon and full monster list.
 
-	private transient int Experience;
-	private transient int Prestige;
+	private int Experience;
+	private int Prestige;
 
 	// [Ace] Global cache. These are here so they don't get reset all the time. With some exceptions. Part of the memory leak patch. Also boosts performance.
-	private transient int TotalKillsEver;
-	private transient int TotalKillsAvailable;
-	private transient int SelWeaponKills;
-	private transient int MaxRankMedals;
+	private int TotalKillsEver;
+	private int TotalKillsAvailable;
+	private int SelWeaponKills;
+	private int MaxRankMedals;
 
 	// --------------------------------------------------
 	// SAVING
@@ -237,9 +237,6 @@ extend class WT_MainHandler
 		BlacklistEnabled = CVar.GetCVar('wt_blacklist_enable', players[consoleplayer]);
 
 		Initialize();
-
-		IsUiProcessor = false;
-		DrawUi = false;
 	}
 
 	private void Initialize()

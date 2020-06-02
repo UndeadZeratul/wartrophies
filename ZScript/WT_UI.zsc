@@ -79,18 +79,18 @@ extend class WT_MainHandler
 	const LiteHudMaxStringWidth = 200; // [Ace] Size in pixels.
 
 	const FontPrefix = "WTFONT";
-	private transient ui Font MainFont;
-	private transient ui HUDFont MainHudFont;
+	private ui Font MainFont;
+	private ui HUDFont MainHudFont;
 
-	private transient ui int SubPage;
-	private transient ui bool InSearchMode;
+	private ui int SubPage;
+	private ui bool InSearchMode;
 
-	private transient ui int GenocideRank;
-	private transient ui string GenocideRankString;
-	private transient ui int PlayerRank;
-	private transient ui string PlayerRankString;
-	private transient ui int WeaponRank;
-	private transient ui string WeaponRankString;
+	private ui int GenocideRank;
+	private ui string GenocideRankString;
+	private ui int PlayerRank;
+	private ui string PlayerRankString;
+	private ui int WeaponRank;
+	private ui string WeaponRankString;
 
 	override void RenderOverlay(RenderEvent e)
 	{

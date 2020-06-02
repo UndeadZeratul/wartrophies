@@ -1,6 +1,6 @@
 extend class WT_MainHandler
 {
-	private transient CVar BlacklistEnabled;
+	private CVar BlacklistEnabled;
 
 	// [Ace] Works for both weapons and monsters. Inheritance is also taken into account.
 	static const string BlacklistDefs[] =
