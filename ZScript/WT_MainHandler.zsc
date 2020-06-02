@@ -211,9 +211,9 @@ class WT_MainHandler : StaticEventHandler
 	{
 		if (e.Player != consoleplayer) return;
 
-		if (e.Name ~== "ForceSave")
+		if (e.Name ~== "WT_ForceSave")
 		{
-			SaveData();
+			SaveData(true);
 		}
 
 		if (e.Name ~== "WT_InitWeaponFolders")
@@ -296,16 +296,7 @@ class WT_MainHandler : StaticEventHandler
 
 		if (e.Name ~== "WT_ToggleSaving")
 		{
-			DisableSaving = !DisableSaving;
-			if (DisableSaving)
-			{
-				SaveData();
-			}
-			else
-			{
-				Initialize();
-			}
-			Console.Printf("Kill saving "..(DisableSaving ? "disabled" : "enabled")..".");
+			ToggleSaving();
 		}
 	}
 }

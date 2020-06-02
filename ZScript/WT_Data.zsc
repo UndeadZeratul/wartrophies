@@ -135,8 +135,36 @@ extend class WT_MainHandler
 	// SAVING
 	// --------------------------------------------------
 
-	private void SaveData()
+	private void ToggleSaving()
 	{
+		if (DisableSaving)
+		{
+			Initialize();
+			DisableSaving = false;
+		}
+		else
+		{
+			SaveData(true); // [Ace] Technically it's manual.
+			DisableSaving = true;
+		}
+		Console.Printf("Kill saving "..(DisableSaving ? "disabled." : "enabled. Old stats restored."));
+	}
+
+	private void SaveData(bool manual)
+	{
+		if (DisableSaving)
+		{
+			if (manual)
+			{
+				Console.Printf("You are trying to save stats while kill saving is disabled. Turn it off first.");
+				return;
+			}
+			else
+			{
+				ToggleSaving();
+			}
+		}
+
 		Dictionary WeaponStats = Dictionary.Create();
 		for (int i = 0; i < AllWeapons.Size(); ++i)
 		{
@@ -153,16 +181,18 @@ extend class WT_MainHandler
 		WeaponStorage.SetString(WeaponStats.ToString());
 		ExperienceStorage.SetInt(Experience);
 		PrestigeStorage.SetInt(Prestige);
+
+		Console.Printf("Stats have been saved.");
 	}
 
 	override void WorldUnloaded(WorldEvent e)
 	{
-		SaveData();
+		SaveData(false);
 	}
 
 	override void OnUnregister()
 	{
-		SaveData();
+		SaveData(false);
 	}
 
 	// --------------------------------------------------
