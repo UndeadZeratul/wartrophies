@@ -180,7 +180,6 @@ OptionValue "LiteHudOrientation"
 OptionValue "LiteHudFolders"
 {
 	0, "Disabled"
-	1, "Bullet-Eye (Slots)"
 	2, "Bullet-Eye (Weapon Type)" 
 	3, "Final Doomer (Weapon Type)"
 	4, "Final Doomer (Game)"
