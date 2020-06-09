@@ -178,9 +178,12 @@ extend class WT_MainHandler
 			WeaponStats.Insert(CurrWeapon.DictionaryName, MonsterStats.ToString());
 		}
 		
-		WeaponStorage.SetString(WeaponStats.ToString());
-		ExperienceStorage.SetInt(Experience);
-		PrestigeStorage.SetInt(Prestige);
+		if (WeaponStorage)
+		{
+			WeaponStorage.SetString(WeaponStats.ToString());
+			ExperienceStorage.SetInt(Experience);
+			PrestigeStorage.SetInt(Prestige);
+		}
 
 		Console.Printf("Stats have been saved.");
 	}
