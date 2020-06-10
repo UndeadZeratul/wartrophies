@@ -462,16 +462,9 @@ extend class WT_MainHandler
 	// [Ace] If the list suddenly goes blank, reset the index to 0. It also prevents out-of-index exceptions if you've selected the last weapon in the list and apply a filter which will reduce the total count.
 	private void SelectWeaponInList(int index)
 	{
-		if (index == -1)
-		{
-			SelectedWeaponList = null;
-			return;
-		}
-
-		SelectedWeaponListIndex = clamp(index, 0, AvailableWeapons.Size() - 1);
-
 		if (AvailableWeapons.Size() > 0)
 		{
+			SelectedWeaponListIndex = clamp(index, 0, AvailableWeapons.Size() - 1);
 			SelectedWeaponList = AvailableWeapons[SelectedWeaponListIndex];
 			InitAvailableMonsters(SelectedWeaponList);
 			SelWeaponKills = SelectedWeaponList.GetKills();
@@ -479,6 +472,7 @@ extend class WT_MainHandler
 		}
 
 		SelectedWeaponListIndex = 0;
+		SelectedWeaponList = null;
 	}
 
 	private WT_WeaponData FindWeapon(class<Weapon> wpn)

@@ -432,8 +432,11 @@ extend class WT_MainHandler
 
 			// Weapon preference.
 			sbar.DrawString(MainHudFont, "P:", (167, -84), DI_TEXT_LEFT, Font.FindFontColor(GetScorecardColor(SElement_Labels)));
-			double Pref = SelWeaponKills / double(TotalKillsAvailable) * 100;
-			sbar.DrawString(MainHudFont, (Pref < 100 ? String.Format("%.2f", Pref) : String.Format("%i", Pref)).."%", (223, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Grey"));
+			if (TotalKillsAvailable > 0)
+			{
+				double Pref = SelWeaponKills / double(TotalKillsAvailable) * 100;
+				sbar.DrawString(MainHudFont, (Pref < 100 ? String.Format("%.2f", Pref) : String.Format("%i", Pref)).."%", (223, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Grey"));
+			}
 
 			// Weapon icon.
 			string SpriteToDraw = "";
