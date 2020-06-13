@@ -158,31 +158,6 @@ class WT_MainHandler : StaticEventHandler
 	}
 
 	// --------------------------------------------------
-	// VARIABLE UPDATES & OTHER
-	// --------------------------------------------------
-
-	override void WorldTick()
-	{
-		// [Ace] Update weapon.
-		if (level.time % 2 == 0)
-		{
-			let plr = PlayerPawn(players[consoleplayer].mo);
-			if (plr && plr.player && plr.player.ReadyWeapon)
-			{
-				class<Weapon> OldWeapon = SelectedWeaponWorld;
-
-				// [Ace] If the weapon is a powered up version, use the main one instead.
-				SelectedWeaponWorld = plr.player.ReadyWeapon.bPOWERED_UP ? plr.Player.ReadyWeapon.SisterWeaponType : plr.player.ReadyWeapon.GetClass();
-
-				if (SelectedWeaponWorld != OldWeapon)
-				{
-					SelectLiteWeapon();
-				}
-			}
-		}
-	}
-
-	// --------------------------------------------------
 	// PROGRESS ERASING
 	// --------------------------------------------------
 

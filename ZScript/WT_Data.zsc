@@ -82,6 +82,8 @@ extend class WT_MainHandler
 
 	private Dictionary ProjectileBinds; // [Ace] Key - projectile, value - weapon.
 
+	private int AutosaveTimer;
+
 	private bool DrawUi;
 	private bool DisableSaving;
 
@@ -90,6 +92,8 @@ extend class WT_MainHandler
 	private CVar WeaponStorage;
 	private CVar ExperienceStorage;
 	private CVar PrestigeStorage;
+
+	private CVar AutosaveInterval;
 
 	private CVar UiFont;
 	private CVar RankSets[3];
@@ -198,6 +202,33 @@ extend class WT_MainHandler
 		SaveData(false);
 	}
 
+	override void WorldTick()
+	{
+		// [Ace] Update weapon.
+		if (level.time % 2 == 0)
+		{
+			let plr = PlayerPawn(players[consoleplayer].mo);
+			if (plr && plr.player && plr.player.ReadyWeapon)
+			{
+				class<Weapon> OldWeapon = SelectedWeaponWorld;
+
+				// [Ace] If the weapon is a powered up version, use the main one instead.
+				SelectedWeaponWorld = plr.player.ReadyWeapon.bPOWERED_UP ? plr.Player.ReadyWeapon.SisterWeaponType : plr.player.ReadyWeapon.GetClass();
+
+				if (SelectedWeaponWorld != OldWeapon)
+				{
+					SelectLiteWeapon();
+				}
+			}
+		}
+
+		if (AutosaveInterval.GetInt() > 0 && --AutosaveTimer <= 0)
+		{
+			SaveData(false);
+			AutosaveTimer = (35 * 60) * AutosaveInterval.GetInt();
+		}
+	}
+
 	// --------------------------------------------------
 	// INITIALIZATION
 	// --------------------------------------------------
@@ -207,6 +238,8 @@ extend class WT_MainHandler
 		WeaponStorage = CVar.FindCVar('wt_stats_weapons_kills');
 		ExperienceStorage = CVar.FindCVar('wt_stats_experience');
 		PrestigeStorage = CVar.FindCVar('wt_stats_prestige');
+
+		AutosaveInterval = CVar.GetCVar('wt_autosave_interval', players[consoleplayer]);
 
 		IWADWeaponFilter = CVar.GetCVar('wt_filter_iwad_weapons', players[consoleplayer]);
 		IWADMonsterFilter = CVar.GetCVar('wt_filter_iwad_monsters', players[consoleplayer]);
@@ -248,6 +281,8 @@ extend class WT_MainHandler
 
 		Experience = ExperienceStorage.GetInt();
 		Prestige = PrestigeStorage.GetInt();
+
+		AutosaveTimer = (35 * 60) * AutosaveInterval.GetInt();
 
 		InitAllWeapons();
 		InitWeaponFolders();

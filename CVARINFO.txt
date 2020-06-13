@@ -4,6 +4,8 @@ nosave int wt_stats_experience = 0;
 nosave int wt_stats_prestige = 0;
 
 // Shared.
+user int wt_autosave_interval = 5;
+
 user int wt_filter_iwad_weapons = 5;
 user int wt_filter_iwad_monsters = 5;
 user int wt_ui_font = 0;
