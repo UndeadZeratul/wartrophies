@@ -154,7 +154,7 @@ extend class WT_MainHandler
 		Console.Printf("Kill saving "..(DisableSaving ? "disabled." : "enabled. Old stats restored."));
 	}
 
-	private void SaveData(bool manual)
+	private void SaveData(bool manual, bool print = true)
 	{
 		if (DisableSaving)
 		{
@@ -189,7 +189,10 @@ extend class WT_MainHandler
 			PrestigeStorage.SetInt(Prestige);
 		}
 
-		Console.Printf("Stats have been saved.");
+		if (print)
+		{
+			Console.Printf("Stats have been saved.");
+		}
 	}
 
 	override void WorldUnloaded(WorldEvent e)
@@ -224,7 +227,7 @@ extend class WT_MainHandler
 
 		if (AutosaveInterval.GetInt() > 0 && --AutosaveTimer <= 0)
 		{
-			SaveData(false);
+			SaveData(false, false);
 			AutosaveTimer = (35 * 60) * AutosaveInterval.GetInt();
 		}
 	}
