@@ -395,7 +395,7 @@ extend class WT_MainHandler
 		{
 			WT_WeaponData wpn = AllWeapons[i];
 			int IwadTypeWpn = GetIwadType(Search_Weapons, wpn.Object);
-			if (wpn.Object && ((WFilter == Filter_All || WFilter == IWadTypeWpn || IwadTypeWpn == Filter_None) && SearchFilter == "" || GetActorTag(wpn.Object).MakeLower().IndexOf(SearchFilter.MakeLower()) != -1))
+			if (wpn.Object && ((WFilter == Filter_All || WFilter == IWadTypeWpn || IwadTypeWpn == Filter_None) && (SearchFilter == "" || GetActorTag(wpn.Object).MakeLower().IndexOf(SearchFilter.MakeLower()) != -1)))
 			{
 				AvailableWeapons.Push(AllWeapons[i]);
 			}
