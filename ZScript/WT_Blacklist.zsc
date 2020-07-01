@@ -6,11 +6,12 @@ extend class WT_MainHandler
 	static const string BlacklistDefs[] =
 	{
 		// Mod			// Class			// Fancy name
-		"Hid. Destr.",	"HDWoundFixer",		"Healing Items",
-		"Hid. Destr.",	"MagManager",		"Mag Manager",
-		"Hid. Destr.",	"PickupManager",	"Item Manager",
-		"Hid. Destr.",	"HDBackpack",		"Backpack",
-		"Hid. Destr.",	"AutoReloader",		"7.76mm Reloader"
+		"Hid. Destr.",	"HDWoundFixer",			"Healing Items",
+		"Hid. Destr.",	"MagManager",			"Mag Manager",
+		"Hid. Destr.",	"PickupManager",		"Item Manager",
+		"Hid. Destr.",	"HDBackpack",			"Backpack",
+		"Hid. Destr.",	"AutoReloader",			"7.76mm Reloader"
+		"Hid. Destr.",	"WeaponStashSwitcher",	"Same-Stack Weapon Switcher"
 	};
 
 	private bool IsBlacklisted(class<Actor> cls)
