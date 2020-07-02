@@ -419,7 +419,7 @@ extend class WT_MainHandler
 			// Weapon rank.
 			GetRank(Type_Weapons, SelWeaponKills, WeaponRank, WeaponRankString);
 			sbar.DrawString(MainHudFont, WeaponRankString, (-7, -108), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_Gold"));
-			sbar.DrawString(MainHudFont, WeaponRank.."/"..WeapKillReq.Size(), (223, -108), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Gold"));
+			sbar.DrawString(MainHudFont, WeaponRank.."/"..WeapKillReq.Size() - 1, (223, -108), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Gold"));
 
 			// Weapon kills.
 			sbar.DrawString(MainHudFont, "K:", (-7, -84), DI_TEXT_LEFT, Font.FindFontColor(GetScorecardColor(SElement_Labels)));
