@@ -339,7 +339,7 @@ extend class WT_MainHandler
 		// Weapon medals.
 		if (visFlags & VF_WeaponMedals)
 		{
-			DrawMedals("WMEDAL", SelWeaponKills, 3, 3, 11, 10, (pos.x, NextOffsetY), (11, 15), DI_TL, alpha);
+			DrawMedals("WMEDAL", SelWeaponKills, 3, 3, 11, 9, (pos.x, NextOffsetY), (11, 15), DI_TL, alpha);
 		}
 	}
 
@@ -470,7 +470,7 @@ extend class WT_MainHandler
 			sbar.DrawImage(SpriteToDraw, (40, -33), DI_CENTER, 1.0, Box);
 
 			// Weapon medals.
-			DrawMedals("WMEDAL", SelWeaponKills, 3, 3, 11, 10, (108, -53), (11, 15), DI_CENTER, 1.0);
+			DrawMedals("WMEDAL", SelWeaponKills, 3, 3, 11, 9, (108, -53), (11, 15), DI_CENTER, 1.0);
 
 			// --------------- MONSTER LIST & STATS ---------------
 
