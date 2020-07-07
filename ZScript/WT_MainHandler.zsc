@@ -188,7 +188,7 @@ class WT_MainHandler : StaticEventHandler
 
 		if (e.Name ~== "WT_ForceSave")
 		{
-			SaveData(true);
+			SaveData(true, true);
 		}
 
 		if (e.Name ~== "WT_InitWeaponFolders")
@@ -271,7 +271,7 @@ class WT_MainHandler : StaticEventHandler
 
 		if (e.Name ~== "WT_ToggleSaving")
 		{
-			ToggleSaving();
+			SetSavingStatus(DisableSaving);
 		}
 	}
 }

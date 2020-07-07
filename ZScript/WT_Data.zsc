@@ -139,22 +139,19 @@ extend class WT_MainHandler
 	// SAVING
 	// --------------------------------------------------
 
-	private void ToggleSaving()
+	private void SetSavingStatus(bool status)
 	{
-		if (DisableSaving)
+		switch (status)
 		{
-			Initialize();
-			DisableSaving = false;
+			case false: SaveData(true, true); break;
+			case true: Initialize(); break;
 		}
-		else
-		{
-			SaveData(true); // [Ace] Technically it's manual.
-			DisableSaving = true;
-		}
-		Console.Printf("Kill saving "..(DisableSaving ? "disabled." : "enabled. Old stats restored."));
+
+		DisableSaving = !status;
+		Console.Printf("Kill saving "..(DisableSaving ? "disabled." : "enabled. Old stats restored."));		
 	}
 
-	private void SaveData(bool manual, bool print = true)
+	private void SaveData(bool manual, bool print)
 	{
 		if (DisableSaving)
 		{
@@ -165,7 +162,7 @@ extend class WT_MainHandler
 			}
 			else
 			{
-				ToggleSaving();
+				SetSavingStatus(true);
 			}
 		}
 
@@ -197,12 +194,12 @@ extend class WT_MainHandler
 
 	override void WorldUnloaded(WorldEvent e)
 	{
-		SaveData(false);
+		SaveData(false, false);
 	}
 
 	override void OnUnregister()
 	{
-		SaveData(false);
+		SaveData(false, false);
 	}
 
 	override void WorldTick()
