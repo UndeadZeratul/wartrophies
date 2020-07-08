@@ -334,26 +334,6 @@ extend class WT_MainHandler
 			WeaponData.Monsters.Move(MonsterList);
 			AllWeapons.Push(WeaponData);
 		}
-
-		// Sort weapon array.
-		for (int i = 0; i < AllWeapons.Size() - 1; ++i)
-		{
-			for (int j = i + 1; j < AllWeapons.Size(); ++j)
-			{
-				if (!AllWeapons[i].Object || !AllWeapons[j].Object) continue;
-
-				let CurrWeapon = GetDefaultByType(AllWeapons[i].Object);
-				let NextWeapon = GetDefaultByType(AllWeapons[j].Object);
-
-				// [Ace] Sort by numbers first, then by first letter if the numbers match.
-				if (CurrWeapon.SlotNumber >= NextWeapon.SlotNumber || (CurrWeapon.SlotNumber == NextWeapon.SlotNumber && String.Format("%s", CurrWeapon.GetClassName()).ByteAt(0) >= String.Format("%s", NextWeapon.GetClassName()).ByteAt(0)))
-				{
-					let Swap = AllWeapons[i];
-					AllWeapons[i] = AllWeapons[j];
-					AllWeapons[j] = Swap;
-				}
-			}
-		}
 	}
 
 	private void InitScorecard(WT_ScorecardPage page)
@@ -361,14 +341,14 @@ extend class WT_MainHandler
 		switch (page)
 		{
 			case Page_Main:
-				InitAvailableWeapons();
+				InitAvailableWeapons(1);
 				SelectScorecardWeapon();
 				TotalKillsEver = GetTotalKillsEver();
 				TotalKillsAvailable = GetTotalKillsAvailable();
 				MaxRankMedals = GetMaxRankMedalCount();
 				break;
 			case Page_Weapons:
-				InitAvailableWeapons();
+				InitAvailableWeapons(2);
 				break;
 			case Page_Monsters:
 				InitAllAvailableMonsters();
@@ -383,7 +363,7 @@ extend class WT_MainHandler
 		TotalKillsEver = GetTotalKillsEver();
 	}
 
-	private void InitAvailableWeapons()
+	private void InitAvailableWeapons(int sortType = 0)
 	{
 		AvailableWeapons.Clear();
 		int WFilter = IWADWeaponFilter.GetInt();
@@ -395,6 +375,36 @@ extend class WT_MainHandler
 			if (wpn.Object && ((WFilter == Filter_All || WFilter == IWadTypeWpn || IwadTypeWpn == Filter_None) && (SearchFilter == "" || GetActorTag(wpn.Object).MakeLower().IndexOf(SearchFilter.MakeLower()) != -1)))
 			{
 				AvailableWeapons.Push(AllWeapons[i]);
+			}
+		}
+
+		for (int i = 0; sortType > 0 && i < AvailableWeapons.Size() - 1; ++i)
+		{
+			for (int j = i + 1; j < AvailableWeapons.Size(); ++j)
+			{
+				bool Check;
+				switch (sortType)
+				{
+					// [Ace] Sort by numbers first, then by first letter if the numbers match.
+					case 1:
+						let CurrWeapon = GetDefaultByType(AvailableWeapons[i].Object);
+						let NextWeapon = GetDefaultByType(AvailableWeapons[j].Object);
+
+						Check = CurrWeapon.SlotNumber >= NextWeapon.SlotNumber || (CurrWeapon.SlotNumber == NextWeapon.SlotNumber && String.Format("%s", CurrWeapon.GetClassName()).ByteAt(0) >= String.Format("%s", NextWeapon.GetClassName()).ByteAt(0));
+						break;
+
+					// [Ace] Sort by kills.
+					case 2:
+						Check = AvailableWeapons[i].GetKills() <= AvailableWeapons[j].GetKills();
+						break;
+				}
+
+				if (Check)
+				{
+					let Swap = AvailableWeapons[i];
+					AvailableWeapons[i] = AvailableWeapons[j];
+					AvailableWeapons[j] = Swap;
+				}
 			}
 		}
 	}
@@ -411,6 +421,20 @@ extend class WT_MainHandler
 			if (mon.Object && (MFilter == Filter_All || MFilter == IWadTypeMon || IwadTypeMon == Filter_None))
 			{
 				AvailableMonsters.Push(wpn.Monsters[i]);
+			}
+		}
+
+		// [Ace] Sort by kills.
+		for (int i = 0; i < AvailableMonsters.Size() - 1; ++i)
+		{
+			for (int j = i + 1; j < AvailableMonsters.Size(); ++j)
+			{
+				if (AvailableMonsters[i].Kills <= AvailableMonsters[j].Kills)
+				{
+					let Swap = AvailableMonsters[i];
+					AvailableMonsters[i] = AvailableMonsters[j];
+					AvailableMonsters[j] = Swap;
+				}
 			}
 		}
 	}
@@ -436,6 +460,20 @@ extend class WT_MainHandler
 					NewMonster.Kills = GetTotalKillsForMonster(CurrMonster.Object);
 
 					AvailableMonsters.Push(NewMonster);
+				}
+			}
+		}
+
+		// [Ace] Sort by kills. Yes, this was copy-pasted.
+		for (int i = 0; i < AvailableMonsters.Size() - 1; ++i)
+		{
+			for (int j = i + 1; j < AvailableMonsters.Size(); ++j)
+			{
+				if (AvailableMonsters[i].Kills <= AvailableMonsters[j].Kills)
+				{
+					let Swap = AvailableMonsters[i];
+					AvailableMonsters[i] = AvailableMonsters[j];
+					AvailableMonsters[j] = Swap;
 				}
 			}
 		}
@@ -569,7 +607,7 @@ extend class WT_MainHandler
 		return TotalKills;
 	}
 
-	// [Ace] This doesn't use the AvailableMonsters array because it needs to be independent from search filter, as the filter affects what gets put in that array.
+	// [Ace] This doesn't use the AvailableWeapons array because it needs to be independent from search filter, as the filter affects what gets put in that array.
 	// This is only used to get the preference percentage for the available weapons.
 	private int GetTotalKillsAvailable()
 	{
