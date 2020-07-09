@@ -114,7 +114,7 @@ class OptionMenuWTBlacklistMenu : OptionMenu
 		mParentMenu = parent;
 		mDesc = desc;
 
-		let MainHandler = WT_MainHandler(EventHandler.Find("WT_MainHandler"));
+		let MainHandler = WT_MainHandler(StaticEventHandler.Find("WT_MainHandler"));
 		if (MainHandler)
 		{
 			// Prevents item duplication in menu when re-entering it.
