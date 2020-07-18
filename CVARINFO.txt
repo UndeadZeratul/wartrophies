@@ -23,8 +23,8 @@ user float wt_scorecard_scale = 1.0;
 user int wt_showlite = 3;
 user int wt_lite_orientation = 0;
 user float wt_lite_scale = 1.0;
-user int wt_lite_offset_x = 0;
-user int wt_lite_offset_y = 0;
+user float wt_lite_offset_x = 0;
+user float wt_lite_offset_y = 0;
 user float wt_lite_alpha = 1.0;
 
 user int wt_lite_adv_visibility = 2047; // [Ace] Show all.

@@ -65,8 +65,8 @@ OptionMenu "WT_LiteHudMenu"
 	Option "Lite HUD", "wt_showlite", "LiteHudType"
 	Option "Orientation", "wt_lite_orientation", "LiteHudOrientation"
 	Slider "Scale", "wt_lite_scale", 0.1, 3.0, 0.1, 1
-	Slider "Offset X", "wt_lite_offset_x", 0, 300, 5, 0
-	Slider "Offset Y", "wt_lite_offset_y", 0, 300, 5, 0
+	Slider "Offset X", "wt_lite_offset_x", 0, 2.0, 0.01, 2
+	Slider "Offset Y", "wt_lite_offset_y", 0, 2.0, 0.01, 2
 	Slider "Opacity", "wt_lite_alpha", 0.1, 1.0, 0.05, 2
 	StaticText ""
 	StaticText "----- Visibility Options -----", "Teal"
