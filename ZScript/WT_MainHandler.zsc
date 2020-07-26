@@ -104,7 +104,8 @@ class WT_MainHandler : StaticEventHandler
 			// [Ace] Killer is a projectile that's also not a puff.
 			if (e.Inflictor && e.Inflictor.bMISSILE && !e.Inflictor.bALWAYSPUFF && !e.Inflictor.bPUFFONACTORS)
 			{
-				string WeaponUsed = ProjectileBinds.At(e.Inflictor.GetClassName());
+				string Proj = e.Inflictor.GetClassName();
+				string WeaponUsed = ProjectileBinds.At(Proj.MakeLower());
 				if (WeaponUsed != "")
 				{
 					if (!IsBlacklisted(WeaponUsed))
@@ -150,7 +151,9 @@ class WT_MainHandler : StaticEventHandler
 			let plr = PlayerPawn(e.Thing.target);
 			if (plr && SelectedWeaponWorld)
 			{
-				ProjectileBinds.Insert(e.Thing.GetClassName(), SelectedWeaponWorld.GetClassName());
+				string Proj = e.Thing.GetClassName();
+				string Wpn = SelectedWeaponWorld.GetClassName();
+				ProjectileBinds.Insert(Proj.MakeLower(), Wpn.MakeLower());
 			}
 		}
 	}

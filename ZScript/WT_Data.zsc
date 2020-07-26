@@ -278,6 +278,7 @@ extend class WT_MainHandler
 	private void Initialize()
 	{
 		ProjectileBinds = Dictionary.Create();
+		InitCompatibilityBinds();
 
 		Experience = ExperienceStorage.GetInt();
 		Prestige = PrestigeStorage.GetInt();
@@ -486,6 +487,12 @@ extend class WT_MainHandler
 		{
 			AllWeapons[i].FolderName = FolderBindings.At(AllWeapons[i].DictionaryName); // [Ace] DictionaryName is guaranteed to be lower case. If it's not, see a doctor.
 		}
+	}
+
+	private void InitCompatibilityBinds()
+	{
+		ProjectileBinds.Insert("fdjpcpsealingdamage", "fdjpcpplasmarifle");
+		ProjectileBinds.Insert("fdjpcpfancysealingdamage", "fdjpcpplasmarifle");
 	}
 
 	// --------------------------------------------------
