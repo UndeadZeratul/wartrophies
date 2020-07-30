@@ -35,6 +35,8 @@ extend class WT_MainHandler
 			case 'DeadRegentipede':					return "Imp Healer (Corpse)";
 			case 'DeadArdentipede':					return "Imp Mage (Corpse)";
 			case 'DeadHideousShotgunGuy':			return "Jackboot (Corpse)";
+			case 'UndeadJackbootman':				return "Jackboot (ZM66)";
+			case 'Jackboot':						return "Jackboot (Pump)";
 			case 'DeadZombieStormtrooper':			return "Zombieman (Corpse)";
 			case 'DeadBabuin':						return "Babuin (Corpse)";
 			case 'DeadSpecBabuin':					return "Cloaked Babuin (Corpse)";
