@@ -12,6 +12,7 @@ extend class WT_MainHandler
 		"Hid. Destr.",		"HDBackpack",			"Backpack",
 		"Hid. Destr.",		"AutoReloader",			"7.76mm Reloader",
 		"Hid. Destr.",		"WeaponStashSwitcher",	"Same-Stack Weapon Switcher",
+		"Univ. Rel.",		"HDUniversalReloader",	"Universal Reloader",
 		"HD Follower",		"HDFollower",			"Daina"
 	};
 
