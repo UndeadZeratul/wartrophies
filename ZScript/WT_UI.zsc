@@ -174,7 +174,16 @@ extend class WT_MainHandler
 
 		// --------------- PRETEND WE WERE NEVER HERE ---------------
 
-		StatusBar.BeginHUD(1.0, false);
+		// [Ace] God help me.
+		int Blocks = ScreenBlocks.GetInt();
+		if (Blocks < 11)
+		{
+			StatusBar.BeginStatusBar(false);
+		}
+		else
+		{
+			StatusBar.BeginHUD(1.0, false);
+		}
 		StatusBar.SetSize(StatusBar.RelTop, OriginalWidth, OriginalHeight);
 	}
 

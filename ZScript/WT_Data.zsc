@@ -113,6 +113,8 @@ extend class WT_MainHandler
 	private CVar LiteHudAlpha;
 	private CVar LiteHudVisibilityFlags;
 
+	private CVar ScreenBlocks;
+
 	private int SelectedPage;
 
 	private class<Weapon> SelectedWeaponWorld;
@@ -271,6 +273,8 @@ extend class WT_MainHandler
 		UiFont = CVar.GetCVar('wt_ui_font', players[consoleplayer]);
 		KillSoundType = CVar.GetCVar('wt_killsound', players[consoleplayer]);
 		BlacklistEnabled = CVar.GetCVar('wt_blacklist_enable', players[consoleplayer]);
+
+		ScreenBlocks = CVar.GetCVar('screenblocks', players[consoleplayer]);
 
 		Initialize();
 	}
