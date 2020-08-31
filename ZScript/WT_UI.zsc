@@ -176,7 +176,7 @@ extend class WT_MainHandler
 
 		// [Ace] God help me.
 		int Blocks = ScreenBlocks.GetInt();
-		if (Blocks < 11)
+		if (Blocks < 11 || AutomapActive)
 		{
 			StatusBar.BeginStatusBar(false);
 		}
