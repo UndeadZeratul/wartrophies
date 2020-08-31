@@ -8,6 +8,9 @@ Tapwave
  - Folders for DRLA and Final Doomer.
  - All of the rank names.
 
+HyperUltra64
+ - All of the medals!
+
 m8f
  - Adding Dictionary to GZDoom. None of this would have been possible without it. Thank you!
  - Adding the "nosave" CVARINFO type, which is, ironically, used to save progress between save games.
@@ -19,7 +22,6 @@ phantombeta
  - Proving me wrong every step of the way.
 
 Mor'ladim
- - Editing some of the player ranks. Thanks!
  - Folders for Bullet-Eye.
 
 Sledge
@@ -28,15 +30,6 @@ Sledge
 
 Unreal Tournament (Epic Games)
  - All UI sounds.
-
-Tetris: The Grand Master 3 - Terror-Instinct
- - Weapon medals
-
-Dimahoo by Raizing
- - Genocide medals
-
-Dave Barr at http://www.foreverbroken.org/
- - Rank icons
 
 Blood (Monolith Productions)
  - Prestige "That's Right"
