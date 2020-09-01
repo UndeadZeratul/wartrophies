@@ -173,7 +173,7 @@ class WT_MainHandler : StaticEventHandler
 		let wpn = FindWeapon(SelectedWeaponWorld);
 		if (wpn)
 		{
-			wpn.Reset();
+			AllWeapons.Delete(AllWeapons.Find(wpn));
 			InitLiteHud();
 		}
 		Console.Printf("Weapon statistics successfully reset!");
