@@ -360,6 +360,7 @@ extend class WT_MainHandler
 	private ui void DrawScorecardMain(BaseStatusBar sbar)
 	{
 		int DI_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_ITEM_CENTER;
+		int DI_TL = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_ITEM_LEFT_TOP;
 		int DI_TEXT_LEFT = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_LEFT;
 		int DI_TEXT_CENTER = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_CENTER;
 		int DI_TEXT_RIGHT = BaseStatusBar.DI_SCREEN_CENTER | BaseStatusBar.DI_TEXT_ALIGN_RIGHT;
@@ -480,7 +481,7 @@ extend class WT_MainHandler
 			sbar.DrawImage(SpriteToDraw, (40, -33), DI_CENTER, 1.0, Box);
 
 			// Weapon medals.
-			DrawMedals("WMEDAL", SelWeaponKills, 3, 3, 11, 9, (108, -53), (11, 15), DI_CENTER, 1.0);
+			DrawMedals("WMEDAL", SelWeaponKills, 3, 3, 11, 9, (102, -61), (11, 15), DI_TL, 1.0);
 
 			// --------------- MONSTER LIST & STATS ---------------
 
