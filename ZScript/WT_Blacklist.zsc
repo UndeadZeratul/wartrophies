@@ -5,15 +5,18 @@ extend class WT_MainHandler
 	// [Ace] Works for both weapons and monsters. Inheritance is also taken into account.
 	static const string BlacklistDefs[] =
 	{
-		// Mod				// Class				// Fancy name
-		"Hid. Destr.",		"HDWoundFixer",			"Healing Items",
-		"Hid. Destr.",		"MagManager",			"Mag Manager",
-		"Hid. Destr.",		"PickupManager",		"Item Manager",
-		"Hid. Destr.",		"HDBackpack",			"Backpack",
-		"Hid. Destr.",		"AutoReloader",			"7.76mm Reloader",
-		"Hid. Destr.",		"WeaponStashSwitcher",	"Same-Stack Weapon Switcher",
-		"Univ. Rel.",		"HDUniversalReloader",	"Universal Reloader",
-		"HD Follower",		"HDFollower",			"Daina"
+		// Mod				// Class					// Fancy name
+		"Hid. Destr.",		"HDWoundFixer",				"Healing Items",
+		"Hid. Destr.",		"MagManager",				"Mag Manager",
+		"Hid. Destr.",		"PickupManager",			"Item Manager",
+		"Hid. Destr.",		"HDBackpack",				"Backpack",
+		"Hid. Destr.",		"AutoReloader",				"7.76mm Reloader",
+		"Hid. Destr.",		"WeaponStashSwitcher",		"Same-Stack Weapon Switcher",
+		"Univ. Rel.",		"HDUniversalReloader",		"Universal Reloader",
+		"Armor Patch Kit",	"HDArmorPatchKit",			"Armor Patch Kit",
+		"HD Follower",		"HDFollower",				"Follower",
+		"Ugly as Sin",		"UaS_WoundStabilization",	"Wound Stabilization",
+		"Ugly as Sin",		"UaS_TraumaKit",			"Trauma Kit"
 	};
 
 	private bool IsBlacklisted(class<Actor> cls)
