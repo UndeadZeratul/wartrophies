@@ -235,46 +235,46 @@ extend class WT_MainHandler
 	// INITIALIZATION
 	// --------------------------------------------------
 
-	override void WorldLoaded(WorldEvent e)
+	override void PlayerEntered(PlayerEvent e)
 	{
 		WeaponStorage = CVar.FindCVar('wt_stats_weapons_kills');
 		ExperienceStorage = CVar.FindCVar('wt_stats_experience');
 		PrestigeStorage = CVar.FindCVar('wt_stats_prestige');
 
-		AutosaveInterval = CVar.GetCVar('wt_autosave_interval', players[consoleplayer]);
+		AutosaveInterval = CVar.GetCVar('wt_autosave_interval', players[e.PlayerNumber]);
 
-		IWADWeaponFilter = CVar.GetCVar('wt_filter_iwad_weapons', players[consoleplayer]);
-		IWADMonsterFilter = CVar.GetCVar('wt_filter_iwad_monsters', players[consoleplayer]);
+		IWADWeaponFilter = CVar.GetCVar('wt_filter_iwad_weapons', players[e.PlayerNumber]);
+		IWADMonsterFilter = CVar.GetCVar('wt_filter_iwad_monsters', players[e.PlayerNumber]);
 
-		ScorecardTheme = CVar.GetCVar('wt_scorecard_theme', players[consoleplayer]);
-		ScorecardScale = CVar.GetCVar('wt_scorecard_scale', players[consoleplayer]);
-		DarkerDisplays = CVar.GetCVar('wt_scorecard_blackdisplays', players[consoleplayer]);
+		ScorecardTheme = CVar.GetCVar('wt_scorecard_theme', players[e.PlayerNumber]);
+		ScorecardScale = CVar.GetCVar('wt_scorecard_scale', players[e.PlayerNumber]);
+		DarkerDisplays = CVar.GetCVar('wt_scorecard_blackdisplays', players[e.PlayerNumber]);
 
-		RankSets[Type_Genocide] = CVar.GetCVar('wt_rankset_genocide', players[consoleplayer]);
-		RankSets[Type_Player] = CVar.GetCVar('wt_rankset_player', players[consoleplayer]);
-		RankSets[Type_Weapons] = CVar.GetCVar('wt_rankset_weapons', players[consoleplayer]);
+		RankSets[Type_Genocide] = CVar.GetCVar('wt_rankset_genocide', players[e.PlayerNumber]);
+		RankSets[Type_Player] = CVar.GetCVar('wt_rankset_player', players[e.PlayerNumber]);
+		RankSets[Type_Weapons] = CVar.GetCVar('wt_rankset_weapons', players[e.PlayerNumber]);
 
-		LiteHudType = CVar.GetCVar('wt_showlite', players[consoleplayer]);
-		LiteHudOrientation = CVar.GetCVar('wt_lite_orientation', players[consoleplayer]);
-		LiteHudScale = CVar.GetCVar('wt_lite_scale', players[consoleplayer]);
-		LiteHudOffsetX = CVar.GetCVar('wt_lite_offset_x', players[consoleplayer]);
-		LiteHudOffsetY = CVar.GetCVar('wt_lite_offset_y', players[consoleplayer]);
-		LiteHudAlpha = CVar.GetCVar('wt_lite_alpha', players[consoleplayer]);
-		LiteFolderView = CVar.GetCVar('wt_lite_usefolders', players[consoleplayer]);
-		LiteHudColors[LElement_Labels] = CVar.GetCVar('wt_lite_color_labels', players[consoleplayer]);
-		LiteHudColors[LElement_TotalKills] = CVar.GetCVar('wt_lite_color_totalkills', players[consoleplayer]);
-		LiteHudColors[LElement_GenocideRank] = CVar.GetCVar('wt_lite_color_genociderank', players[consoleplayer]);
-		LiteHudColors[LElement_PlayerRank] = CVar.GetCVar('wt_lite_color_playerrank', players[consoleplayer]);
-		LiteHudColors[LElement_WeaponName] = CVar.GetCVar('wt_lite_color_weaponname', players[consoleplayer]);
-		LiteHudColors[LElement_WeaponRank] = CVar.GetCVar('wt_lite_color_weaponrank', players[consoleplayer]);
-		LiteHudColors[LElement_WeaponKills] = CVar.GetCVar('wt_lite_color_weaponkills', players[consoleplayer]);
-		LiteHudVisibilityFlags = CVar.GetCVar('wt_lite_adv_visibility', players[consoleplayer]);
+		LiteHudType = CVar.GetCVar('wt_showlite', players[e.PlayerNumber]);
+		LiteHudOrientation = CVar.GetCVar('wt_lite_orientation', players[e.PlayerNumber]);
+		LiteHudScale = CVar.GetCVar('wt_lite_scale', players[e.PlayerNumber]);
+		LiteHudOffsetX = CVar.GetCVar('wt_lite_offset_x', players[e.PlayerNumber]);
+		LiteHudOffsetY = CVar.GetCVar('wt_lite_offset_y', players[e.PlayerNumber]);
+		LiteHudAlpha = CVar.GetCVar('wt_lite_alpha', players[e.PlayerNumber]);
+		LiteFolderView = CVar.GetCVar('wt_lite_usefolders', players[e.PlayerNumber]);
+		LiteHudColors[LElement_Labels] = CVar.GetCVar('wt_lite_color_labels', players[e.PlayerNumber]);
+		LiteHudColors[LElement_TotalKills] = CVar.GetCVar('wt_lite_color_totalkills', players[e.PlayerNumber]);
+		LiteHudColors[LElement_GenocideRank] = CVar.GetCVar('wt_lite_color_genociderank', players[e.PlayerNumber]);
+		LiteHudColors[LElement_PlayerRank] = CVar.GetCVar('wt_lite_color_playerrank', players[e.PlayerNumber]);
+		LiteHudColors[LElement_WeaponName] = CVar.GetCVar('wt_lite_color_weaponname', players[e.PlayerNumber]);
+		LiteHudColors[LElement_WeaponRank] = CVar.GetCVar('wt_lite_color_weaponrank', players[e.PlayerNumber]);
+		LiteHudColors[LElement_WeaponKills] = CVar.GetCVar('wt_lite_color_weaponkills', players[e.PlayerNumber]);
+		LiteHudVisibilityFlags = CVar.GetCVar('wt_lite_adv_visibility', players[e.PlayerNumber]);
 
-		UiFont = CVar.GetCVar('wt_ui_font', players[consoleplayer]);
-		KillSoundType = CVar.GetCVar('wt_killsound', players[consoleplayer]);
-		BlacklistEnabled = CVar.GetCVar('wt_blacklist_enable', players[consoleplayer]);
+		UiFont = CVar.GetCVar('wt_ui_font', players[e.PlayerNumber]);
+		KillSoundType = CVar.GetCVar('wt_killsound', players[e.PlayerNumber]);
+		BlacklistEnabled = CVar.GetCVar('wt_blacklist_enable', players[e.PlayerNumber]);
 
-		ScreenBlocks = CVar.GetCVar('screenblocks', players[consoleplayer]);
+		ScreenBlocks = CVar.GetCVar('screenblocks', players[e.PlayerNumber]);
 
 		Initialize();
 	}
