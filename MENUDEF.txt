@@ -179,6 +179,7 @@ OptionValue "LiteHudFolders"
 	5, "DoomRL Arsenal (Weapon Type)"
 	6, "DoomRL Arsenal (Assembly Type)"
 	7, "DoomRL Arsenal (Rarity)"
+	8, "Ashes: Afterglow (Weapon Type)"
 }
 
 OptionValue "LiteHudType"

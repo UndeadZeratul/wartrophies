@@ -353,6 +353,40 @@ extend class WT_MainHandler
 		"rlwidowmakersmg",							"Rifle",				"Stock",				"Unique"
 	};
 
+	static const string AshesDefs[] =
+	{
+		// Class name. Must be lowercase.	// Weapon Type
+	//	"crowbar",									"Crowbar",		//i'll define all weapons in case they get upgrades as well
+	//	"pilebunker",								"Pile Bunker",
+	//	"jackhammer",								"Pile Bunker",
+		"revolver",									"0.45 Revolver",
+		"revolver2",								"0.45 Revolver",
+		"revolver3",								"0.45 Revolver",
+		"glock",									"9mm Autoloader",
+		"glock2",									"9mm Autoloader",
+		"pumpaction",								"Pump-action shotgun",
+		"pumpaction2",								"Pump-action shotgun",
+		"sawedoff",									"Sawed-off Shotgun",
+		"sawedoff2",								"Sawed-off Shotgun",
+		"ingram",									"Machine Pistol",
+		"ingram2",									"Machine Pistol",
+		"napalmgun",								"Master Blaster",
+		"napalmgun2",								"Master Blaster",
+		"napalmgun3",								"Master Blaster",
+		"junkermusket",								"Junker Musket",
+		"junkermusket2",							"Junker Musket",
+		"pipebomb",									"Pipebomb",
+		"thumper",									"Grenade Launcher",
+		"bootknifelantern",							"Boot Knife",		//this is how 2063 works
+		"bootkniferevolver",						"Boot Knife",
+		"bootknifeglock",							"Boot Knife",
+		"bootknifesawedoff",						"Boot Knife",
+		"bootknifegrizzly",							"Boot Knife",
+		"bootknifeingram",							"Boot Knife",
+		"bootknifeingram2",							"Boot Knife",
+		"bootknifethumper",							"Boot Knife"
+	};
+	
 	private void CreateFolderBindings()
 	{
 		FolderBindings = Dictionary.Create();
@@ -367,6 +401,7 @@ extend class WT_MainHandler
 			case 5: for (int i = 0; i < DrlaDefs.Size(); i += 4) FolderBindings.Insert(DrlaDefs[i], DrlaDefs[i + 1]); break;
 			case 6: for (int i = 0; i < DrlaDefs.Size(); i += 4) FolderBindings.Insert(DrlaDefs[i], DrlaDefs[i + 2]); break;
 			case 7: for (int i = 0; i < DrlaDefs.Size(); i += 4) FolderBindings.Insert(DrlaDefs[i], DrlaDefs[i + 3]); break;
+			case 8: for (int i = 0; i < AshesDefs.Size(); i += 2) FolderBindings.Insert(AshesDefs[i], AshesDefs[i + 1]); break;
 		}
 	}
 }
