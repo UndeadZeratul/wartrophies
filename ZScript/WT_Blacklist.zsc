@@ -5,25 +5,26 @@ extend class WT_MainHandler
 	// [Ace] Works for both weapons and monsters. Inheritance is also taken into account.
 	static const string BlacklistDefs[] =
 	{
-		// Mod				// Class					// Fancy name
-		"Hid. Destr.",		"HDWoundFixer",				"Healing Items",
-		"Hid. Destr.",		"MagManager",				"Mag Manager",
-		"Hid. Destr.",		"PickupManager",			"Item Manager",
-		"Hid. Destr.",		"HDBackpack",				"Backpack",
-		"Hid. Destr.",		"AutoReloader",				"7.76mm Reloader",
-		"Hid. Destr.",		"WeaponStashSwitcher",		"Same-Stack Weapon Switcher",
-		"Univ. Rel.",		"HDUniversalReloader",		"Universal Reloader",
-		"Armor Patch Kit",	"HDArmorPatchKit",			"Armor Patch Kit",
-		"HD Follower",		"HDFollower",				"Follower",
-		"Ugly as Sin",		"UaS_WoundStabilization",	"Wound Stabilization",
-		"Ugly as Sin",		"UaS_TraumaKit",			"Trauma Kit"
+		// Class				
+		"HDWoundFixer",	
+		"MagManager",
+		"PickupManager",
+		"HDBackpack",
+		"AutoReloader",
+		"WeaponStashSwitcher",
+		"HDUniversalReloader",
+		"HDArmorPatchKit",
+		"HDFollower",
+		"UaS_WoundStabilization",
+		"UaS_TraumaKit",
+		"HDSoulCube"
 	};
 
 	private bool IsBlacklisted(class<Actor> cls)
 	{
-		for (int i = 0; BlackListEnabled.GetBool() && i < BlacklistDefs.Size(); i += 3)
+		for (int i = 0; BlackListEnabled.GetBool() && i < BlacklistDefs.Size(); ++i)
 		{
-			class<Actor> BlacklistedClass = BlacklistDefs[i + 1];
+			class<Actor> BlacklistedClass = BlacklistDefs[i];
 			if (cls is BlacklistedClass)
 			{
 				return true;
