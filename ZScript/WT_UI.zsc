@@ -874,6 +874,7 @@ extend class WT_MainHandler
 					case UiEvent.Key_Escape:
 						EventHandler.SendNetworkEvent("WT_ClearFilter");
 						EventHandler.SendNetworkEvent("WT_ToggleUi");
+						SubPage = 0;
 						break;
 
 					// Enter search mode. Chars: Space
