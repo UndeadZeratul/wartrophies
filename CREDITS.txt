@@ -6,7 +6,7 @@ Tapwave
  - FragTrak, which inspired me to make a universal version.
  - Various feature suggestions and misc support, such as picking the genocide medals and overhauling the progression numbers.
  - Folders for DRLA and Final Doomer.
- - All of the rank names.
+ - Ranks: Default, Alternate, Festive
 
 HyperUltra64
  - All of the medals!
@@ -30,6 +30,9 @@ Sledge
 
 IKA
  - Ashes folders.
+
+XSlayer300
+ - Ranks: Demon, Fantasy
 
 Unreal Tournament (Epic Games)
  - All UI sounds.

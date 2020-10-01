@@ -209,17 +209,21 @@ OptionValue "RankSetWeapons"
 	0, "Default"
 	1, "Alternate"
 	2, "Festive"
+	3, "Fantasy"
 }
 
 OptionValue "RankSetPlayer"
 {
 	0, "Default"
 	1, "Festive"
+	2, "Doom"
 }
 
 OptionValue "RankSetGenocide"
 {
 	0, "Default"
+	1, "Festive"
+	2, "Demon"
 }
 
 // [Ace] See LANGUAGE.txt
