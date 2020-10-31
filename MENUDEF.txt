@@ -73,18 +73,18 @@ OptionMenu "WT_LiteHudMenu"
 	Slider "Opacity", "wt_lite_alpha", 0.1, 1.0, 0.05, 2
 	StaticText ""
 	StaticText "----- Visibility Options -----", "Teal"
-	VisibilityOption "Player Name", "wt_lite_adv_visibility", "OnOff", 0
-	VisibilityOption "Total Kills", "wt_lite_adv_visibility", "OnOff", 1
-	VisibilityOption "Genocide Rank", "wt_lite_adv_visibility", "OnOff", 2
-	VisibilityOption "Genocide Medal", "wt_lite_adv_visibility", "OnOff", 3
-	VisibilityOption "Player Rank", "wt_lite_adv_visibility", "OnOff", 4
-	VisibilityOption "Player Experience", "wt_lite_adv_visibility", "OnOff", 5
-	VisibilityOption "Player Medal", "wt_lite_adv_visibility", "OnOff", 6
+	FlagOption "Player Name", "wt_lite_adv_visibility", "OnOff", 0
+	FlagOption "Total Kills", "wt_lite_adv_visibility", "OnOff", 1
+	FlagOption "Genocide Rank", "wt_lite_adv_visibility", "OnOff", 2
+	FlagOption "Genocide Medal", "wt_lite_adv_visibility", "OnOff", 3
+	FlagOption "Player Rank", "wt_lite_adv_visibility", "OnOff", 4
+	FlagOption "Player Experience", "wt_lite_adv_visibility", "OnOff", 5
+	FlagOption "Player Medal", "wt_lite_adv_visibility", "OnOff", 6
 	StaticText ""
-	VisibilityOption "Weapon Name", "wt_lite_adv_visibility", "OnOff", 7
-	VisibilityOption "Weapon Rank", "wt_lite_adv_visibility", "OnOff", 8
-	VisibilityOption "Weapon Kills", "wt_lite_adv_visibility", "OnOff", 9
-	VisibilityOption "Weapon Medals", "wt_lite_adv_visibility", "OnOff", 10
+	FlagOption "Weapon Name", "wt_lite_adv_visibility", "OnOff", 7
+	FlagOption "Weapon Rank", "wt_lite_adv_visibility", "OnOff", 8
+	FlagOption "Weapon Kills", "wt_lite_adv_visibility", "OnOff", 9
+	FlagOption "Weapon Medals", "wt_lite_adv_visibility", "OnOff", 10
 }
 
 OptionMenu "WT_LiteHudFoldersMenu"
