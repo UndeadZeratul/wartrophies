@@ -17,7 +17,9 @@ extend class WT_MainHandler
 		"HDFollower",
 		"UaS_WoundStabilization",
 		"UaS_TraumaKit",
-		"HDSoulCube"
+		"HDSoulCube",
+		"HDMagazineReloader",
+		"HDTeleporter"
 	};
 
 	private bool IsBlacklisted(class<Actor> cls)
