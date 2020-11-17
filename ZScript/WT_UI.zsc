@@ -816,14 +816,14 @@ extend class WT_MainHandler
 				{
 					// Cycle pages left.
 					case UiEvent.Key_Left:
-						EventHandler.SendNetworkEvent("WT_PreviousPage");
 						OnChangeScorecardPage();
+						EventHandler.SendNetworkEvent("WT_PreviousPage");
 						break;
 
 					// Cycle pages right.
 					case UiEvent.Key_Right:
-						EventHandler.SendNetworkEvent("WT_NextPage");
 						OnChangeScorecardPage();
+						EventHandler.SendNetworkEvent("WT_NextPage");
 						break;
 
 					// Move weapon selection up.
@@ -879,7 +879,10 @@ extend class WT_MainHandler
 
 					// Enter search mode. Chars: Space
 					case 32:
-						if (SelectedPage != Page_Main) break;
+						if (SelectedPage != Page_Main)
+						{
+							break;
+						}
 						InSearchMode = true;
 						EventHandler.SendNetworkEvent("WT_ClearFilter");
 						break;
