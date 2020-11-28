@@ -701,13 +701,13 @@ extend class WT_MainHandler
 		{
 			switch (element)
 			{
-				case LElement_Labels: return "WT_FadedBrown";
-				case LElement_TotalKills: return "WT_Red";
-				case LElement_GenocideRank: return "WT_FadedRed";
-				case LElement_PlayerRank: return "WT_DarkGreen";
-				case LElement_WeaponName: return "WT_White";
-				case LElement_WeaponRank: return "WT_Gold";
-				case LElement_WeaponKills: return "WT_Red";
+				case LElement_Labels: return "WT_Old_FadedBrown";
+				case LElement_TotalKills: return "WT_Old_Red";
+				case LElement_GenocideRank: return "WT_Old_FadedRed";
+				case LElement_PlayerRank: return "WT_Old_DarkGreen";
+				case LElement_WeaponName: return "WT_Old_White";
+				case LElement_WeaponRank: return "WT_Old_Gold";
+				case LElement_WeaponKills: return "WT_Old_Red";
 			}
 		}
 
