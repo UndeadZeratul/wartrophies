@@ -19,7 +19,8 @@ extend class WT_MainHandler
 		"UaS_TraumaKit",
 		"HDSoulCube",
 		"HDMagazineReloader",
-		"HDTeleporter"
+		"HDTeleporter",
+		"HDRiftGrenades"
 	};
 
 	private bool IsBlacklisted(class<Actor> cls)
