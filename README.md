@@ -1,6 +1,6 @@
 ### Installation
 ---
-Download the zip and load it into GZDoom. No need to change its extension to .pk3. However, a .pk3 extension is required when loading the mod with Delta Touch.
+Download the zip and load it into GZDoom. No need to change its extension to .pk3.
 
 ### Important
 ---
