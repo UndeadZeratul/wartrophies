@@ -146,10 +146,9 @@ class WT_MainHandler : StaticEventHandler
 	override void WorldThingSpawned(WorldEvent e)
 	{
 		// [Ace] Some mods' puffs have "+MISSILE". Don't consider them a projectile if they also have one of the puff flags.
-		if (e.Thing && e.Thing.bMISSILE && !e.Thing.bALWAYSPUFF && !e.Thing.bPUFFONACTORS && e.Thing.target && e.Thing.target is "PlayerPawn")
+		if (e.Thing && e.Thing.bMISSILE && !e.Thing.bALWAYSPUFF && !e.Thing.bPUFFONACTORS)
 		{
-			let plr = PlayerPawn(e.Thing.target);
-			if (plr && SelectedWeaponWorld)
+			if ((e.Thing.target is 'PlayerPawn' || e.Thing.master is 'PlayerPawn') && SelectedWeaponWorld)
 			{
 				string Proj = e.Thing.GetClassName();
 				string Wpn = SelectedWeaponWorld.GetClassName();
