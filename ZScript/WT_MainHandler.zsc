@@ -14,9 +14,15 @@ class WT_MainHandler : StaticEventHandler
 	// FUNCTIONS
 	// --------------------------------------------------
 
-	void RegisterKill(class<Weapon> wpn, class<Actor> victim)
+	void RegisterKill(Name wpn, class<Actor> victim)
 	{
-		WT_WeaponData Weapon = FindWeapon(wpn);
+		class<Weapon> wpncls = wpn;
+		if (!wpncls)
+		{
+			return;
+		}
+
+		WT_WeaponData Weapon = FindWeapon(wpncls);
 
 		// [Ace] If weapon exists, update info.
 		if (Weapon)
@@ -47,11 +53,11 @@ class WT_MainHandler : StaticEventHandler
 		{
 			Weapon = new ("WT_WeaponData");
 
-			string WeaponName = wpn.GetClassName();
+			string WeaponName = wpncls.GetClassName();
 			WeaponName = WeaponName.MakeLower();
 
 			Weapon.DictionaryName = WeaponName;
-			Weapon.Object = wpn;
+			Weapon.Object = wpncls;
 			Weapon.FolderName = FolderBindings.At(WeaponName);
 
 				WT_MonsterData Monster = new("WT_MonsterData");
@@ -101,40 +107,47 @@ class WT_MainHandler : StaticEventHandler
 	{
 		if (e.Thing && e.Thing.bISMONSTER && e.DamageSource && e.DamageSource.player && players[consoleplayer] == e.DamageSource.player && e.Thing.Health <= 0 && !IsBlacklisted(e.Thing.GetClass()))
 		{
-			// [Ace] Killer is a projectile that's also not a puff.
-			if (e.Inflictor && e.Inflictor.bMISSILE && !e.Inflictor.bALWAYSPUFF && !e.Inflictor.bPUFFONACTORS)
+			if (e.Inflictor)
 			{
-				string Proj = e.Inflictor.GetClassName();
-				string WeaponUsed = ProjectileBinds.At(Proj.MakeLower());
-				if (WeaponUsed != "")
+				Name ClsName = e.Inflictor.GetClassName();
+				switch (ClsName)
 				{
-					if (!IsBlacklisted(WeaponUsed))
-					{
-						RegisterKill(WeaponUsed, e.Thing.GetClass());
-						PlayKillSound();
-					}
+					case 'HDSoulCube': RegisterKill('HDSoulCube', e.Thing.GetClass()); break;
+					default:
+						// [Ace] Killer is a projectile that's also not a puff.
+						if (e.Inflictor.bMISSILE && !e.Inflictor.bALWAYSPUFF && !e.Inflictor.bPUFFONACTORS)
+						{
+							string Proj = ClsName;
+							string WeaponUsed = ProjectileBinds.At(Proj.MakeLower());
+							if (WeaponUsed != "")
+							{
+								if (!IsBlacklisted(WeaponUsed))
+								{
+									RegisterKill(WeaponUsed, e.Thing.GetClass());
+									PlayKillSound();
+								}
+							}
+						}
+						break;
 				}
 			}
 
 			// [Ace] Killer is the player's hitscan or telefrag. Don't blacklist the telefrag.
-			else
+			else if (e.DamageSource is "PlayerPawn")
 			{
-				if (e.DamageSource is "PlayerPawn")
+				switch (e.DamageType)
 				{
-					switch (e.DamageType)
-					{
-						case 'Telefrag': RegisterKill("WT_Telefrag", e.Thing.GetClass()); break;
-						case 'GloryKill': RegisterKill("WT_D4TGloryKills", e.Thing.GetClass()); break;
-						default:
-							if (SelectedWeaponWorld && !IsBlacklisted(SelectedWeaponWorld))
-							{
-								RegisterKill(SelectedWeaponWorld, e.Thing.GetClass());
-							}
-							else return;
-							break;
-					}
-					PlayKillSound();
+					case 'Telefrag': RegisterKill('WT_Telefrag', e.Thing.GetClass()); break;
+					case 'GloryKill': RegisterKill('WT_D4TGloryKills', e.Thing.GetClass()); break;
+					default:
+						if (SelectedWeaponWorld && !IsBlacklisted(SelectedWeaponWorld))
+						{
+							RegisterKill(SelectedWeaponWorld.GetClassName(), e.Thing.GetClass());
+						}
+						else return;
+						break;
 				}
+				PlayKillSound();
 			}
 		}
 	}
