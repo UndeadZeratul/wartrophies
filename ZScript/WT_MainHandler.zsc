@@ -80,6 +80,8 @@ class WT_MainHandler : StaticEventHandler
 		int ExperienceGained = int(min(12000, GetDefaultByType(victim).Health) * 0.05 * SkillNumber * FastMonstersMult);
 
 		Experience += ExperienceGained;
+
+		PlayKillSound();
 	}
 
 	private void PlayKillSound()
@@ -109,31 +111,31 @@ class WT_MainHandler : StaticEventHandler
 		{
 			if (e.Inflictor)
 			{
-				Name ClsName = e.Inflictor.GetClassName();
-				switch (ClsName)
+				// [Ace] Missiles.
+				if (e.Inflictor.bMISSILE && !e.Inflictor.bALWAYSPUFF && !e.Inflictor.bPUFFONACTORS)
 				{
-					case 'HDSoulCube': RegisterKill('HDSoulCube', e.Thing.GetClass()); break;
-					default:
-						// [Ace] Killer is a projectile that's also not a puff.
-						if (e.Inflictor.bMISSILE && !e.Inflictor.bALWAYSPUFF && !e.Inflictor.bPUFFONACTORS)
+					string Proj = e.Inflictor.GetClassName();
+					string WeaponUsed = ProjectileBinds.At(Proj.MakeLower());
+					if (WeaponUsed != "")
+					{
+						if (!IsBlacklisted(WeaponUsed))
 						{
-							string Proj = ClsName;
-							string WeaponUsed = ProjectileBinds.At(Proj.MakeLower());
-							if (WeaponUsed != "")
-							{
-								if (!IsBlacklisted(WeaponUsed))
-								{
-									RegisterKill(WeaponUsed, e.Thing.GetClass());
-									PlayKillSound();
-								}
-							}
+							RegisterKill(WeaponUsed, e.Thing.GetClass());
+							return;
 						}
-						break;
+					}
+				}
+				else // [Ace] Special cases.
+				{
+					switch (e.Inflictor.GetClassName())
+					{
+						case 'HDSoulCube': RegisterKill('HDSoulCube', e.Thing.GetClass()); return;
+					}
 				}
 			}
 
-			// [Ace] Killer is the player's hitscan or telefrag. Don't blacklist the telefrag.
-			else if (e.DamageSource is "PlayerPawn")
+			// [Ace] Hitscans and everything else.
+			if (e.DamageSource is 'PlayerPawn')
 			{
 				switch (e.DamageType)
 				{
@@ -144,10 +146,8 @@ class WT_MainHandler : StaticEventHandler
 						{
 							RegisterKill(SelectedWeaponWorld.GetClassName(), e.Thing.GetClass());
 						}
-						else return;
 						break;
 				}
-				PlayKillSound();
 			}
 		}
 	}
