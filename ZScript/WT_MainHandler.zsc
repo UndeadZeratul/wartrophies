@@ -127,7 +127,6 @@ class WT_MainHandler : StaticEventHandler
 					Array<string> SplitString;
 					WeaponUsed.Split(SplitString, "||");
 
-					Console.Printf("%s, %s", e.Inflictor.GetClassName(), SplitString[0]);
 					if (!IsBlacklisted(SplitString[0]) && consoleplayer == int(SplitString[1].ToDouble()))
 					{
 						RegisterKill(SplitString[0], e.Thing.GetClass());
