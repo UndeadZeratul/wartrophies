@@ -177,7 +177,7 @@ class WT_MainHandler : StaticEventHandler
 				ActT = PlayerPawn(NextT);
 				break;
 			}
-			else
+			else if (NextT)
 			{
 				NextT = NextT.target;
 			}
@@ -187,7 +187,7 @@ class WT_MainHandler : StaticEventHandler
 				ActM = PlayerPawn(NextM);
 				break;
 			}
-			else
+			else if (NextM)
 			{
 				NextM = NextM.target;
 			}
