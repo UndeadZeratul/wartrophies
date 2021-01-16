@@ -45,7 +45,10 @@ class WT_MainHandler : StaticEventHandler
 
 				Weapon.Monsters.Push(Monster);
 			}
-			SelWeaponKills++;
+			if (SelectedWeaponWorld == wpn)
+			{
+				SelWeaponKills++;
+			}
 			TotalKillsEver++;
 		}
 		// [Ace] Otherwise create a new weapon.
@@ -107,35 +110,34 @@ class WT_MainHandler : StaticEventHandler
 	// 30 bucks I'm not paying up if I lose.
 	override void WorldThingDamaged(WorldEvent e)
 	{
-		if (e.Thing && e.Thing.bISMONSTER && e.DamageSource && e.DamageSource.player && players[consoleplayer] == e.DamageSource.player && e.Thing.Health <= 0 && !IsBlacklisted(e.Thing.GetClass()))
+		if (e.Thing && e.Thing.bISMONSTER && e.Thing.Health <= 0 && !IsBlacklisted(e.Thing.GetClass()))
 		{
-			if (e.Inflictor)
+			if (e.Inflictor) // [Ace] See if maybe actor is mapped.
 			{
-				// [Ace] Missiles.
-				if (e.Inflictor.bMISSILE && !e.Inflictor.bALWAYSPUFF && !e.Inflictor.bPUFFONACTORS)
+				// [Ace] Check special cases first.
+				switch (e.Inflictor.GetClassName())
 				{
-					string Proj = e.Inflictor.GetClassName();
-					string WeaponUsed = ProjectileBinds.At(Proj.MakeLower());
-					if (WeaponUsed != "")
-					{
-						if (!IsBlacklisted(WeaponUsed))
-						{
-							RegisterKill(WeaponUsed, e.Thing.GetClass());
-							return;
-						}
-					}
+					case 'HDSoulCube': RegisterKill('HDSoulCube', e.Thing.GetClass()); return;
 				}
-				else // [Ace] Special cases.
+
+				string Inf = e.Inflictor.GetClassName();
+				string WeaponUsed = InflictorBinds.At(Inf.MakeLower());
+				if (WeaponUsed != "")
 				{
-					switch (e.Inflictor.GetClassName())
+					Array<string> SplitString;
+					WeaponUsed.Split(SplitString, "||");
+
+					Console.Printf("%s, %s", e.Inflictor.GetClassName(), SplitString[0]);
+					if (!IsBlacklisted(SplitString[0]) && consoleplayer == int(SplitString[1].ToDouble()))
 					{
-						case 'HDSoulCube': RegisterKill('HDSoulCube', e.Thing.GetClass()); return;
+						RegisterKill(SplitString[0], e.Thing.GetClass());
+						return;
 					}
 				}
 			}
 
 			// [Ace] Hitscans and everything else.
-			if (e.DamageSource is 'PlayerPawn')
+			if (e.DamageSource is 'PlayerPawn' && e.DamageSource.player == players[consoleplayer])
 			{
 				switch (e.DamageType)
 				{
@@ -153,19 +155,61 @@ class WT_MainHandler : StaticEventHandler
 	}
 
 	// --------------------------------------------------
-	// PROJECTILE TO WEAPON ASSIGNMENT
+	// DAMAGER TO WEAPON ASSIGNMENT
 	// --------------------------------------------------
 
 	override void WorldThingSpawned(WorldEvent e)
 	{
-		// [Ace] Some mods' puffs have "+MISSILE". Don't consider them a projectile if they also have one of the puff flags.
-		if (e.Thing && e.Thing.bMISSILE && !e.Thing.bALWAYSPUFF && !e.Thing.bPUFFONACTORS)
+		if (!e.Thing) // [Ace] How???
 		{
-			if ((e.Thing.target is 'PlayerPawn' || e.Thing.master is 'PlayerPawn') && SelectedWeaponWorld)
+			return;
+		}
+
+		// [Ace] Go through the entire pointer chain until you either run out of iterations or finally find the player. When you do, store their weapon.
+		PlayerPawn ActT, ActM; 
+		Actor NextT = e.Thing.target;
+		Actor NextM = e.Thing.master;
+
+		for (int i = 0; i < 6; ++i) // [Ace] Used to prevent infinite recursion.
+		{
+			if (NextT is 'PlayerPawn')
 			{
-				string Proj = e.Thing.GetClassName();
-				string Wpn = SelectedWeaponWorld.GetClassName();
-				ProjectileBinds.Insert(Proj.MakeLower(), Wpn.MakeLower());
+				ActT = PlayerPawn(NextT);
+				break;
+			}
+			else
+			{
+				NextT = NextT.target;
+			}
+
+			if (NextM is 'PlayerPawn')
+			{
+				ActM = PlayerPawn(NextM);
+				break;
+			}
+			else
+			{
+				NextM = NextM.target;
+			}
+		}
+
+		int PlayerNum = -1;
+		if (SelectedWeaponWorld)
+		{
+			if (ActT)
+			{
+				PlayerNum = ActT.PlayerNumber();
+			}
+			else if (ActM)
+			{
+				PlayerNum = ActM.PlayerNumber();
+			}
+
+			if (PlayerNum > -1)
+			{
+				string Act = e.Thing.GetClassName();
+				string Wpn = SelectedWeaponWorld.GetClassName().."||"..PlayerNum;
+				InflictorBinds.Insert(Act.MakeLower(), Wpn.MakeLower());
 			}
 		}
 	}
