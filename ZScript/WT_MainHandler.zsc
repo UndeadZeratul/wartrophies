@@ -165,9 +165,8 @@ class WT_MainHandler : StaticEventHandler
 		}
 
 		// [Ace] Go through the entire pointer chain until you either run out of iterations or finally find the player. When you do, store their weapon.
-		PlayerPawn ActT, ActM; 
+		PlayerPawn ActT; 
 		Actor NextT = e.Thing.target;
-		Actor NextM = e.Thing.master;
 
 		for (int i = 0; i < 6; ++i) // [Ace] Used to prevent infinite recursion.
 		{
@@ -180,16 +179,6 @@ class WT_MainHandler : StaticEventHandler
 			{
 				NextT = NextT.target;
 			}
-
-			if (NextM is 'PlayerPawn')
-			{
-				ActM = PlayerPawn(NextM);
-				break;
-			}
-			else if (NextM)
-			{
-				NextM = NextM.target;
-			}
 		}
 
 		int PlayerNum = -1;
@@ -198,10 +187,6 @@ class WT_MainHandler : StaticEventHandler
 			if (ActT)
 			{
 				PlayerNum = ActT.PlayerNumber();
-			}
-			else if (ActM)
-			{
-				PlayerNum = ActM.PlayerNumber();
 			}
 
 			if (PlayerNum > -1)
