@@ -3,23 +3,24 @@ extend class WT_MainHandler
 	private CVar BlacklistEnabled;
 
 	// [Ace] Works for both weapons and monsters. Inheritance is also taken into account.
-	static const string BlacklistDefs[] =
+	static const Name BlacklistDefs[] =
 	{
-		// Class				
-		"HDWoundFixer",	
-		"MagManager",
-		"PickupManager",
-		"HDBackpack",
-		"AutoReloader",
-		"WeaponStashSwitcher",
-		"HDUniversalReloader",
-		"HDArmorPatchKit",
-		"HDFollower",
-		"UaS_WoundStabilization",
-		"UaS_TraumaKit",
-		"HDSoulCube",
-		"HDMagazineReloader",
-		"HDTeleporter"
+		'HDWoundFixer',
+		'MagManager',
+		'PickupManager',
+		'HDBackpack',
+		'AutoReloader',
+		'WeaponStashSwitcher',
+		'HDUniversalReloader',
+		'HDArmorPatchKit',
+		'HDFollower',
+		'UaS_WoundStabilization',
+		'UaS_TraumaKit',
+		'HDSoulCube',
+		'HDMagazineReloader',
+		'HDTeleporter',
+		'HDWeaponUpgradeKit',
+		'DSDInterface'
 	};
 
 	private bool IsBlacklisted(class<Actor> cls)
