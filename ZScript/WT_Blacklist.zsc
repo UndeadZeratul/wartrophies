@@ -16,7 +16,6 @@ extend class WT_MainHandler
 		'HDFollower',
 		'UaS_WoundStabilization',
 		'UaS_TraumaKit',
-		'HDSoulCube',
 		'HDMagazineReloader',
 		'HDTeleporter',
 		'HDWeaponUpgradeKit',
