@@ -726,6 +726,7 @@ extend class WT_MainHandler
 					default: return "WT_Old_FadedBrown";
 					case 1: return "WT_LightSteelBlue";
 					case 2: return "WT_Old_Orange";
+					case 3: return "WT_LightSteelBlue";
 				}
 			case SElement_WeaponList:
 				switch (Theme)
@@ -733,6 +734,7 @@ extend class WT_MainHandler
 					default: return "WT_Old_FadedBrown";
 					case 1: return "WT_SlateGray";
 					case 2: return "WT_Old_FadedOrange";
+					case 3: return "WT_SlateGray";
 				}
 			case SElement_WeaponListAlt:
 				switch (Theme)
@@ -740,6 +742,7 @@ extend class WT_MainHandler
 					default: return "WT_Old_FadedBrownAlt";
 					case 1: return "WT_LightSteelBlue";
 					case 2: return "WT_Old_FadedOrangeAlt";
+					case 3: return "WT_LightSteelBlue";
 				}
 			case SElement_SelectedWeapon:
 				switch (Theme)
@@ -747,6 +750,7 @@ extend class WT_MainHandler
 					default: return "WT_Old_OrangeRed";
 					case 1: return "WT_LightSteelBlue";
 					case 2: return "WT_Old_Orange";
+					case 3: return "WT_LightSteelBlue";
 				}
 		}
 
