@@ -114,10 +114,13 @@ class WT_MainHandler : StaticEventHandler
 		{
 			if (e.Inflictor) // [Ace] See if maybe actor is mapped.
 			{
-				// [Ace] Check special cases first.
-				switch (e.Inflictor.GetClassName())
+				if (e.Inflictor.master && e.Inflictor.master.player == players[consoleplayer])
 				{
-					case 'HDSoulCube': RegisterKill('HDSoulCube', e.Thing.GetClass()); return;
+					// [Ace] Check special cases first.
+					switch (e.Inflictor.GetClassName())
+					{
+						case 'HDSoulCube': RegisterKill('HDSoulCube', e.Thing.GetClass()); return;
+					}
 				}
 
 				string Inf = e.Inflictor.GetClassName();
