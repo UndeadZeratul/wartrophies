@@ -133,6 +133,7 @@ class WT_MainHandler : StaticEventHandler
 					if (!IsBlacklisted(SplitString[0]) && consoleplayer == int(SplitString[1].ToDouble()))
 					{
 						RegisterKill(SplitString[0], e.Thing.GetClass());
+						InflictorBinds.Remove(Inf.MakeLower());
 						return;
 					}
 				}
