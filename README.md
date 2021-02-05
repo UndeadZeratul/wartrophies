@@ -36,3 +36,9 @@ Certain mods don't play too well with War Trophies. They will work, but not alwa
 - Add an Icon property to your weapons or define a Spawn state sprite.  
 *Again, will work without it, but sometimes Ready state sprites may be used and it'd look bad.*
 - Prefix your weapon classes! There have been reports of weapons from one mod affecting a weapon from another because they both shared the same class name.
+
+### Blacklisting Classes
+---
+- You don't need to touch War Trophies to do that. If you have classes in your own mod that you wish to be blacklisted, add a WTBLKLST lump to your mod's root directory, then separate each blacklisted class with a comma. You can place them on new lines and such, but don't use comments.
+
+Example: `LostSoul, Revenant, SpiderMastermind, Cyberdemon, BossBrain`

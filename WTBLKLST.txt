@@ -1,0 +1,8 @@
+HDWoundFixer,
+MagManager,
+PickupManager,
+HDBackpack,
+AutoReloader,
+WeaponStashSwitcher,
+UaS_WoundStabilization,
+UaS_TraumaKit

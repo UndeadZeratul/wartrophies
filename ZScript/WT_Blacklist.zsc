@@ -3,35 +3,53 @@ extend class WT_MainHandler
 	private CVar BlacklistEnabled;
 
 	// [Ace] Works for both weapons and monsters. Inheritance is also taken into account.
-	static const Name BlacklistDefs[] =
-	{
-		'HDWoundFixer',
-		'MagManager',
-		'PickupManager',
-		'HDBackpack',
-		'AutoReloader',
-		'WeaponStashSwitcher',
-		'HDUniversalReloader',
-		'HDArmorPatchKit',
-		'HDFollower',
-		'UaS_WoundStabilization',
-		'UaS_TraumaKit',
-		'HDMagazineReloader',
-		'HDTeleporter',
-		'HDWeaponUpgradeKit',
-		'DSDInterface'
-	};
+	Array<class<Actor> > BlacklistDefs;
 
 	private bool IsBlacklisted(class<Actor> cls)
 	{
-		for (int i = 0; BlackListEnabled.GetBool() && i < BlacklistDefs.Size(); ++i)
+		if (BlackListEnabled.GetBool())
 		{
-			class<Actor> BlacklistedClass = BlacklistDefs[i];
-			if (cls is BlacklistedClass)
+			for (int i = 0; i < BlacklistDefs.Size(); ++i)
 			{
-				return true;
+				if (cls is BlacklistDefs[i])
+				{
+					return true;
+				}
 			}
 		}
 		return false;
+	}
+
+	// [Ace] Copy-pasted from Universal Gibs with some edits.
+	override void OnRegister()
+	{
+		int LumpNum = -1;
+		while ((LumpNum = Wads.FindLump("WTBLKLST", LumpNum + 1, Wads.GlobalNamespace)) >= 0)
+		{
+			string BlacklistLumpText = Wads.ReadLump(LumpNum);
+			BlacklistLumpText.Replace("\n", "");
+			BlacklistLumpText.Replace("\r", "");
+			BlacklistLumpText.Replace(" ", "");
+
+			Array<string> ParsedBlacklist;
+			BlacklistLumpText.Split(ParsedBlacklist, ",");
+
+			for (int i = 0; i < ParsedBlacklist.Size(); ++i)
+			{
+				string ClassName = ParsedBlacklist[i];
+
+				// [Ace] The last character of the last element will be either end-of-line or some sort of an invisible termination character. It is added to the string as well, and that messes things up.
+				if (i == ParsedBlacklist.Size() - 1)
+				{
+					ClassName.DeleteLastCharacter();
+				}
+
+				class<Actor> BlacklistedClass = ClassName;
+				if (BlacklistedClass && BlacklistDefs.Find(BlacklistedClass) == BlacklistDefs.Size())
+				{
+					BlacklistDefs.Push(BlacklistedClass);
+				}
+			}
+		}
 	}
 }
