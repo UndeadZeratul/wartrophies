@@ -5,4 +5,5 @@ HDBackpack,
 AutoReloader,
 WeaponStashSwitcher,
 UaS_WoundStabilization,
-UaS_TraumaKit
+UaS_TraumaKit,
+Tripwire
