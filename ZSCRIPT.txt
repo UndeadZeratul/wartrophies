@@ -3,6 +3,7 @@ version 4.5
 #include "ZScript/WT_Menu.zsc"
 #include "ZScript/WT_MainHandler.zsc"
 #include "ZScript/WT_Data.zsc"
+#include "ZScript/WT_Registration.zsc"
 #include "ZScript/WT_UI.zsc"
 #include "ZScript/WT_Special.zsc"
 #include "ZScript/WT_FilterList.zsc"

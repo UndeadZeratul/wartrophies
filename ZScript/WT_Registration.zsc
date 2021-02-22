@@ -1,0 +1,54 @@
+extend class WT_MainHandler
+{
+	// [Ace] WTD gets called *after* the damage is dealt. Just sayin'.
+	// 10 bucks it's going to break with Hideous Destructor.
+	// 20 bucks I won't be able to fix it.
+	// 30 bucks I'm not paying up if I lose.
+	override void WorldThingDamaged(WorldEvent e)
+	{
+		if (e.Thing && e.Thing.bISMONSTER && e.Thing.Health <= 0 && !IsBlacklisted(e.Thing.GetClass()))
+		{
+			if (e.Inflictor) // [Ace] See if maybe actor is mapped.
+			{
+				if (e.Inflictor.master && e.Inflictor.master.player == players[consoleplayer])
+				{
+					switch (e.Inflictor.GetClassName())
+					{
+						case 'HDSoulCube': RegisterKill('HDSoulCube', e.Thing.GetClass()); return;
+					}
+				}
+
+				string Inf = e.Inflictor.GetClassName();
+				string WeaponUsed = InflictorBinds.At(Inf.MakeLower());
+				if (WeaponUsed != "")
+				{
+					Array<string> SplitString;
+					WeaponUsed.Split(SplitString, "||");
+
+					if (!IsBlacklisted(SplitString[0]) && consoleplayer == int(SplitString[1].ToDouble()))
+					{
+						RegisterKill(SplitString[0], e.Thing.GetClass());
+						InflictorBinds.Remove(Inf.MakeLower());
+						return;
+					}
+				}
+			}
+
+			// [Ace] Hitscans and everything else.
+			if (e.DamageSource is 'PlayerPawn' && e.DamageSource.player == players[consoleplayer])
+			{
+				switch (e.DamageType)
+				{
+					case 'Telefrag': RegisterKill('WT_Telefrag', e.Thing.GetClass()); break;
+					case 'GloryKill': RegisterKill('WT_D4TGloryKills', e.Thing.GetClass()); break;
+					default:
+						if (SelectedWeaponWorld && !IsBlacklisted(SelectedWeaponWorld))
+						{
+							RegisterKill(SelectedWeaponWorld.GetClassName(), e.Thing.GetClass());
+						}
+						break;
+				}
+			}
+		}
+	}
+}
