@@ -49,6 +49,12 @@ extend class WT_MainHandler
 						break;
 				}
 			}
+
+			Name FollowerCls = 'HDFollower';
+			if (e.DamageSource is FollowerCls && e.DamageSource.master.player == players[consoleplayer])
+			{
+				RegisterKill('WT_HDFollower', e.Thing.GetClassName());
+			}
 		}
 	}
 }
