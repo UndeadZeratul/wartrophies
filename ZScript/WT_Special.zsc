@@ -1,4 +1,4 @@
-class WT_Weapon : Weapon
+class WT_Weapon : Weapon abstract
 {
 	string CheckedActor;
 	property CheckForActor: CheckedActor; // [Ace] Don't display if the actor doesn't exist.
