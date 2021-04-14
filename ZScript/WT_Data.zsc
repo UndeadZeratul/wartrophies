@@ -12,6 +12,13 @@ enum WT_ScorecardPage
 	Page_Monsters
 }
 
+class WT_InflictorInfo
+{
+	Actor Inflictor;
+	PlayerPawn OwningPlayer;
+	Name WeaponUsed;
+}
+
 class WT_WeaponData
 {
 	class<Weapon> Object;
@@ -84,7 +91,7 @@ extend class WT_MainHandler
 		"Agnostic", "Believer", "Initiate", "Acolyte", "Disciple", "Brother", "Fanatic", "Apostle", "Prefect", "Confessor", "Deacon", "Archdeacon", "Abbot", "Grand Confessor", "Pontifex", "Vicar", "Executor", "Exarch", "Vizier", "Grand Vizier", "Avatar", "Redeemer", "Inner Circle", "Black Hand", "Hand Of Kane"
 	};
 
-	private Dictionary InflictorBinds; // [Ace] Key - actor, value - weapon.
+	private Array<WT_InflictorInfo> InflictorBinds;
 
 	private int AutosaveTimer;
 
@@ -285,7 +292,7 @@ extend class WT_MainHandler
 
 	private void Initialize()
 	{
-		InflictorBinds = Dictionary.Create();
+		InflictorBinds.Clear();
 
 		Experience = ExperienceStorage.GetInt();
 		Prestige = PrestigeStorage.GetInt();
@@ -573,6 +580,33 @@ extend class WT_MainHandler
 			if (AllWeapons[i].Object == wpn)
 			{
 				return AllWeapons[i];
+			}
+		}
+
+		return null;
+	}
+
+	private void CleanupBinds()
+	{
+		for (int i = 0; i < InflictorBinds.Size();)
+		{
+			if (!InflictorBinds[i].Inflictor)
+			{
+				InflictorBinds[i].Destroy();
+				InflictorBinds.Delete(i);
+				continue;
+			}
+			i++;
+		}
+	}
+
+	private WT_InflictorInfo FindInflictorBind(Actor inf)
+	{
+		for (int i = 0; i < InflictorBinds.Size(); ++i)
+		{
+			if (InflictorBinds[i].Inflictor == inf)
+			{
+				return InflictorBinds[i];
 			}
 		}
 

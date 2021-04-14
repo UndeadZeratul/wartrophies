@@ -110,10 +110,42 @@ class WT_MainHandler : StaticEventHandler
 		{
 			return;
 		}
+		
+		PlayerPawn plr = TraverseTargetChain(e.Thing);
+		if (plr && !e.Thing.target.bISMONSTER && (e.Thing.bMISSILE || e.Thing.bPUFFONACTORS || e.Thing.bALWAYSPUFF))
+		{
+			int PlayerNum = plr.PlayerNumber();
+			if (PlayerNum > -1)
+			{
+				WT_InflictorInfo Bind = new('WT_InflictorInfo');
+				Bind.Inflictor = e.Thing;
+				Bind.OwningPlayer = plr;
+				if (SelectedWeaponWorld)
+				{
+					Bind.WeaponUsed = SelectedWeaponWorld.GetClassName();
+				}
 
-		// [Ace] Go through the entire pointer chain until you either run out of iterations or finally find the player. When you do, store their weapon.
-		PlayerPawn ActT; 
-		Actor NextT = e.Thing.target;
+				// [Ace] Hardcoded overrides. I hate this.
+				Name cls = 'BFGPuff';
+				if (e.Thing is cls)
+				{
+					Bind.WeaponUsed = 'BFG9K';
+				}
+
+				if (Bind.WeaponUsed != '')
+				{
+					CleanupBinds();
+					InflictorBinds.Push(Bind);
+				}
+			}
+		}
+	}
+
+	// [Ace] Go through the entire pointer chain until you either run out of iterations or finally find the player.
+	private PlayerPawn TraverseTargetChain(Actor a)
+	{
+		PlayerPawn ActT = null;
+		Actor NextT = a.target;
 
 		for (int i = 0; i < 6; ++i) // [Ace] Used to prevent infinite recursion.
 		{
@@ -128,21 +160,7 @@ class WT_MainHandler : StaticEventHandler
 			}
 		}
 
-		int PlayerNum = -1;
-		if (SelectedWeaponWorld)
-		{
-			if (ActT)
-			{
-				PlayerNum = ActT.PlayerNumber();
-			}
-
-			if (PlayerNum > -1)
-			{
-				string Act = e.Thing.GetClassName();
-				string Wpn = SelectedWeaponWorld.GetClassName().."||"..PlayerNum;
-				InflictorBinds.Insert(Act.MakeLower(), Wpn.MakeLower());
-			}
-		}
+		return ActT;
 	}
 
 	// --------------------------------------------------
