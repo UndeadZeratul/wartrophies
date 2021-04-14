@@ -8,7 +8,6 @@ extend class WT_MainHandler
 	{
 		if (e.Thing && e.Thing.bISMONSTER && e.Thing.Health <= 0 && !IsBlacklisted(e.Thing.GetClass()))
 		{
-			Console.Printf(e.Inflictor.GetClassName()..", "..e.DamageSource.GetClassName());
 			if (e.Inflictor) // [Ace] See if maybe actor is mapped.
 			{
 				if (e.Inflictor.master && e.Inflictor.master.player == players[consoleplayer])
