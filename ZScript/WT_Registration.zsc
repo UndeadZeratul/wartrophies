@@ -47,7 +47,7 @@ extend class WT_MainHandler
 
 			// [Ace] Special handling for the follower because I am tired of them stealing my kills. They're technically not a weapon.
 			Name FollowerCls = 'HDFollower';
-			if (e.DamageSource is FollowerCls && e.DamageSource.master.player == players[consoleplayer])
+			if (e.DamageSource is FollowerCls && e.DamageSource.master && e.DamageSource.master.player == players[consoleplayer])
 			{
 				RegisterKill('WT_HDFollower', e.Thing.GetClassName());
 			}
