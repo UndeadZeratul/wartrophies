@@ -212,6 +212,7 @@ OptionValue "RankSetWeapons"
 	1, "Alternate"
 	2, "Festive"
 	3, "Fantasy"
+	4, "Waifu"
 }
 
 OptionValue "RankSetPlayer"
@@ -227,6 +228,7 @@ OptionValue "RankSetGenocide"
 	0, "Default"
 	1, "Festive"
 	2, "Demon"
+	3, "Contagion"
 }
 
 // [Ace] See LANGUAGE.txt
