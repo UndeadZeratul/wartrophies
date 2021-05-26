@@ -32,7 +32,7 @@ IKA
  - Ashes folders.
 
 XSlayer300
- - Ranks: Demon, Fantasy, Doom, Waifu, Contagion
+ - Ranks: Demon, Fantasy, Doom, Waifu, Contagion, Imperium Infantry
 
 Unreal Tournament (Epic Games)
  - All UI sounds.

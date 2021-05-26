@@ -221,6 +221,7 @@ OptionValue "RankSetPlayer"
 	1, "Festive"
 	2, "Doom"
 	3, "Brotherhood of NOD"
+	4, "Imperium Infantry"
 }
 
 OptionValue "RankSetGenocide"
