@@ -65,6 +65,7 @@ class WT_MonsterData
 
 extend class WT_MainHandler
 {
+	// [Ace] 23 ranks.
 	static const int WeapKillReq[] = { 0, 50, 100, 250, 400, 550, 700, 900, 1000, 1300, 1650, 2000, 2500, 3000, 4000, 5000, 6500, 8000, 10000, 12500, 15000, 20000, 25000 };
 	static const string WeapRanks[] =
 	{
@@ -75,6 +76,7 @@ extend class WT_MainHandler
 		"Never Met", "First Contact",  "Stranger", "Acquaintance", "Mutually Interested", "Fondly Remembered", "Well-known Friend", "Close Partner", "Really Trusted", "Deeply Attached", "First Kiss", "Girlfriend", "Essentially Integral", "Dream Mate", "Engaged", "Committed", "Officially Married", "Best Girl", "Together Forever", "Kindred Soul", "Etched Memory", "Astral Soulmate", "Universe's Best Wife"
 	};
 
+	// [Ace] 30 ranks.
 	static const int GenocideReqs[] = { 0, 50, 100, 250, 500, 1000, 1500, 2500, 3500, 4500, 6000, 7500, 9000, 11111, 13333, 16666, 20000, 25000, 30000, 35000, 50000, 70000, 99999, 125000, 175000, 250000, 350000, 500000, 750000, 1000000 };
 	static const string GenocideRanks[] =
 	{
@@ -84,6 +86,7 @@ extend class WT_MainHandler
 		"Patient Zero", "Afflicted", "Wretched", "Undead", "Mesh", "Desecrated", "Evolved", "Legion", "Vindicator", "Revenant", "Zealot", "Defiler", "Lictor", "Predator", "Mauler", "Abomination", "Crisis", "Nemesis", "Mutilator", "Bloodthirster", "Extirpator", "Una Substantia ", "Obliterator", "Calamity", "Apocalypse", "Nexus", "Primordial Being", "Architect Of Annihilation", "Apollyon Omega", "The End"
 	};
 
+	// [Ace] 25 ranks.
 	static const int XPReq[] = { 0, 5000, 8500, 12500, 16000, 20000, 25000, 31000, 37000, 45000, 60000, 85000, 100000, 125000, 175000, 250000, 400000, 600000, 900000, 1150000, 1400000, 1900000, 2850000, 4000000, 5000000 };
 	static const string XPRanks[] =
 	{
