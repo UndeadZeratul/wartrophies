@@ -6,6 +6,11 @@ extend class WT_MainHandler
 	// 30 bucks I'm not paying up if I lose.
 	override void WorldThingDamaged(WorldEvent e)
 	{
+		if (demoplayback)
+		{
+			return;
+		}
+
 		if (e.Thing && e.Thing.bISMONSTER && e.Thing.Health <= 0 && !IsBlacklisted(e.Thing.GetClass()))
 		{
 			if (e.Inflictor) // [Ace] See if maybe actor is mapped.
@@ -52,5 +57,78 @@ extend class WT_MainHandler
 				RegisterKill('WT_HDFollower', e.Thing.GetClassName());
 			}
 		}
+	}
+
+	void RegisterKill(Name wpn, class<Actor> victim)
+	{
+		class<Weapon> wpncls = wpn;
+		if (!wpncls)
+		{
+			return;
+		}
+
+		WT_WeaponData Weapon = FindWeapon(wpncls);
+
+		// [Ace] If weapon exists, update info.
+		if (Weapon)
+		{
+			WT_MonsterData Monster = Weapon.FindMonster(victim);
+			if (Monster)
+			{
+				Monster.Kills++;
+			}
+			else
+			{
+				Monster = new("WT_MonsterData");
+
+				string MonsterName = victim.GetClassName();
+				MonsterName = MonsterName.MakeLower();
+
+				Monster.DictionaryName = MonsterName;
+				Monster.Object = victim;
+				Monster.Kills = 1;
+
+				Weapon.Monsters.Push(Monster);
+			}
+			if (SelectedWeaponWorld == wpn)
+			{
+				SelWeaponKills++;
+			}
+			TotalKillsEver++;
+		}
+		// [Ace] Otherwise create a new weapon.
+		else
+		{
+			Weapon = new ("WT_WeaponData");
+
+			string WeaponName = wpncls.GetClassName();
+			WeaponName = WeaponName.MakeLower();
+
+			Weapon.DictionaryName = WeaponName;
+			Weapon.Object = wpncls;
+			Weapon.FolderName = FolderBindings.At(WeaponName);
+
+				WT_MonsterData Monster = new("WT_MonsterData");
+
+				string MonsterName = victim.GetClassName();
+				MonsterName = MonsterName.MakeLower();
+
+				Monster.DictionaryName = MonsterName;
+				Monster.Object = victim;
+				Monster.Kills = 1;
+
+			Weapon.Monsters.Push(Monster);
+
+			AllWeapons.Push(Weapon);
+			InitLiteHud();
+		}
+
+		double FastMonstersMult = sv_fastmonsters || G_SkillPropertyInt(SKILLP_FastMonsters) ? 2.5 : 1;
+		int SkillNumber = min(4, (G_SkillPropertyInt(SKILLP_ACSReturn) + 1));
+		int ExperienceGained = int(min(12000, GetDefaultByType(victim).Health) * 0.05 * SkillNumber * FastMonstersMult);
+
+		Experience += ExperienceGained;
+
+		PlayKillSound();
 	}
 }
