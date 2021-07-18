@@ -222,6 +222,7 @@ OptionValue "RankSetPlayer"
 	2, "Doom"
 	3, "Brotherhood of NOD"
 	4, "Imperium Infantry"
+	5, "Agency"
 }
 
 OptionValue "RankSetGenocide"
