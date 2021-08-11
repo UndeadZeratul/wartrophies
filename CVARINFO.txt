@@ -8,6 +8,8 @@ nosave int wt_autosave_interval = 5;
 
 nosave int wt_filter_iwad_weapons = 5;
 nosave int wt_filter_iwad_monsters = 5;
+
+nosave bool wt_ui_drawoverhud = true;
 nosave int wt_ui_font = 0;
 
 nosave int wt_rankset_weapons = 0;

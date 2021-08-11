@@ -113,7 +113,9 @@ extend class WT_MainHandler
 
 	private CVar AutosaveInterval;
 
+	private CVar DrawOverHud;
 	private CVar UiFont;
+
 	private CVar RankSets[3];
 
 	private CVar KillSoundType;
@@ -288,6 +290,7 @@ extend class WT_MainHandler
 		LiteHudColors[LElement_WeaponKills] = CVar.FindCVar('wt_lite_color_weaponkills');
 		LiteHudVisibilityFlags = CVar.FindCVar('wt_lite_adv_visibility');
 
+		DrawOverHud = CVar.FindCVar('wt_ui_drawoverhud');
 		UiFont = CVar.FindCVar('wt_ui_font');
 		KillSoundType = CVar.FindCVar('wt_killsound');
 		BlacklistEnabled = CVar.FindCVar('wt_blacklist_enable');

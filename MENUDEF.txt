@@ -11,6 +11,8 @@ OptionMenu "WarTrophiesMenu"
 	Slider "Autosave Interval", "wt_autosave_interval", 0, 30, 1, 0
 	StaticText "In minutes. Set to 0 to disable.", "White"
 	StaticText ""
+	Option "Draw Over HUD", "wt_ui_drawoverhud", "YesNo"
+	StaticText ""
 	Option "UI Font", "wt_ui_font", "UiFont"
 	Option "Kill Sound Type", "wt_killsound", "KillSoundType"
 	StaticText ""
