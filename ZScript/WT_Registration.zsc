@@ -125,7 +125,7 @@ extend class WT_MainHandler
 
 		double FastMonstersMult = sv_fastmonsters || G_SkillPropertyInt(SKILLP_FastMonsters) ? 2.5 : 1;
 		int SkillNumber = min(4, (G_SkillPropertyInt(SKILLP_ACSReturn) + 1));
-		int ExperienceGained = int(min(12000, GetDefaultByType(victim).Health) * 0.05 * SkillNumber * FastMonstersMult);
+		int ExperienceGained = int((12000, abs(GetDefaultByType(victim).Health) * 0.05 * SkillNumber * FastMonstersMult));
 
 		Experience += ExperienceGained;
 
