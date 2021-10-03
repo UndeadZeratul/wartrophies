@@ -94,7 +94,7 @@ extend class WT_MainHandler
 
 	override void RenderOverlay(RenderEvent e)
 	{
-		if (DrawOverHud.GetBool())
+		if (DrawOverHud.GetBool() || DrawUi)
 		{
 			DrawHudStuff();
 		}
@@ -102,7 +102,7 @@ extend class WT_MainHandler
 
 	override void RenderUnderlay(RenderEvent e)
 	{
-		if (!DrawOverHud.GetBool())
+		if (!DrawOverHud.GetBool() && !DrawUi)
 		{
 			DrawHudStuff();
 		}
