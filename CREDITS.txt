@@ -42,3 +42,6 @@ Blood (Monolith Productions)
 
 ARSENAL by Daniel
  - Kill confirm sound(s).
+
+ SaGa Frontier (Square)
+ - Folder icon
