@@ -355,29 +355,45 @@ extend class WT_MainHandler
 
 	static const string AshesDefs[] =
 	{
-		// Class name. Must be lowercase.	// Weapon Type
-	//	"crowbar",									"Crowbar",		//i'll define all weapons in case they get upgrades as well
+		// Class name. Must be lowercase.			// Weapon Type
+		"crowbar",									"Crowbar",		//i'll define all weapons in case they get upgrades as well
+		"crowbar2",									"Crowbar",		//EDIT: they did
 	//	"pilebunker",								"Pile Bunker",
 	//	"jackhammer",								"Pile Bunker",
-		"revolver",									"0.45 Revolver",
-		"revolver2",								"0.45 Revolver",
-		"revolver3",								"0.45 Revolver",
+		"revolver",									".45 Revolver",
+		"revolver2",								".45 Revolver",
+		"revolver3",								".45 Revolver",
 		"glock",									"9mm Autoloader",
 		"glock2",									"9mm Autoloader",
+		"glock3",									"9mm Autoloader",
 		"pumpaction",								"Pump-action shotgun",
 		"pumpaction2",								"Pump-action shotgun",
+		"pumpaction3",								"Pump-action shotgun",
 		"sawedoff",									"Sawed-off Shotgun",
 		"sawedoff2",								"Sawed-off Shotgun",
+		"sawedoff3",								"Sawed-off Shotgun",
 		"ingram",									"Machine Pistol",
 		"ingram2",									"Machine Pistol",
+		"ingram3",									"Machine Pistol",
+		"m16",										"Military Rifle",
+		"m162",										"Military Rifle",
+		"m163",										"Military Rifle",
+		"fal",										"Battle Rifle",
 		"napalmgun",								"Master Blaster",
 		"napalmgun2",								"Master Blaster",
 		"napalmgun3",								"Master Blaster",
 		"junkermusket",								"Junker Musket",
 		"junkermusket2",							"Junker Musket",
+		"junkermusket3",							"Junker Musket",
 		"pipebomb",									"Pipebomb",
-		"thumper",									"Grenade Launcher",
-		"bootknifelantern",							"Boot Knife",		//this is how 2063 works
+//		"thumper",									"Grenade Launcher",
+		"killerpig",								"Killer P.I.G.",
+		"killerpig2",								"Killer P.I.G.",
+		"killerpig3",								"Killer P.I.G.",
+		"lazergun",									"Lazer Gun",
+		"lazergun2",								"Lazer Gun",
+		"lazergun3",								"Lazer Gun",
+		"bootknifelantern",							"Boot Knife",		//this is how non-enriched 2063 works
 		"bootkniferevolver",						"Boot Knife",
 		"bootknifeglock",							"Boot Knife",
 		"bootknifesawedoff",						"Boot Knife",
