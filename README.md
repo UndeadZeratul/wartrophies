@@ -8,13 +8,6 @@ Download the zip and load it into GZDoom. No need to change its extension to .pk
 - The mod has been tested in multiplayer and works just fine. If any abnormalities are observed, please report them.
 - Due to the way data is saved, the mod may cause ini bloat if played with too many mods for a long time. The data is at the bottom of your config file in a separate section. If ini bloat really bothers you, this mod probably isn't for you. At the moment there is no other way to store data between saves.
 - Stats do not persist between IWADs. Due to how CVars are stored in the ini file, the only workaround is to use JPL's [WadSmoosh](https://forum.zdoom.org/viewtopic.php?f=232&t=52757) and use Doom_Complete as an IWAD.
----
-- If you have played a version of this mod prior to v1.0.0, you *may* encounter the following error message: `Dictionary is expected to be a JSON object`.  
-To fix this, you have four options, three of which require config editing:
-1. If the data is split into several CVars, i.e. `wt_stats_weapons_kills_x`, where x is a number from 1-20, combine the value of all CVars starting from `*_1` until you run out of text, and put it in the `wt_stats_weapons_kills` CVar at the bottom of the config under the section `ConfigOnlyVariables`.
-2. If the data is only in one CVar called `wt_stats_weapons_kills`, but has lots of `@` in the string, replace all `@` with `\`, and replace the CVar with the same name at the bottom of the config under the section `ConfigOnlyVariables` with the one you just edited.
-3. Erase all encounters of `wt_stats_*` and let the mod generate those again. This will result in progress loss.
-4. Delete the config and let GZDoom generate it again. Will result in progress loss. Obviously this is the least convenient solution, but it's guaranteed to work.
 
 ### First time playing? Read this.
 ---
@@ -26,7 +19,7 @@ To fix this, you have four options, three of which require config editing:
 ---
 Certain mods don't play too well with War Trophies. They will work, but not always the way you'd expect them to. A few examples:
 - **Combined Arms (and probably lots of other mods):** Some weapons don't have icons or pickup sprites, so the weapon icon in the scorecard would instead be the first frame from the Ready state. It's only a visual "bug".
-- **Kriegsland/Doom Incarnate:** Dual-wielded weapons are separate weapons, meaning their stats are tracked separately from their single variants. This can be fixed if anyone is willing to make folders for those weapons so they count as one. PRs are welcome.
+- **Kriegsland/Doom Incarnate:** Dual-wielded weapons are separate weapons, meaning their stats are tracked separately from their single variants. This can be fixed if anyone is willing to make folders for those weapons so they count as one. Pull requests are welcome.
 - **Hideous Destructor:** It's possible to attribute kills from a weapon to a different weapon that cannot physically kill anything. Most such weapons have been blacklisted, but some may have been overlooked.
 
 ### Do this if you want (proper) addon support
@@ -42,3 +35,8 @@ Certain mods don't play too well with War Trophies. They will work, but not alwa
 - You don't need to touch War Trophies to do that. If you have classes in your own mod that you wish to be blacklisted, add a WTBLKLST lump to your mod's root directory, then separate each blacklisted class with a comma. You can place them on new lines and such, but don't use comments.
 
 Example: `LostSoul, Revenant, SpiderMastermind, Cyberdemon, BossBrain`
+
+### Miscellaneous
+---
+- `netevent WT_ToggleSaving`: temporarily makes all kills "fake". The numbers on the HUD will update, but the stats will not be saved if you exit the game. The old numbers will be reverted when you toggle this again. Limited use.
+- `netevent WT_Cleanup #`: this will remove all monsters stats with kills under #. Can be used in combination with WT_ToggleSaving to non-destructively test the result of the command. Toggle saving off, then use the cleanup command. If you are satisfied with the results, turn saving back on and do the cleanup again. This is useful if your weapons are plagued with some rare kills of which you only have a very small number of that you wish to get rid of.

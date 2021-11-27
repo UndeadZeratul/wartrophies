@@ -65,7 +65,7 @@ extend class WT_MainHandler
 	static const int MonsterNameLengths[] =
 	{
 		// Monster name in the main page.
-		22, 36, // [Ace] Timmy Turner, my name is DougsDaleDimmaDaleDimmaDimmsDomeDoDiDomeDimmsDimmaDimmaDome, Owner of the DougDimmsDimmaDaleDimmsDomeDoDiDimmaDimmsDaleDimmaDimmsDaleDimmaDome. Also monster page.
+		22, 36, // [Ace] Timmy Turner, my name is DougsDaleDimmaDaleDimmaDimmsDomeDoDiDomeDimmsDimmaDimmaDome, owner of the DougDimmsDimmaDaleDimmsDomeDoDiDimmaDimmsDaleDimmaDimmsDaleDimmaDome. Also monster page.
 		26, 40,
 		24, 38
 	};

@@ -578,6 +578,55 @@ extend class WT_MainHandler
 		SelectedWeaponList = null;
 	}
 
+	private void CleanupBinds()
+	{
+		for (int i = 0; i < InflictorBinds.Size();)
+		{
+			if (!InflictorBinds[i].Inflictor)
+			{
+				InflictorBinds[i].Destroy();
+				InflictorBinds.Delete(i);
+				continue;
+			}
+			i++;
+		}
+	}
+
+	// [Ace] This removes all monsters with kills under minKills. Sometimes you play this super esoteric map with super custom enemies that you never kill again.
+	// but they were logged in the list and now you can't get rid of them without editing the data. This addresses that.
+	private void CleanupWeaponKills(int minKills)
+	{
+		for (int i = AllWeapons.Size() - 1; i >= 0; --i)
+		{
+			bool newLine = false;
+			for (int j = AllWeapons[i].Monsters.Size() - 1; j >= 0; --j)
+			{
+				if (AllWeapons[i].Monsters[j].Kills < minKills)
+				{
+					newLine = true;
+					Console.Printf("%s: deleted %s with %i kills.", AllWeapons[i].DictionaryName, AllWeapons[i].Monsters[j].DictionaryName, AllWeapons[i].Monsters[j].Kills);
+					AllWeapons[i].Monsters[j].Destroy(); // [Ace] I don't trust GZDoom's garbage collector.
+					AllWeapons[i].Monsters.Delete(j);
+				}
+			}
+			if (AllWeapons[i].Monsters.Size() == 0)
+			{
+				Console.Printf("Deleted weapon %s.", AllWeapons[i].DictionaryName);
+				AllWeapons[i].Destroy();
+				AllWeapons.Delete(i);
+			}
+			if (newLine)
+			{
+				Console.Printf("");
+			}
+		}
+		InitLiteHud();
+	}
+
+	// --------------------------------------------------
+	// INFORMATION
+	// --------------------------------------------------
+
 	private WT_WeaponData FindWeapon(class<Weapon> wpn)
 	{
 		if (!wpn)
@@ -596,20 +645,6 @@ extend class WT_MainHandler
 		return null;
 	}
 
-	private void CleanupBinds()
-	{
-		for (int i = 0; i < InflictorBinds.Size();)
-		{
-			if (!InflictorBinds[i].Inflictor)
-			{
-				InflictorBinds[i].Destroy();
-				InflictorBinds.Delete(i);
-				continue;
-			}
-			i++;
-		}
-	}
-
 	private WT_InflictorInfo FindInflictorBind(Actor inf)
 	{
 		for (int i = 0; i < InflictorBinds.Size(); ++i)
@@ -622,10 +657,6 @@ extend class WT_MainHandler
 
 		return null;
 	}
-
-	// --------------------------------------------------
-	// INFORMATION
-	// --------------------------------------------------
 
 	// [Ace] Checks if there's a custom tag. If not, gets the tag. If no tag is present either, get class name.
 	private string GetActorTag(class<Actor> a) const

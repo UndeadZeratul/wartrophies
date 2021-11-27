@@ -122,48 +122,57 @@ class WT_MainHandler : StaticEventHandler
 		if (e.Name ~== "WT_ForceSave")
 		{
 			SaveData(true, true);
+			return;
 		}
 
 		if (e.Name ~== "WT_InitWeaponFolders")
 		{
 			InitWeaponFolders();
 			InitLiteHud();
+			return;
 		}
 
 		if (e.Name ~== "WT_ReInitialize")
 		{
 			InitLiteHud();
 			InitScorecard(SelectedPage);
+			return;
 		}
 
 		if (e.Name ~== "WT_ResetTally")
 		{
 			ResetTally();
+			return;
 		}
 
 		if (e.Name ~== "WT_ResetWeapon")
 		{
 			ResetWeapon();
+			return;
 		}
 
 		if (e.Name ~== "WT_PreviousPage")
 		{
 			SwitchScorecardPage(SelectedPage - 1);
+			return;
 		}
 
 		if (e.Name ~== "WT_NextPage")
 		{
 			SwitchScorecardPage(SelectedPage + 1);
+			return;
 		}
 
 		if (e.Name ~== "WT_PreviousWeapon")
 		{
 			SelectWeaponInList(SelectedWeaponListIndex - 1);
+			return;
 		}
 
 		if (e.Name ~== "WT_NextWeapon")
 		{
 			SelectWeaponInList(SelectedWeaponListIndex + 1);
+			return;
 		}
 
 		if (e.Name ~== "WT_ToggleUI")
@@ -180,31 +189,43 @@ class WT_MainHandler : StaticEventHandler
 			{
 				SelectLiteWeapon();
 			}
+			return;
 		}
 
 		if (e.Name ~== "WT_ClearFilter")
 		{
 			SearchFilter = "";
+			return;
 		}
 
 		if (e.Name ~== "WT_EraseLastFilterChar")
 		{
 			SearchFilter.DeleteLastCharacter();
+			return;
 		}
 
 		if (e.Name ~== "WT_AppendFilterChar")
 		{
 			SearchFilter = SearchFilter..String.Format("%c", e.Args[0]);
+			return;
 		}
 
 		if (e.Name ~== "WT_UpgradePrestige" && !e.IsManual)
 		{
 			UpgradePrestige();
+			return;
 		}
 
 		if (e.Name ~== "WT_ToggleSaving")
 		{
 			SetSavingStatus(DisableSaving);
+			return;
+		}
+
+		if (e.Name ~== "WT_Cleanup")
+		{
+			CleanupWeaponKills(e.Args[0]);
+			return;
 		}
 	}
 }

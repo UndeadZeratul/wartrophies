@@ -1,5 +1,7 @@
 AddKeySection "War Trophies" WarTrophiesKeybinds
+
 alias ToggleScorecard "netevent wt_toggleui"
 alias SaveStats "netevent wt_forcesave"
+
 AddMenuKey "Toggle Scorecard" ToggleScorecard
 AddMenuKey "Save Stats" SaveStats
