@@ -233,6 +233,7 @@ OptionValue "RankSetGenocide"
 	1, "Festive"
 	2, "Demon"
 	3, "Contagion"
+	4, "Chronicles"
 }
 
 // [Ace] See LANGUAGE.txt
