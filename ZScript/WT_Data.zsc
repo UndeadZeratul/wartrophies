@@ -88,7 +88,7 @@ extend class WT_MainHandler
 	};
 
 	// [Ace] 25 ranks. Max character length: 24
-	static const int XPReq[] = { 0, 5000, 8500, 12500, 16000, 20000, 25000, 31000, 37000, 45000, 60000, 85000, 100000, 125000, 175000, 250000, 400000, 600000, 900000, 1150000, 1400000, 1900000, 2850000, 4000000, 5000000 };
+	static const int XPReq[] = { 0, 2500, 5000, 10000, 15000, 22500, 30000, 40000, 50000, 75000, 100000, 150000, 200000, 300000, 450000, 650000, 900000, 1200000, 1550000, 1950000, 2450000, 3000000, 3600000, 4250000, 5000000 };
 	static const string XPRanks[] =
 	{
 		"Private", "Private 1st Class", "Corporal", "Sergeant", "Staff Sergeant", "Sergeant 1st Class", "Master Sergeant", "First Sergeant", "Sergeant Major", "Cmd. Sergeant Major", "Master Chief Sergeant", "2nd Lieutenant", "1st Lieutenant", "Captain", "Major", "Lieutenant Colonel", "Colonel", "Brigadier General", "Major General", "Lieutenant General", "General", "General of the Army", "Field Marshal", "Force Of Freedom", "Savior of Humanity",
