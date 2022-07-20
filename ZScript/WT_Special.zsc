@@ -6,6 +6,8 @@ class WT_Weapon : Weapon abstract
 	Default
 	{
 		+WEAPON.CHEATNOTWEAPON
+		+WEAPON.NO_AUTO_SWITCH
+		+WEAPON.NOAUTOSWITCHTO
 	}
 
 	States
