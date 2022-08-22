@@ -21,7 +21,7 @@ class WT_InflictorInfo
 
 class WT_WeaponData
 {
-	class<Weapon> Object;
+	class<Inventory> Object;
 	string FolderName;
 	string DictionaryName;
 	Array<WT_MonsterData> Monsters;
@@ -138,7 +138,7 @@ extend class WT_MainHandler
 
 	private int SelectedPage;
 
-	private class<Weapon> SelectedWeaponWorld;
+	private class<Inventory> SelectedWeaponWorld;
 	private WT_WeaponData SelectedWeaponLite;
 
 	private int SelectedWeaponListIndex;
@@ -233,7 +233,7 @@ extend class WT_MainHandler
 			let plr = PlayerPawn(players[consoleplayer].mo);
 			if (plr && plr.player && plr.player.ReadyWeapon)
 			{
-				class<Weapon> OldWeapon = SelectedWeaponWorld;
+				class<Inventory> OldWeapon = SelectedWeaponWorld;
 
 				// [Ace] If the weapon is a powered up version, use the main one instead.
 				SelectedWeaponWorld = plr.player.ReadyWeapon.bPOWERED_UP ? plr.Player.ReadyWeapon.SisterWeaponType : plr.player.ReadyWeapon.GetClass();
@@ -336,7 +336,7 @@ extend class WT_MainHandler
 		let it1 = DictionaryIterator.Create(Dictionary.FromString(WeaponStorage.GetString().MakeLower()));
 		while (it1.Next())
 		{
-			class<Weapon> wpn = it1.Key();
+			class<Inventory> wpn = it1.Key();
 
 			WT_WeaponData WeaponData = new("WT_WeaponData");
 			WeaponData.DictionaryName = it1.Key();
@@ -418,10 +418,12 @@ extend class WT_MainHandler
 				{
 					// [Ace] Sort by numbers first, then by first letter if the numbers match.
 					case 1:
-						let CurrWeapon = GetDefaultByType(AvailableWeapons[i].Object);
-						let NextWeapon = GetDefaultByType(AvailableWeapons[j].Object);
+						let currItem = GetDefaultByType(AvailableWeapons[i].Object);
+						let nextItem = GetDefaultByType(AvailableWeapons[j].Object);
 
-						Check = CurrWeapon.SlotNumber >= NextWeapon.SlotNumber || (CurrWeapon.SlotNumber == NextWeapon.SlotNumber && String.Format("%s", CurrWeapon.GetClassName()).ByteAt(0) >= String.Format("%s", NextWeapon.GetClassName()).ByteAt(0));
+						let cWpn = Weapon(currItem);
+						let nWpn = Weapon(nextItem);
+						Check = cWpn && nWpn && cWpn.SlotNumber >= nWpn.SlotNumber || ((!cWpn || !nWpn || cWpn.SlotNumber == nWpn.SlotNumber) && String.Format("%s", currItem.GetClassName()).ByteAt(0) >= String.Format("%s", nextItem.GetClassName()).ByteAt(0));
 						break;
 
 					// [Ace] Sort by kills.
@@ -628,7 +630,7 @@ extend class WT_MainHandler
 	// INFORMATION
 	// --------------------------------------------------
 
-	private WT_WeaponData FindWeapon(class<Weapon> wpn)
+	private WT_WeaponData FindWeapon(class<Inventory> wpn)
 	{
 		if (!wpn)
 		{

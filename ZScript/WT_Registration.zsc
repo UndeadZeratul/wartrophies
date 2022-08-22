@@ -13,58 +13,63 @@ extend class WT_MainHandler
 
 		if (e.Inflictor) // [Ace] See if maybe actor is mapped.
 		{
-			if (e.Inflictor.master && e.Inflictor.master.player == players[consoleplayer])
+			// [Ace] I know for sure Deathstrider uses weapons and items for inflictors when dealing damage.
+			if (e.Inflictor is 'Inventory' && (Inventory(e.Inflictor).Owner == players[consoleplayer].mo || e.Inflictor.Master == players[consoleplayer].mo || e.Inflictor.Target == players[consoleplayer].mo))
 			{
-				switch (e.Inflictor.GetClassName())
+				if (IsValid(e.Inflictor.GetClass()))
 				{
-					case 'HDSoulCube': RegisterKill('HDSoulCube', e.Thing.GetClass()); return;
+					RegisterKill(e.Inflictor.GetClassName(), e.Thing.GetClass());
 				}
+				return;
 			}
 
-			WT_InflictorInfo Bind = FindInflictorBind(e.Inflictor);
-			if (Bind)
+			WT_InflictorInfo bind = FindInflictorBind(e.Inflictor);
+			if (bind)
 			{
-				if (IsValid(Bind.WeaponUsed) && Bind.OwningPlayer.player == players[consoleplayer])
+				if (IsValid(bind.WeaponUsed) && bind.OwningPlayer == players[consoleplayer].mo)
 				{
-					RegisterKill(Bind.WeaponUsed, e.Thing.GetClass());
+					RegisterKill(bind.WeaponUsed, e.Thing.GetClass());
 					return;
 				}
 			}
 		}
 
 		// [Ace] Hitscans and everything else.
-		if (e.DamageSource is 'PlayerPawn' && e.DamageSource.player == players[consoleplayer])
+		if (e.DamageSource is 'PlayerPawn' && e.DamageSource == players[consoleplayer].mo)
 		{
 			switch (e.DamageType)
 			{
 				case 'Telefrag': RegisterKill('WT_Telefrag', e.Thing.GetClass()); return;
 				case 'GloryKill': RegisterKill('WT_D4TGloryKills', e.Thing.GetClass()); return;
 				default:
+				{
 					if (SelectedWeaponWorld && IsValid(SelectedWeaponWorld))
 					{
 						RegisterKill(SelectedWeaponWorld.GetClassName(), e.Thing.GetClass());
 					}
 					return;
+				}
 			}
 		}
 
 		// [Ace] Special handling for the follower because I am tired of them stealing my kills. They're technically not a weapon.
 		Name FollowerCls = 'HDFollower';
-		if (e.DamageSource is FollowerCls && e.DamageSource.master && e.DamageSource.master.player == players[consoleplayer])
+		if (e.DamageSource is FollowerCls && e.DamageSource.Master && e.DamageSource.Master == players[consoleplayer].mo)
 		{
 			RegisterKill('WT_HDFollower', e.Thing.GetClassName());
 		}
 	}
 
-	void RegisterKill(Name wpn, class<Actor> victim)
+	void RegisterKill(Name wpnName, class<Actor> victim)
 	{
-		class<Weapon> wpncls = wpn;
-		if (!wpncls)
+		// [Ace]
+		class<Inventory> cls = wpnName;
+		if (!cls)
 		{
 			return;
 		}
 
-		WT_WeaponData Weapon = FindWeapon(wpncls);
+		WT_WeaponData Weapon = FindWeapon(cls);
 
 		// [Ace] If weapon exists, update info.
 		if (Weapon)
@@ -87,7 +92,7 @@ extend class WT_MainHandler
 
 				Weapon.Monsters.Push(Monster);
 			}
-			if (SelectedWeaponWorld == wpn)
+			if (SelectedWeaponWorld == wpnName)
 			{
 				SelWeaponKills++;
 			}
@@ -98,11 +103,11 @@ extend class WT_MainHandler
 		{
 			Weapon = new ("WT_WeaponData");
 
-			string WeaponName = wpncls.GetClassName();
+			string WeaponName = cls.GetClassName();
 			WeaponName = WeaponName.MakeLower();
 
 			Weapon.DictionaryName = WeaponName;
-			Weapon.Object = wpncls;
+			Weapon.Object = cls;
 			Weapon.FolderName = FolderBindings.At(WeaponName);
 
 				WT_MonsterData Monster = new("WT_MonsterData");
