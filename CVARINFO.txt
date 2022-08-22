@@ -40,8 +40,8 @@ nosave int wt_lite_color_weaponname = 0;
 nosave int wt_lite_color_weaponrank = 0;
 nosave int wt_lite_color_weaponkills = 0;
 
-// Blacklist.
-nosave bool wt_blacklist_enable = true;
+// Blacklist/whitelist
+nosave int wt_blacklist_enable = 1;
 
 // Misc.
 nosave int wt_killsound = 0;

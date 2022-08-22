@@ -32,9 +32,13 @@ Certain mods don't play too well with War Trophies. They will work, but not alwa
 
 ### Blacklisting Classes
 ---
-- You don't need to touch War Trophies to do that. If you have classes in your own mod that you wish to be blacklisted, add a WTBLKLST lump to your mod's root directory, then separate each blacklisted class with a comma. You can place them on new lines and such, but don't use comments.
+- You don't need to touch War Trophies to do that. If you have classes in your own mod that you wish to be blacklisted, add a WTBLKLST lump to your mod's root directory, then separate each blacklisted class with a comma. You can place them on new lines and such, but don't use comments. Only works for weapons. Ancestry is checked so you can blanket blacklist a bunch of classes by using their base class.
 
-Example: `LostSoul, Revenant, SpiderMastermind, Cyberdemon, BossBrain`
+Example: `Pistol, Shotgun, SuperShotgun`
+
+### Whitelisting Classes
+---
+Same as above but the lump is called WTWHTLST.
 
 ### Miscellaneous
 ---

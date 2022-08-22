@@ -20,9 +20,9 @@ OptionMenu "WarTrophiesMenu"
 	Option "Rank Set - Player", "wt_rankset_player", "RankSetPlayer"
 	Option "Rank Set - Genocide", "wt_rankset_genocide", "RankSetGenocide"
 	StaticText ""
-	Option "Enable Blacklist", "wt_blacklist_enable", "YesNo"
-	StaticText "Excludes various weapons and monsters from kill tracking.", "White"
-	StaticText "Does not remove already existing actors from the scorecard!", "White"
+	Option "Blacklist type", "wt_blacklist_enable", "BlacklistType"
+	StaticText "Allows blacklisting or whitelisting weapons from kill tracking.", "White"
+	StaticText "Does not remove already existing weapons from the scorecard!", "White"
 	StaticText ""
 	SafeCommand "Reset all statistics", "netevent wt_resettally"
 	SafeCommand "Reset stats for equipped weapon", "netevent wt_resetweapon"
@@ -132,6 +132,13 @@ OptionMenu "WT_FiltersMenu"
 AddOptionMenu "OptionsMenu"
 {
 	Submenu "War Trophies", "WarTrophiesMenu"
+}
+
+OptionValue "BlacklistType"
+{
+	0, "Disabled"
+	1, "Blacklist"
+	2, "Whitelist"
 }
 
 OptionValue "IWADFilterMode"

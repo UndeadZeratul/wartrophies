@@ -3,51 +3,74 @@ extend class WT_MainHandler
 	private CVar BlacklistEnabled;
 
 	// [Ace] Works for both weapons and monsters. Inheritance is also taken into account.
-	Array<class<Actor> > BlacklistDefs;
+	private Array<class<Actor> > BlacklistDefs;
+	private Array<class<Actor> > WhitelistDefs;
 
-	private bool IsBlacklisted(class<Actor> cls)
+	private bool IsValid(class<Actor> cls)
 	{
-		if (BlackListEnabled.GetBool())
+		switch (BlackListEnabled.GetInt())
 		{
-			for (int i = 0; i < BlacklistDefs.Size(); ++i)
+			case 1:
 			{
-				if (cls is BlacklistDefs[i])
+				for (int i = 0; i < BlacklistDefs.Size(); ++i)
 				{
-					return true;
+					if (cls is BlacklistDefs[i])
+					{
+						return false;
+					}
 				}
+				return true;
+			}
+			case 2:
+			{
+				for (int i = 0; i < WhitelistDefs.Size(); ++i)
+				{
+					if (cls is WhitelistDefs[i])
+					{
+						return true;
+					}
+				}
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 
 	// [Ace] Copy-pasted from Universal Gibs with some edits.
 	override void OnRegister()
 	{
+		ParseLump("WTBLKLST", BlacklistDefs);
+		ParseLump("WTWHTLST", WhitelistDefs);
+	}
+
+	private void ParseLump(string lumpName, out Array<class<Actor> > arr)
+	{
+		arr.Clear();
 		int LumpNum = -1;
-		while ((LumpNum = Wads.FindLump("WTBLKLST", LumpNum + 1, Wads.GlobalNamespace)) >= 0)
+		while ((LumpNum = Wads.FindLump(lumpName, LumpNum + 1, Wads.GlobalNamespace)) >= 0)
 		{
-			string BlacklistLumpText = Wads.ReadLump(LumpNum);
-			BlacklistLumpText.Replace("\n", "");
-			BlacklistLumpText.Replace("\r", "");
-			BlacklistLumpText.Replace(" ", "");
+			string lumpText = Wads.ReadLump(LumpNum);
+			lumpText.Replace("\n", "");
+			lumpText.Replace("\r", "");
+			lumpText.Replace(" ", "");
 
-			Array<string> ParsedBlacklist;
-			BlacklistLumpText.Split(ParsedBlacklist, ",");
+			Array<string> parsedList;
+			lumpText.Split(parsedList, ",");
 
-			for (int i = 0; i < ParsedBlacklist.Size(); ++i)
+			for (int i = 0; i < parsedList.Size(); ++i)
 			{
-				string ClassName = ParsedBlacklist[i];
+				string ClassName = parsedList[i];
 
 				// [Ace] The last character of the last element will be either end-of-line or some sort of an invisible termination character. It is added to the string as well, and that messes things up.
-				if (i == ParsedBlacklist.Size() - 1)
+				if (i == parsedList.Size() - 1)
 				{
 					ClassName.DeleteLastCharacter();
 				}
 
-				class<Actor> BlacklistedClass = ClassName;
-				if (BlacklistedClass && BlacklistDefs.Find(BlacklistedClass) == BlacklistDefs.Size())
+				class<Actor> cls = ClassName;
+				if (cls && arr.Find(cls) == arr.Size())
 				{
-					BlacklistDefs.Push(BlacklistedClass);
+					arr.Push(cls);
 				}
 			}
 		}

@@ -6,56 +6,53 @@ extend class WT_MainHandler
 	// 30 bucks I'm not paying up if I lose.
 	override void WorldThingDamaged(WorldEvent e)
 	{
-		if (demoplayback)
+		if (demoplayback || !e.Thing || !e.Thing.bISMONSTER || e.Thing.Health > 0)
 		{
 			return;
 		}
 
-		if (e.Thing && e.Thing.bISMONSTER && e.Thing.Health <= 0 && !IsBlacklisted(e.Thing.GetClass()))
+		if (e.Inflictor) // [Ace] See if maybe actor is mapped.
 		{
-			if (e.Inflictor) // [Ace] See if maybe actor is mapped.
+			if (e.Inflictor.master && e.Inflictor.master.player == players[consoleplayer])
 			{
-				if (e.Inflictor.master && e.Inflictor.master.player == players[consoleplayer])
+				switch (e.Inflictor.GetClassName())
 				{
-					switch (e.Inflictor.GetClassName())
+					case 'HDSoulCube': RegisterKill('HDSoulCube', e.Thing.GetClass()); return;
+				}
+			}
+
+			WT_InflictorInfo Bind = FindInflictorBind(e.Inflictor);
+			if (Bind)
+			{
+				if (IsValid(Bind.WeaponUsed) && Bind.OwningPlayer.player == players[consoleplayer])
+				{
+					RegisterKill(Bind.WeaponUsed, e.Thing.GetClass());
+					return;
+				}
+			}
+		}
+
+		// [Ace] Hitscans and everything else.
+		if (e.DamageSource is 'PlayerPawn' && e.DamageSource.player == players[consoleplayer])
+		{
+			switch (e.DamageType)
+			{
+				case 'Telefrag': RegisterKill('WT_Telefrag', e.Thing.GetClass()); return;
+				case 'GloryKill': RegisterKill('WT_D4TGloryKills', e.Thing.GetClass()); return;
+				default:
+					if (SelectedWeaponWorld && IsValid(SelectedWeaponWorld))
 					{
-						case 'HDSoulCube': RegisterKill('HDSoulCube', e.Thing.GetClass()); return;
+						RegisterKill(SelectedWeaponWorld.GetClassName(), e.Thing.GetClass());
 					}
-				}
-
-				WT_InflictorInfo Bind = FindInflictorBind(e.Inflictor);
-				if (Bind)
-				{
-					if (!IsBlacklisted(Bind.WeaponUsed) && Bind.OwningPlayer.player == players[consoleplayer])
-					{
-						RegisterKill(Bind.WeaponUsed, e.Thing.GetClass());
-						return;
-					}
-				}
+					return;
 			}
+		}
 
-			// [Ace] Hitscans and everything else.
-			if (e.DamageSource is 'PlayerPawn' && e.DamageSource.player == players[consoleplayer])
-			{
-				switch (e.DamageType)
-				{
-					case 'Telefrag': RegisterKill('WT_Telefrag', e.Thing.GetClass()); return;
-					case 'GloryKill': RegisterKill('WT_D4TGloryKills', e.Thing.GetClass()); return;
-					default:
-						if (SelectedWeaponWorld && !IsBlacklisted(SelectedWeaponWorld))
-						{
-							RegisterKill(SelectedWeaponWorld.GetClassName(), e.Thing.GetClass());
-						}
-						return;
-				}
-			}
-
-			// [Ace] Special handling for the follower because I am tired of them stealing my kills. They're technically not a weapon.
-			Name FollowerCls = 'HDFollower';
-			if (e.DamageSource is FollowerCls && e.DamageSource.master && e.DamageSource.master.player == players[consoleplayer])
-			{
-				RegisterKill('WT_HDFollower', e.Thing.GetClassName());
-			}
+		// [Ace] Special handling for the follower because I am tired of them stealing my kills. They're technically not a weapon.
+		Name FollowerCls = 'HDFollower';
+		if (e.DamageSource is FollowerCls && e.DamageSource.master && e.DamageSource.master.player == players[consoleplayer])
+		{
+			RegisterKill('WT_HDFollower', e.Thing.GetClassName());
 		}
 	}
 
