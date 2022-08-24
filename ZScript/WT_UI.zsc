@@ -658,6 +658,7 @@ extend class WT_MainHandler
 		switch (type)
 		{
 			case Type_Genocide:
+			{
 				// [Ace] The + 1 is to account for the beginner rank. Same in the other cases.
 				for (int i = 0; i < GenocideReqs.Size(); ++i)
 				{
@@ -668,7 +669,9 @@ extend class WT_MainHandler
 					}
 				}
 				break;
+			}
 			case Type_Player:
+			{
 				for (int i = 0; i < XPReq.Size(); ++i)
 				{
 					if (currAmount >= XPReq[i])
@@ -678,7 +681,9 @@ extend class WT_MainHandler
 					}
 				}
 				break;
+			}
 			case Type_Weapons:
+			{
 				for (int i = 0; i < WeapKillReq.Size(); ++i)
 				{
 					if (currAmount >= WeapKillReq[i])
@@ -688,6 +693,7 @@ extend class WT_MainHandler
 					}
 				}
 				break;
+			}
 		}
 	}
 
@@ -736,6 +742,7 @@ extend class WT_MainHandler
 		{
 			// [Ace] The default values are the colors for the classic WarTrophies scorecard.
 			case SElement_Labels:
+			{
 				switch (Theme)
 				{
 					default: return "WT_Old_FadedBrown";
@@ -743,7 +750,9 @@ extend class WT_MainHandler
 					case 2: return "WT_Old_Orange";
 					case 3: return "WT_LightSteelBlue";
 				}
+			}
 			case SElement_WeaponList:
+			{
 				switch (Theme)
 				{
 					default: return "WT_Old_FadedBrown";
@@ -751,7 +760,9 @@ extend class WT_MainHandler
 					case 2: return "WT_Old_FadedOrange";
 					case 3: return "WT_SlateGray";
 				}
+			}
 			case SElement_WeaponListAlt:
+			{
 				switch (Theme)
 				{
 					default: return "WT_Old_FadedBrownAlt";
@@ -759,7 +770,9 @@ extend class WT_MainHandler
 					case 2: return "WT_Old_FadedOrangeAlt";
 					case 3: return "WT_LightSteelBlue";
 				}
+			}
 			case SElement_SelectedWeapon:
+			{
 				switch (Theme)
 				{
 					default: return "WT_Old_OrangeRed";
@@ -767,6 +780,7 @@ extend class WT_MainHandler
 					case 2: return "WT_Old_Orange";
 					case 3: return "WT_LightSteelBlue";
 				}
+			}
 		}
 
 		return "Invalid";
@@ -835,38 +849,49 @@ extend class WT_MainHandler
 				{
 					// Cycle pages left.
 					case UiEvent.Key_Left:
+					{
 						OnChangeScorecardPage();
 						EventHandler.SendNetworkEvent("WT_PreviousPage");
 						break;
+					}
 
 					// Cycle pages right.
 					case UiEvent.Key_Right:
+					{
 						OnChangeScorecardPage();
 						EventHandler.SendNetworkEvent("WT_NextPage");
 						break;
+					}
 
 					// Move weapon selection up.
 					case UiEvent.Key_Up:
+					{
 						if (SelectedPage != Page_Main) break;
 						EventHandler.SendNetworkEvent("WT_PreviousWeapon");
 						OnChangeWeaponSelection();
 						break;
+					}
 
 					// Move weapon selection down.
 					case UiEvent.Key_Down:
+					{
 						if (SelectedPage != Page_Main) break;
 						EventHandler.SendNetworkEvent("WT_NextWeapon");
 						OnChangeWeaponSelection();
 						break;
+					}
 
 					// Previous sub-page.
 					case UiEvent.Key_PgUp:
+					{
 						SubPage = max(0, SubPage - 1);
 						S_StartSound("WT/ChangeSubPage", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
+					}
 
 					// Next sub-page.
 					case UiEvent.Key_PgDn:
+					{
 						int TotalEntries = 1;
 						int MaxEntries = 1;
 						switch (SelectedPage)
@@ -888,16 +913,31 @@ extend class WT_MainHandler
 						SubPage = min(SubPage + 1, GetPages(TotalEntries, MaxEntries) - 1);
 						S_StartSound("WT/ChangeSubPage", CHAN_AUTO, CHANF_UI | CHANF_LOCAL);
 						break;
+					}
+
+					case UiEvent.Key_Del:
+					{
+						if (e.IsCtrl && e.IsShift)
+						{
+							EventHandler.SendNetworkEvent("WT_ResetSelectedWeapon");
+							EventHandler.SendNetworkEvent("WT_ReInitialize");
+						}
+						break;
+					}
+
 
 					// Exit menu.
 					case UiEvent.Key_Escape:
+					{
 						EventHandler.SendNetworkEvent("WT_ClearFilter");
 						EventHandler.SendNetworkEvent("WT_ToggleUi");
 						SubPage = 0;
 						break;
+					}
 
 					// Enter search mode. Chars: Space
 					case 32:
+					{
 						if (SelectedPage != Page_Main)
 						{
 							break;
@@ -905,27 +945,34 @@ extend class WT_MainHandler
 						InSearchMode = true;
 						EventHandler.SendNetworkEvent("WT_ClearFilter");
 						break;
+					}
 
 					// Clear filter.
 					case UiEvent.Key_Backspace:
+					{
 						EventHandler.SendNetworkEvent("WT_ClearFilter");
 						EventHandler.SendNetworkEvent("WT_ReInitialize");
 						break;
+					}
 
 					// [Ace] Upgrade prestige. Chars: 'p' or 'P'.
 					// It really bothers me that I'm doing such logic checks in the UI. I'd have to completely mess up the scoping otherwise.
 					case 80:
 					case 112:
+					{
 						if (PlayerRank == XPReq.Size() - 1 && Prestige < 3)
 						{
 							EventHandler.SendNetworkEvent("WT_UpgradePrestige");
 						}
 						break;
+					}
 
 					// Take screenshot.
 					case UiEvent.Key_F12:
+					{
 						LevelLocals.MakeScreenShot();
 						break;
+					}
 				}
 			}
 			else
@@ -934,27 +981,35 @@ extend class WT_MainHandler
 				{
 					// Apply filter.
 					case UiEvent.Key_Return:
+					{
 						InSearchMode = false;
 						EventHandler.SendNetworkEvent("WT_ReInitialize");
 						break;
+					}
 
 					// Exit search mode and don't apply filter.
 					case UiEvent.Key_Escape:
+					{
 						EventHandler.SendNetworkEvent("WT_ClearFilter");
 						InSearchMode = false;
 						break;
+					}
 
 					// Delete last character.
 					case UiEvent.Key_Backspace:
+					{
 						EventHandler.SendNetworkEvent("WT_EraseLastFilterChar");
 						break;
+					}
 
 					default:
+					{
 						if (SearchFilter.Length() < 13 && e.KeyChar >= 32 && e.KeyChar <= 126) // [Ace] Only valid characters.
 						{
 							EventHandler.SendNetworkEvent("WT_AppendFilterChar", e.KeyChar);
 						}
 						break;
+					}
 				}
 			}
 		}

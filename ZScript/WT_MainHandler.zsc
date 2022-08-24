@@ -100,15 +100,17 @@ class WT_MainHandler : StaticEventHandler
 		Console.Printf("All statistics successfully reset!");
 	}
 
-	private void ResetWeapon()
+	private void ResetSelectedWeapon()
 	{
-		let wpn = FindWeapon(SelectedWeaponWorld);
-		if (wpn)
+		int index = AllWeapons.Find(SelectedWeaponList);
+		if (index == AllWeapons.Size())
 		{
-			AllWeapons.Delete(AllWeapons.Find(wpn));
-			InitLiteHud();
+			return;
 		}
-		Console.Printf("Weapon statistics successfully reset!");
+
+		WT_WeaponData data = AllWeapons[index];
+		AllWeapons.Delete(index);
+		Console.Printf("Statistics for %s successfully reset!", GetDefaultByType(data.Object).GetTag());
 	}
 
 	// --------------------------------------------------
@@ -118,6 +120,8 @@ class WT_MainHandler : StaticEventHandler
 	override void NetworkProcess(ConsoleEvent e)
 	{
 		if (e.Player != consoleplayer) return;
+
+		string cmd = e.Name.MakeLower();
 
 		if (e.Name ~== "WT_ForceSave")
 		{
@@ -145,9 +149,9 @@ class WT_MainHandler : StaticEventHandler
 			return;
 		}
 
-		if (e.Name ~== "WT_ResetWeapon")
+		if (e.Name ~== "WT_ResetSelectedWeapon")
 		{
-			ResetWeapon();
+			ResetSelectedWeapon();
 			return;
 		}
 
