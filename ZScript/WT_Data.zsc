@@ -413,7 +413,7 @@ extend class WT_MainHandler
 		{
 			for (int j = i + 1; j < AvailableWeapons.Size(); ++j)
 			{
-				bool Check;
+				bool check;
 				switch (sortType)
 				{
 					// [Ace] Sort by numbers first, then by first letter if the numbers match.
@@ -423,20 +423,22 @@ extend class WT_MainHandler
 
 						let cWpn = Weapon(currItem);
 						let nWpn = Weapon(nextItem);
-						Check = cWpn && nWpn && cWpn.SlotNumber >= nWpn.SlotNumber || ((!cWpn || !nWpn || cWpn.SlotNumber == nWpn.SlotNumber) && String.Format("%s", currItem.GetClassName()).ByteAt(0) >= String.Format("%s", nextItem.GetClassName()).ByteAt(0));
+
+						bool alphabetical = String.Format("%s", currItem.GetClassName()).ByteAt(0) >= String.Format("%s", nextItem.GetClassName()).ByteAt(0);
+						check = !cWpn && nWpn && alphabetical || cWpn && nWpn && (cWpn.SlotNumber >= nWpn.SlotNumber && alphabetical);
 						break;
 
 					// [Ace] Sort by kills.
 					case 2:
-						Check = AvailableWeapons[i].GetKills() <= AvailableWeapons[j].GetKills();
+						check = AvailableWeapons[i].GetKills() <= AvailableWeapons[j].GetKills();
 						break;
 				}
 
-				if (Check)
+				if (check)
 				{
-					let Swap = AvailableWeapons[i];
+					let swap = AvailableWeapons[i];
 					AvailableWeapons[i] = AvailableWeapons[j];
-					AvailableWeapons[j] = Swap;
+					AvailableWeapons[j] = swap;
 				}
 			}
 		}
