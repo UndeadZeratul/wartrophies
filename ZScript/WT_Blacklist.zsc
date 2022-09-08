@@ -50,8 +50,7 @@ extend class WT_MainHandler
 		while ((LumpNum = Wads.FindLump(lumpName, LumpNum + 1, Wads.GlobalNamespace)) >= 0)
 		{
 			string lumpText = Wads.ReadLump(LumpNum);
-			lumpText.Replace("\n", "");
-			lumpText.Replace("\r", "");
+			lumpText = lumpText.Filter();
 			lumpText.Replace(" ", "");
 
 			Array<string> parsedList;
@@ -62,7 +61,7 @@ extend class WT_MainHandler
 				string clsName = parsedList[i];
 
 				// [Ace] The last character of the last element will be either end-of-line or some sort of an invisible termination character. It is added to the string as well, and that messes things up.
-				class<Actor> cls = clsName.Filter();
+				class<Actor> cls = clsName;
 				if (cls && arr.Find(cls) == arr.Size())
 				{
 					arr.Push(cls);
