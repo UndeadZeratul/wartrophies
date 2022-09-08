@@ -58,10 +58,7 @@ extend class WT_MainHandler
 
 			for (int i = 0; i < parsedList.Size(); ++i)
 			{
-				string clsName = parsedList[i];
-
-				// [Ace] The last character of the last element will be either end-of-line or some sort of an invisible termination character. It is added to the string as well, and that messes things up.
-				class<Actor> cls = clsName;
+				class<Actor> cls = parsedList[i];
 				if (cls && arr.Find(cls) == arr.Size())
 				{
 					arr.Push(cls);
