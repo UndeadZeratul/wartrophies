@@ -416,7 +416,7 @@ extend class WT_MainHandler
 				bool check;
 				switch (sortType)
 				{
-					// [Ace] Sort by numbers first, then by first letter if the numbers match.
+					// [Ace] Sort by slot numbers. Items are just sorted alphabetically.
 					case 1:
 						let currItem = GetDefaultByType(AvailableWeapons[i].Object);
 						let nextItem = GetDefaultByType(AvailableWeapons[j].Object);
@@ -424,8 +424,11 @@ extend class WT_MainHandler
 						let cWpn = Weapon(currItem);
 						let nWpn = Weapon(nextItem);
 
-						bool alphabetical = String.Format("%s", currItem.GetClassName()).ByteAt(0) >= String.Format("%s", nextItem.GetClassName()).ByteAt(0);
-						check = !cWpn && nWpn && alphabetical || cWpn && nWpn && (cWpn.SlotNumber >= nWpn.SlotNumber && alphabetical);
+						string cName = currItem.GetTag();
+						string nName = nextItem.GetTag();
+						bool alphabetical = cName.ByteAt(0) >= nName.ByteAt(0);
+
+						check = !cWpn && alphabetical || cWpn && nWpn && cWpn.SlotNumber >= nWpn.SlotNumber;
 						break;
 
 					// [Ace] Sort by kills.
