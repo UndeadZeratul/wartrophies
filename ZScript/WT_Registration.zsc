@@ -62,7 +62,6 @@ extend class WT_MainHandler
 
 	void RegisterKill(Name wpnName, class<Actor> victim)
 	{
-		// [Ace]
 		class<Inventory> cls = wpnName;
 		if (!cls)
 		{
