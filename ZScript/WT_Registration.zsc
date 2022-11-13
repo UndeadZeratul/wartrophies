@@ -6,7 +6,7 @@ extend class WT_MainHandler
 	// 30 bucks I'm not paying up if I lose.
 	override void WorldThingDamaged(WorldEvent e)
 	{
-		if (demoplayback || !e.Thing || !e.Thing.bISMONSTER || e.Thing.Health > 0)
+		if (demoplayback || !e.Thing || !e.Thing.bISMONSTER || e.Thing.Health > 0 || !e.Thing.bCOUNTKILL && !RegisterNoCountKill.GetBool())
 		{
 			return;
 		}

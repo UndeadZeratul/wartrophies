@@ -135,6 +135,8 @@ extend class WT_MainHandler
 	private CVar LiteHudVisibilityFlags;
 
 	private CVar ScreenBlocks;
+	
+	private CVar RegisterNoCountKill;
 
 	private int SelectedPage;
 
@@ -295,6 +297,7 @@ extend class WT_MainHandler
 		UiFont = CVar.FindCVar('wt_ui_font');
 		KillSoundType = CVar.FindCVar('wt_killsound');
 		BlacklistEnabled = CVar.FindCVar('wt_blacklist_enable');
+		RegisterNoCountKill = CVar.FindCVar('wt_nocountkill');
 
 		ScreenBlocks = CVar.FindCVar('screenblocks');
 
