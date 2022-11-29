@@ -13,7 +13,7 @@ extend class WT_MainHandler
 
 		if (e.Inflictor) // [Ace] See if maybe actor is mapped.
 		{
-			// [Ace] I know for sure Deathstrider uses weapons and items for inflictors when dealing damage.
+			// [Ace] Deathstrider support start.
 			if (e.Inflictor is 'Inventory' && (Inventory(e.Inflictor).Owner == players[consoleplayer].mo || e.Inflictor.Master == players[consoleplayer].mo || e.Inflictor.Target == players[consoleplayer].mo))
 			{
 				if (IsValid(e.Inflictor.GetClass()))
@@ -22,6 +22,17 @@ extend class WT_MainHandler
 				}
 				return;
 			}
+
+			if (e.Inflictor.Target is 'Inventory' && (e.Inflictor.Target.Master == players[consoleplayer].mo || e.Inflictor.Target.Target == players[consoleplayer].mo))
+			{
+				if (IsValid(e.Inflictor.Target.GetClass()))
+				{
+					RegisterKill(e.Inflictor.Target.GetClassName(), e.Thing.GetClass());
+				}
+			}
+
+			// [Ace] Deathstrider support end. If anything else works, it's by complete happenstance.
+			// At this point I only care enough to support my own mods.
 
 			WT_InflictorInfo bind = FindInflictorBind(e.Inflictor);
 			if (bind)
