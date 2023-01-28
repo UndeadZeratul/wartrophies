@@ -1,13 +1,24 @@
 extend class WT_MainHandler
 {
-	// [Ace] WTD gets called *after* the damage is dealt. Just sayin'.
-	// 10 bucks it's going to break with Hideous Destructor.
-	// 20 bucks I won't be able to fix it.
-	// 30 bucks I'm not paying up if I lose.
+	enum ValidityFlags
+	{
+		VAF_NOCOUNTKILL = 1,
+		VAF_FRIENDLY = 2
+	}
+	
 	override void WorldThingDamaged(WorldEvent e)
 	{
-		if (demoplayback || !e.Thing || !e.Thing.bISMONSTER || e.Thing.Health > 0 || !e.Thing.bCOUNTKILL && !RegisterNoCountKill.GetBool())
+		int valid = Validity.GetInt();
+		if (demoplayback || !e.Thing || !e.Thing.bISMONSTER || e.Thing.Health > 0 || !e.Thing.bCOUNTKILL && !(valid & VAF_NOCOUNTKILL) || e.Thing.bFRIENDLY && !(valid & VAF_FRIENDLY))
 		{
+			return;
+		}
+
+		// [Ace] Special handling for the follower because I am tired of them stealing my kills. They're technically not a weapon.
+		Name followerCls = 'DSFollower';
+		if (e.DamageSource is followerCls && e.DamageSource.Master && e.DamageSource.Master == players[consoleplayer].mo)
+		{
+			RegisterKill('WT_DSFollower', e.Thing.GetClassName());
 			return;
 		}
 
@@ -61,13 +72,6 @@ extend class WT_MainHandler
 					return;
 				}
 			}
-		}
-
-		// [Ace] Special handling for the follower because I am tired of them stealing my kills. They're technically not a weapon.
-		Name FollowerCls = 'HDFollower';
-		if (e.DamageSource is FollowerCls && e.DamageSource.Master && e.DamageSource.Master == players[consoleplayer].mo)
-		{
-			RegisterKill('WT_HDFollower', e.Thing.GetClassName());
 		}
 	}
 

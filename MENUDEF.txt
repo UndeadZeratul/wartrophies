@@ -20,15 +20,20 @@ OptionMenu "WarTrophiesMenu"
 	Option "Rank Set - Player", "wt_rankset_player", "RankSetPlayer"
 	Option "Rank Set - Genocide", "wt_rankset_genocide", "RankSetGenocide"
 	StaticText ""
-	Option "Counterless Monsters Are Valid", "wt_nocountkill", "YesNo"
+	StaticText "----- Kill Validity -----", "Teal"
+	FlagOption "Counterless Monsters", "wt_validity", "YesNo", 0
 	StaticText "By default, monsters with -COUNTKILL are registered. However, some mods may use", "White"
 	StaticText "a lot of decorative monsters (e.g. maggots) that can potentially be registered.", "White"
 	StaticText "This option can help reduce bloat from miscellaneous kills.", "White"
 	StaticText ""
+	FlagOption " Friendly Monsters", "wt_validity", "YesNo", 1
+	StaticText ""
+	StaticText "----- Blacklist -----", "Teal"
 	Option "Blacklist type", "wt_blacklist_enable", "BlacklistType"
 	StaticText "Allows blacklisting or whitelisting weapons from kill tracking.", "White"
 	StaticText "Does not remove already existing weapons from the scorecard!", "White"
 	StaticText ""
+	StaticText "----- DANGEROUS SECTION -----", "Teal"
 	SafeCommand "Reset all statistics", "netevent wt_resettally"
 }
 

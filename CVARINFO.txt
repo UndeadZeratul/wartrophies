@@ -45,4 +45,4 @@ nosave int wt_blacklist_enable = 1;
 
 // Misc.
 nosave int wt_killsound = 0;
-nosave bool wt_nocountkill = true;
+nosave int wt_validity = 1;
