@@ -1,7 +1,0 @@
-HDWoundFixer,
-MagManager,
-PickupManager,
-HDBackpack,
-AutoReloader,
-WeaponStashSwitcher,
-Tripwire

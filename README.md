@@ -20,7 +20,7 @@ Download the zip and load it into GZDoom. No need to change its extension to .pk
 Certain mods don't play too well with War Trophies. They will work, but not always the way you'd expect them to. A few examples:
 - **Combined Arms (and probably lots of other mods):** Some weapons don't have icons or pickup sprites, so the weapon icon in the scorecard would instead be the first frame from the Ready state. It's only a visual "bug".
 - **Kriegsland/Doom Incarnate:** Dual-wielded weapons are separate weapons, meaning their stats are tracked separately from their single variants. This can be fixed if anyone is willing to make folders for those weapons so they count as one. Pull requests are welcome.
-- **Hideous Destructor:** It's possible to attribute kills from a weapon to a different weapon that cannot physically kill anything. Most such weapons have been blacklisted, but some may have been overlooked.
+- **Hideous Destructor:** It's possible to attribute kills from a weapon to a different weapon that cannot physically kill anything.
 
 ### Do this if you want (proper) addon support
 ---
