@@ -41,8 +41,8 @@ class WT_MainHandler : StaticEventHandler
 		PlayerPawn plr = TraverseTargetChain(e.Thing);
 		if (plr && !e.Thing.target.bISMONSTER && (e.Thing.bMISSILE || e.Thing.bPUFFONACTORS || e.Thing.bALWAYSPUFF))
 		{
-			int PlayerNum = plr.PlayerNumber();
-			if (PlayerNum > -1)
+			int playerNum = plr.PlayerNumber();
+			if (playerNum > -1)
 			{
 				WT_InflictorInfo Bind = new('WT_InflictorInfo');
 				Bind.Inflictor = e.Thing;

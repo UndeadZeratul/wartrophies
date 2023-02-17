@@ -14,41 +14,52 @@ extend class WT_MainHandler
 			return;
 		}
 
-		// [Ace] Special handling for the follower because I am tired of them stealing my kills. They're technically not a weapon.
-		Name followerCls = 'DSFollower';
-		if (e.DamageSource is followerCls && e.DamageSource.Master && e.DamageSource.Master == players[consoleplayer].mo)
+		PlayerPawn plr = players[consoleplayer].mo;
+
+		// [Ace] Check for compatibility stuff.
+		if (e.DamageSource && (e.DamageSource.Master == plr || e.DamageSource.Target == plr))
 		{
-			RegisterKill('WT_DSFollower', e.Thing.GetClassName());
-			return;
+			for (int i = 0; i < AllActorClasses.Size(); ++i)
+			{
+				let cls = (class<WT_CompatItem>)(AllActorClasses[i]);
+				if (cls)
+				{
+					let def = GetDefaultByType(cls);
+					if (e.DamageSource is def.CheckedActor)
+					{
+						RegisterKill(def.GetClassName(), e.Thing.GetClassName());
+						return;
+					}
+				}
+			}	
 		}
 
-		if (e.Inflictor) // [Ace] See if maybe actor is mapped.
+		if (e.Inflictor)
 		{
 			// [Ace] Deathstrider support start.
-			if (e.Inflictor is 'Inventory' && (Inventory(e.Inflictor).Owner == players[consoleplayer].mo || e.Inflictor.Master == players[consoleplayer].mo || e.Inflictor.Target == players[consoleplayer].mo))
+			if (e.Inflictor is 'Inventory' && (Inventory(e.Inflictor).Owner == plr || e.Inflictor.Master == plr || e.Inflictor.Target == plr))
 			{
 				if (IsValid(e.Inflictor.GetClass()))
 				{
 					RegisterKill(e.Inflictor.GetClassName(), e.Thing.GetClass());
+					return;
 				}
-				return;
 			}
 
-			if (e.Inflictor.Target is 'Inventory' && (e.Inflictor.Target.Master == players[consoleplayer].mo || e.Inflictor.Target.Target == players[consoleplayer].mo))
+			if (e.Inflictor.Target is 'Inventory' && (Inventory(e.Inflictor.Target).Owner == plr || e.Inflictor.Target.Master == plr || e.Inflictor.Target.Target == plr))
 			{
 				if (IsValid(e.Inflictor.Target.GetClass()))
 				{
 					RegisterKill(e.Inflictor.Target.GetClassName(), e.Thing.GetClass());
+					return;
 				}
 			}
+			// [Ace] Deathstrider support end. If anything else works, it's by complete happenstance. At this point I only care enough to support my own mods.
 
-			// [Ace] Deathstrider support end. If anything else works, it's by complete happenstance.
-			// At this point I only care enough to support my own mods.
-
-			WT_InflictorInfo bind = FindInflictorBind(e.Inflictor);
+			WT_InflictorInfo bind = FindInflictorBind(e.Inflictor); // [Ace] See if maybe actor is mapped.
 			if (bind)
 			{
-				if (IsValid(bind.WeaponUsed) && bind.OwningPlayer == players[consoleplayer].mo)
+				if (IsValid(bind.WeaponUsed) && bind.OwningPlayer == plr)
 				{
 					RegisterKill(bind.WeaponUsed, e.Thing.GetClass());
 					return;
@@ -57,12 +68,11 @@ extend class WT_MainHandler
 		}
 
 		// [Ace] Hitscans and everything else.
-		if (e.DamageSource is 'PlayerPawn' && e.DamageSource == players[consoleplayer].mo)
+		if (e.DamageSource is 'PlayerPawn' && e.DamageSource == plr)
 		{
 			switch (e.DamageType)
 			{
 				case 'Telefrag': RegisterKill('WT_Telefrag', e.Thing.GetClass()); return;
-				case 'GloryKill': RegisterKill('WT_D4TGloryKills', e.Thing.GetClass()); return;
 				default:
 				{
 					if (SelectedWeaponWorld && IsValid(SelectedWeaponWorld))

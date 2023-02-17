@@ -1,63 +1,14 @@
-class WT_Weapon : Weapon abstract
+class WT_CompatItem : Inventory abstract
 {
 	string CheckedActor;
 	property CheckForActor: CheckedActor; // [Ace] Don't display if the actor doesn't exist.
-
-	Default
-	{
-		+WEAPON.CHEATNOTWEAPON
-		+WEAPON.NO_AUTO_SWITCH
-		+WEAPON.NOAUTOSWITCHTO
-	}
-
-	States
-	{
-		// [Ace] Don't even try equipping it.
-		Ready:
-			TNT1 A 1;
-			Stop;
-		Select:
-			TNT1 A 1;
-			Stop;
-		Deselect:
-			TNT1 A 1;
-			Stop;
-		Fire:
-			TNT1 A 1;
-			Stop;
-	}
 }
 
-class WT_Telefrag : WT_Weapon
+class WT_Telefrag : WT_CompatItem
 {
 	Default
 	{
 		Tag "Telefragging";
 		Inventory.Icon "WTTLFRAG";
-		Weapon.SlotNumber -50;
-	}
-}
-
-// [Ace] Compatibility. HEEEEEEEEEEEEEEEEEERE WE GO!
-
-class WT_D4TGloryKills : WT_Weapon
-{
-	Default
-	{
-		Tag "Glory Kills";
-		Inventory.Icon "GLRYKILL";
-		Weapon.SlotNumber -49;
-		WT_Weapon.CheckForActor "Doom4Player";
-	}
-}
-
-class WT_HDFollower : WT_Weapon
-{
-	Default
-	{
-		Tag "Followers";
-		Inventory.Icon "TNT1A0";
-		Weapon.SlotNumber -48;
-		WT_Weapon.CheckForActor "HDFollower";
 	}
 }

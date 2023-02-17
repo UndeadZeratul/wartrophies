@@ -400,7 +400,7 @@ extend class WT_MainHandler
 		for (int i = 0; i < AllWeapons.Size(); ++i)
 		{
 			WT_WeaponData wpn = AllWeapons[i];
-			if (wpn.Object is 'WT_Weapon' && !(class<Actor>)(GetDefaultByType((class<WT_Weapon>)(wpn.Object)).CheckedActor))
+			if (wpn.Object is 'WT_CompatItem' && !(class<Actor>)(GetDefaultByType((class<WT_CompatItem>)(wpn.Object)).CheckedActor))
 			{
 				continue;
 			}
