@@ -8,32 +8,39 @@ extend class WT_MainHandler
 
 	private bool IsValid(class<Actor> cls)
 	{
-		switch (BlackListEnabled.GetInt())
+		int flags = BlackListEnabled.GetInt();
+
+		bool isWhitelisted = false, isBlacklisted = false;
+		if (flags & 1) // [Ace] This only works on weapons.
 		{
-			case 1:
+			for (int i = 0; i < BlacklistDefs.Size(); ++i)
 			{
-				for (int i = 0; i < BlacklistDefs.Size(); ++i)
+				if (cls is BlacklistDefs[i])
 				{
-					if (cls is BlacklistDefs[i])
-					{
-						return false;
-					}
+					isBlacklisted = true;
+					break;
 				}
-				return true;
-			}
-			case 2:
-			{
-				for (int i = 0; i < WhitelistDefs.Size(); ++i)
-				{
-					if (cls is WhitelistDefs[i])
-					{
-						return true;
-					}
-				}
-				return false;
 			}
 		}
-		return true;
+		if (flags & 2)
+		{
+			for (int i = 0; i < WhitelistDefs.Size(); ++i)
+			{
+				if (cls is WhitelistDefs[i])
+				{
+					isWhitelisted = true;
+					break;
+				}
+			}
+		}
+
+		switch (flags)
+		{
+			default: return true;
+			case 1: return !isBlacklisted;
+			case 2: return isWhitelisted;
+			case 3: return isWhitelisted && !isBlacklisted;
+		}
 	}
 
 	// [Ace] Copy-pasted from Universal Gibs with some edits.

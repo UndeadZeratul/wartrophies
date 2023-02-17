@@ -149,6 +149,7 @@ OptionValue "BlacklistType"
 	0, "Disabled"
 	1, "Blacklist"
 	2, "Whitelist"
+	3, "Both"
 }
 
 OptionValue "IWADFilterMode"
