@@ -68,7 +68,7 @@ extend class WT_MainHandler
 		}
 
 		// [Ace] Hitscans and everything else.
-		if (e.DamageSource is 'PlayerPawn' && e.DamageSource == plr)
+		if (e.DamageSource is 'PlayerPawn' && e.DamageSource == plr && e.Inflictor != e.DamageSource)
 		{
 			switch (e.DamageType)
 			{
