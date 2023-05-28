@@ -39,7 +39,7 @@ class WT_MainHandler : StaticEventHandler
 		}
 		
 		PlayerPawn plr = TraverseTargetChain(e.Thing);
-		if (plr && !e.Thing.target.bISMONSTER && (e.Thing.bMISSILE || e.Thing.bPUFFONACTORS || e.Thing.bALWAYSPUFF))
+		if (plr && !e.Thing.Target.bISMONSTER && (e.Thing.bMISSILE || e.Thing.bPUFFONACTORS || e.Thing.bALWAYSPUFF))
 		{
 			int playerNum = plr.PlayerNumber();
 			if (playerNum > -1)
@@ -72,7 +72,7 @@ class WT_MainHandler : StaticEventHandler
 	private PlayerPawn TraverseTargetChain(Actor a)
 	{
 		PlayerPawn ActT = null;
-		Actor NextT = a.target;
+		Actor NextT = a.Target;
 
 		for (int i = 0; i < 6; ++i) // [Ace] Used to prevent infinite recursion.
 		{
@@ -83,7 +83,7 @@ class WT_MainHandler : StaticEventHandler
 			}
 			else if (NextT)
 			{
-				NextT = NextT.target;
+				NextT = NextT.Target;
 			}
 		}
 
