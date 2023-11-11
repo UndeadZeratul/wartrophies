@@ -134,13 +134,12 @@ extend class WT_MainHandler
 				StatusBar.SetSize(StatusBar.RelTop, int(640 / Scale), int(480 / Scale));
 			}
 
-			vector2 OffsetMult = (LiteHudOffsetX.GetFloat(), LiteHudOffsetY.GetFloat());
-			vector2 LiteOffset = (StatusBar.HorizontalResolution * (OffsetMult.X > 2.0 ? 0 : OffsetMult.X), StatusBar.VerticalResolution * (OffsetMult.Y > 2.0 ? 0 : OffsetMult.Y));
+			vector2 liteOff = (StatusBar.HorizontalResolution * LiteHudOffsetX.GetFloat(), StatusBar.VerticalResolution * LiteHudOffsetY.GetFloat());
 
 			vector2 PlayerStatsSize = (0, 0);
 			if (LiteHud != Stats_Weapon && VisiblityFlags & VF_Player_All != 0)
 			{
-				PlayerStatsSize = DrawLiteHudPlayerStats(StatusBar, (2, 2) + LiteOffset, VisiblityFlags, Alpha);
+				PlayerStatsSize = DrawLiteHudPlayerStats(StatusBar, (2, 2) + liteOff, VisiblityFlags, Alpha);
 			}
 
 			// [Ace] Don't update available weapons if the weapon stats aren't visible. It'd be a waste of VM time.
@@ -156,7 +155,7 @@ extend class WT_MainHandler
 						case 1: Pos.X += PlayerStatsSize.X; break;
 					}
 
-					DrawLiteHudWeaponStats(StatusBar, SelectedWeaponLite, Pos +LiteOffset, VisiblityFlags, Alpha);
+					DrawLiteHudWeaponStats(StatusBar, SelectedWeaponLite, Pos + liteOff, VisiblityFlags, Alpha);
 				}
 			}
 		}
