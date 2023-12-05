@@ -221,6 +221,9 @@ OptionValue "UiFont"
 	0, "Simply Unreal"
 	1, "Teevee Gold"
 	2, "Jenocide"
+	3, "BigFont"
+	4, "SmallFont"
+	5, "NewSmallFont"
 }
 
 OptionValue "ScorecardTheme"

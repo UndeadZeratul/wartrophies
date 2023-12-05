@@ -64,7 +64,10 @@ extend class WT_MainHandler
 		// [Ace] One pair for each font.
 		17, 30, 30,
 		24, 37, 37,
-		19, 32, 32
+		19, 32, 32,
+		12, 30, 30,
+		16, 30, 30,
+		12, 30, 30
 	};
 
 	static const int MonsterNameLengths[] =
@@ -72,7 +75,10 @@ extend class WT_MainHandler
 		// Monster name in the main page.
 		22, 36, // [Ace] Timmy Turner, my name is DougsDaleDimmaDaleDimmaDimmsDomeDoDiDomeDimmsDimmaDimmaDome, owner of the DougDimmsDimmaDaleDimmsDomeDoDiDimmaDimmsDaleDimmaDimmsDaleDimmaDome. Also monster page.
 		26, 40,
-		24, 38
+		24, 38,
+		24, 24,
+		32, 32,
+		22, 36
 	};
 
 	static const int MaxListEntries[] =
@@ -81,9 +87,14 @@ extend class WT_MainHandler
 		27 // Weapon and mosnter lists in their specialized page.
 	};
 
-	const LiteHudMaxStringWidth = 200; // [Ace] Size in pixels.
+	const LiteHudMaxStringWidth = 320; // [Ace] Size in pixels.
 
 	const FontPrefix = "WTFONT";
+
+
+	// Splice that allows for hideous helmet compatability (REQUIRES HD).
+	private ui Service _HHFunc;
+
 	private ui Font MainFont;
 	private ui HUDFont MainHudFont;
 
@@ -115,8 +126,21 @@ extend class WT_MainHandler
 
 	private ui void DrawHudStuff()
 	{
-		MainFont = Font.GetFont(FontPrefix..UiFont.GetInt() + 1);
-		MainHudFont = HUDFont.Create(MainFont);
+		switch (UiFont.GetInt()) {
+			case 3:
+				MainFont = Font.GetFont("BigFont");
+				break;
+			case 4:
+				MainFont = Font.GetFont("SmallFont");
+				break;
+			case 5:
+				MainFont = Font.GetFont("NewSmallFont");
+				break;
+			default:
+				MainFont = Font.GetFont(FontPrefix..UiFont.GetInt() + 1);
+				break;
+		}
+		MainHudFont = HUDFont.Create(MainFont/* , MainFont.GetCharWidth("w"), true */);
 
 		int LiteHud = LiteHudType.GetInt();
 
@@ -127,7 +151,11 @@ extend class WT_MainHandler
 
 		// --------------- LITE HUD ---------------
 
-		if (LiteHud > Stats_None && !DrawUi && !AutomapActive && GameState == GS_LEVEL)
+		if (!_HHFunc) _HHFunc = ServiceIterator.Find("HHFunc").Next();
+
+		bool helmet = !_HHFunc || _HHFunc.GetIntUI("GetShowHUD", ObjectArg: StatusBar.cplayer.mo);
+		
+		if (LiteHud > Stats_None && !DrawUi && !AutomapActive && GameState == GS_LEVEL && helmet)
 		{
 			double Alpha = LiteHudAlpha.GetFloat();
 			double Scale = LiteHudScale.GetFloat();
@@ -227,7 +255,7 @@ extend class WT_MainHandler
 			sbar.DrawString(MainHudFont, PlayerName, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_WHITE, alpha);
 
 			TotalSize.X = max(TotalSize.X, MainFont.StringWidth(PlayerName));
-			TotalSize.Y += 14;
+			TotalSize.Y += MainFont.GetHeight();
 		}
 
 		// Total kills.
@@ -237,7 +265,7 @@ extend class WT_MainHandler
 			sbar.DrawString(MainHudFont, TotalKillsString, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
 
 			TotalSize.X = max(TotalSize.X, MainFont.StringWidth(TotalKillsString));
-			TotalSize.Y += 10;
+			TotalSize.Y += MainFont.GetHeight();
 		}
 
 		// Genocide rank.
@@ -247,7 +275,7 @@ extend class WT_MainHandler
 			sbar.DrawString(MainHudFont, GenocideRankString, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetLiteColor(LElement_GenocideRank)), alpha);
 
 			TotalSize.X = max(TotalSize.X, MainFont.StringWidth(GenocideRankString));
-			TotalSize.Y += 10;
+			TotalSize.Y += MainFont.GetHeight();
 		}
 
 		// [Ace] Separates sections.
@@ -267,7 +295,7 @@ extend class WT_MainHandler
 			sbar.DrawString(MainHudFont, PlayerRankString, (Prestige > 0 ? pos.x + 12 : pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetLiteColor(LElement_PlayerRank)), alpha);
 
 			TotalSize.X = max(TotalSize.X, MainFont.StringWidth(PlayerRankString)) + (Prestige > 0 ? 8 : 0);
-			TotalSize.Y += 10;
+			TotalSize.Y += MainFont.GetHeight();
 		}
 
 		// Player experience.
@@ -277,14 +305,14 @@ extend class WT_MainHandler
 			sbar.DrawString(MainHudFont, ExperienceString, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
 
 			TotalSize.X = max(TotalSize.X, MainFont.StringWidth(ExperienceString));
-			TotalSize.Y += 10;
+			TotalSize.Y += MainFont.GetHeight();
 
 			// Player experience for next level.
 			string NextPlayerRankExp = "\c["..GetLiteColor(LElement_Labels).."]NX: \c["..GetLiteColor(LElement_PlayerRank).."]"..(PlayerRank + 1 < XPReq.Size() ? sbar.FormatNumber(XPReq[PlayerRank + 1], 1, 8) : "-").."\c-";
 			sbar.DrawString(MainHudFont, NextPlayerRankExp, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
 
 			TotalSize.X = max(TotalSize.X, MainFont.StringWidth(NextPlayerRankExp));
-			TotalSize.Y += 10;
+			TotalSize.Y += MainFont.GetHeight();
 		}
 
 		// Player medal.
@@ -335,10 +363,10 @@ extend class WT_MainHandler
 				{
 					sbar.DrawImage("WTFOLDER", pos + (1, 0), DI_TL, alpha, (8, 8));
 				}
-				pos.y += 10 * i;
+				pos.y += MainFont.GetHeight() * i;
 				sbar.DrawString(MainHudFont, MultilineName.StringAt(i), pos + (i == 0 && isFolder ? 10 : 0, 0), DI_TL_TEXT_LEFT, Font.FindFontColor(GetLiteColor(LElement_WeaponName)), alpha);
 			}
-			pos.y += 10;
+			pos.y += MainFont.GetHeight();
 		}
 		
 		// Weapon rank.
@@ -346,7 +374,7 @@ extend class WT_MainHandler
 		if (visFlags & VF_WeaponRank)
 		{
 			sbar.DrawString(MainHudFont, WeaponRankString, pos, DI_TL_TEXT_LEFT, Font.FindFontColor(GetLiteColor(LElement_WeaponRank)), alpha);
-			pos.y += 10;
+			pos.y += MainFont.GetHeight();
 		}
 
 		if (visFlags & VF_WeaponName || visFlags & VF_WeaponRank)
@@ -359,7 +387,7 @@ extend class WT_MainHandler
 			// Weapon kills.
 			sbar.DrawString(MainHudFont, "K:", (pos.x, pos.y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetLiteColor(LElement_Labels)), alpha);
 			sbar.DrawString(MainHudFont, sbar.FormatNumber(SelWeaponKills, 1, 8), (pos.x + 14, pos.y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetLiteColor(LElement_WeaponKills)), alpha);
-			pos.y += 10;
+			pos.y += MainFont.GetHeight();
 
 			// Weapon kills for next level.
 			string NextWeaponRankKills = WeaponRank + 1 < WeapKillReq.Size() ? sbar.FormatNumber(WeapKillReq[WeaponRank + 1], 1, 8) : "-";
