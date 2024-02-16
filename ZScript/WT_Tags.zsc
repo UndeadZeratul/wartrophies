@@ -31,17 +31,17 @@ extend class WT_MainHandler
 			// Hideous Destructor
 			case 'HDBossBrain':						return "The Tyrant";
 			case 'DeadRifleman':					return "Marine (Corpse)";
-			case 'DeadSerpentipede':				return "Imp (Corpse)";
-			case 'DeadRegentipede':					return "Imp Healer (Corpse)";
-			case 'DeadArdentipede':					return "Imp Mage (Corpse)";
+			case 'DeadFighterImp':					return "Imp (Corpse)";
+			case 'DeadHealerImp':					return "Imp Healer (Corpse)";
+			case 'DeadMageImp':						return "Imp Mage (Corpse)";
 			case 'DeadHideousShotgunGuy':			return "Jackboot (Corpse)";
 			case 'UndeadJackbootman':				return "Jackboot (ZM66)";
 			case 'Jackboot':						return "Jackboot (Pump)";
 			case 'DeadZombieStormtrooper':			return "Zombieman (Corpse)";
 			case 'DeadBabuin':						return "Babuin (Corpse)";
 			case 'DeadSpecBabuin':					return "Cloaked Babuin (Corpse)";
-			case 'DeadTrilobite':					return "Cacodemon (Corpse)";
-			case 'DeadSpectre':						return "Spectre (Corpse)";
+			case 'DeadCenobite':					return "Cacodemon (Corpse)";
+			case 'DeadSpectre':						return "Ninja Pirate (Corpse)";
 			case 'HoopBubble':						return "Wolfenstein SS";
 
 			// DRLA
