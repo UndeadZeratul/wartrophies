@@ -45,12 +45,19 @@ extend class WT_MainHandler
 					return;
 				}
 			}
-
 			if (e.Inflictor.Target is 'Inventory' && (Inventory(e.Inflictor.Target).Owner == plr || e.Inflictor.Target.Master == plr || e.Inflictor.Target.Target == plr))
 			{
 				if (IsValid(e.Inflictor.Target.GetClass()))
 				{
 					RegisterKill(e.Inflictor.Target.GetClassName(), e.Thing.GetClass());
+					return;
+				}
+			}
+			if (e.Inflictor.Master is 'Inventory' && (Inventory(e.Inflictor.Master).Owner == plr || e.Inflictor.Master.Master == plr || e.Inflictor.Master.Target == plr))
+			{
+				if (IsValid(e.Inflictor.Master.GetClass()))
+				{
+					RegisterKill(e.Inflictor.Master.GetClassName(), e.Thing.GetClass());
 					return;
 				}
 			}
