@@ -226,7 +226,7 @@ extend class WT_MainHandler
 		// Total kills.
 		if (visFlags & VF_TotalKills)
 		{
-			string TotalKillsString = "\c["..GetLiteColor(LElement_Labels).."]Total: \c["..GetLiteColor(LElement_TotalKills).."]"..sbar.FormatNumber(TotalKillsEver, 1, 10).."\c-";
+			string TotalKillsString = "\c["..GetLiteColor(LElement_Labels).."]Total: \c["..GetLiteColor(LElement_TotalKills).."]"..sbar.FormatNumber(TotalKillsEver, 1, 8).."\c-";
 			sbar.DrawString(MainHudFont, TotalKillsString, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
 
 			TotalSize.X = max(TotalSize.X, MainFont.StringWidth(TotalKillsString));
@@ -266,14 +266,14 @@ extend class WT_MainHandler
 		// Player experience.
 		if (visFlags & VF_PlayerExperience)
 		{
-			string ExperienceString = "\c["..GetLiteColor(LElement_Labels).."]XP: \c["..GetLiteColor(LElement_PlayerRank).."]"..sbar.FormatNumber(Experience, 1, 7).."\c-";
+			string ExperienceString = "\c["..GetLiteColor(LElement_Labels).."]XP: \c["..GetLiteColor(LElement_PlayerRank).."]"..sbar.FormatNumber(Experience, 1, 8).."\c-";
 			sbar.DrawString(MainHudFont, ExperienceString, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
 
 			TotalSize.X = max(TotalSize.X, MainFont.StringWidth(ExperienceString));
 			TotalSize.Y += 10;
 
 			// Player experience for next level.
-			string NextPlayerRankExp = "\c["..GetLiteColor(LElement_Labels).."]NX: \c["..GetLiteColor(LElement_PlayerRank).."]"..(PlayerRank + 1 < XPReq.Size() ? sbar.FormatNumber(XPReq[PlayerRank + 1], 1, 7) : "-").."\c-";
+			string NextPlayerRankExp = "\c["..GetLiteColor(LElement_Labels).."]NX: \c["..GetLiteColor(LElement_PlayerRank).."]"..(PlayerRank + 1 < XPReq.Size() ? sbar.FormatNumber(XPReq[PlayerRank + 1], 1, 8) : "-").."\c-";
 			sbar.DrawString(MainHudFont, NextPlayerRankExp, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_UNTRANSLATED, alpha);
 
 			TotalSize.X = max(TotalSize.X, MainFont.StringWidth(NextPlayerRankExp));
@@ -351,11 +351,11 @@ extend class WT_MainHandler
 		{
 			// Weapon kills.
 			sbar.DrawString(MainHudFont, "K:", (pos.x, pos.y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetLiteColor(LElement_Labels)), alpha);
-			sbar.DrawString(MainHudFont, sbar.FormatNumber(SelWeaponKills, 1, 6), (pos.x + 14, pos.y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetLiteColor(LElement_WeaponKills)), alpha);
+			sbar.DrawString(MainHudFont, sbar.FormatNumber(SelWeaponKills, 1, 8), (pos.x + 14, pos.y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetLiteColor(LElement_WeaponKills)), alpha);
 			pos.y += 10;
 
 			// Weapon kills for next level.
-			string NextWeaponRankKills = WeaponRank + 1 < WeapKillReq.Size() ? sbar.FormatNumber(WeapKillReq[WeaponRank + 1], 1, 6) : "-";
+			string NextWeaponRankKills = WeaponRank + 1 < WeapKillReq.Size() ? sbar.FormatNumber(WeapKillReq[WeaponRank + 1], 1, 8) : "-";
 			sbar.DrawString(MainHudFont, "NX:", (pos.x, pos.y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetLiteColor(LElement_Labels)), alpha);
 			sbar.DrawString(MainHudFont, NextWeaponRankKills, (pos.x + 24, pos.y), DI_TL_TEXT_LEFT, Font.FindFontColor(GetLiteColor(LElement_WeaponRank)), alpha);
 			pos.y += 14;
@@ -389,7 +389,7 @@ extend class WT_MainHandler
 
 		// Total kills.
 		sbar.DrawString(MainHudFont, "TOTAL:", (-223, -84), DI_TEXT_LEFT, Font.FindFontColor(GetScorecardColor(SElement_Labels)));
-		sbar.DrawString(MainHudFont, sbar.FormatNumber(TotalKillsEver, 1, 10), (-42, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Red"));
+		sbar.DrawString(MainHudFont, sbar.FormatNumber(TotalKillsEver, 1, 8), (-42, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Red"));
 
 		// Genocide rank.
 		GetRank(Type_Genocide, TotalKillsEver, GenocideRank, GenocideRankString);
@@ -407,11 +407,11 @@ extend class WT_MainHandler
 
 		// Player experience.
 		sbar.DrawString(MainHudFont, "XP:", (-223, -12), DI_TEXT_LEFT, Font.FindFontColor(GetScorecardColor(SElement_Labels)));
-		sbar.DrawString(MainHudFont, sbar.FormatNumber(Experience, 1, 7), (-139, -12), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_DarkGreen"));
+		sbar.DrawString(MainHudFont, sbar.FormatNumber(Experience, 1, 8), (-139, -12), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_DarkGreen"));
 
 		// Player experience for next level.
 		sbar.DrawString(MainHudFont, "NX:", (-126, -12), DI_TEXT_LEFT, Font.FindFontColor(GetScorecardColor(SElement_Labels)));
-		string NextPlayerRankExp = PlayerRank + 1 < XPReq.Size() ? sbar.FormatNumber(XPReq[PlayerRank + 1], 1, 7) : "-";
+		string NextPlayerRankExp = PlayerRank + 1 < XPReq.Size() ? sbar.FormatNumber(XPReq[PlayerRank + 1], 1, 8) : "-";
 		sbar.DrawString(MainHudFont, NextPlayerRankExp, (-42, -12), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_DarkGreen"));
 
 		// Player medal.
@@ -450,11 +450,11 @@ extend class WT_MainHandler
 
 			// Weapon kills.
 			sbar.DrawString(MainHudFont, "K:", (-7, -84), DI_TEXT_LEFT, Font.FindFontColor(GetScorecardColor(SElement_Labels)));
-			sbar.DrawString(MainHudFont, sbar.FormatNumber(SelWeaponKills, 1, 6), (66, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Red"));
+			sbar.DrawString(MainHudFont, sbar.FormatNumber(SelWeaponKills, 1, 8), (66, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Red"));
 
 			// Weapon kills for next level.
 			sbar.DrawString(MainHudFont, "NX:", (80, -84), DI_TEXT_LEFT, Font.FindFontColor(GetScorecardColor(SElement_Labels)));
-			string NextWepRankReq = WeaponRank + 1 < WeapKillReq.Size() ? sbar.FormatNumber(WeapKillReq[WeaponRank + 1], 1, 6) : "-";
+			string NextWepRankReq = WeaponRank + 1 < WeapKillReq.Size() ? sbar.FormatNumber(WeapKillReq[WeaponRank + 1], 1, 8) : "-";
 			sbar.DrawString(MainHudFont, NextWepRankReq, (152, -84), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_Gold"));
 
 			// Weapon preference.
@@ -517,7 +517,7 @@ extend class WT_MainHandler
 				sbar.DrawString(MainHudFont, GetTruncatedText(GetActorTag(CurrMonster.Object), MonsterNameLengths[0 + 2 * UiFont.GetInt()]), (-7, 36 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor("WT_Old_FadedBlue"));
 
 				// Kills.
-				sbar.DrawString(MainHudFont, sbar.FormatNumber(CurrMonster.Kills, 1, 5), (224, 36 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBlue"));
+				sbar.DrawString(MainHudFont, sbar.FormatNumber(CurrMonster.Kills, 1, 8), (224, 36 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor("WT_Old_FadedBlue"));
 				
 				mRow++;
 			}
@@ -561,7 +561,7 @@ extend class WT_MainHandler
 			sbar.DrawString(MainHudFont, GetTruncatedText(GetActorTag(CurrWeapon.Object), WeaponNameLengths[2 + 3 * UiFont.GetInt()]), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? GetScorecardColor(SElement_WeaponListAlt) : GetScorecardColor(SElement_WeaponList)));
 
 			// Kills.
-			sbar.DrawString(MainHudFont, sbar.FormatNumber(WeaponKills, 1, 5), (116, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? "WT_Old_FadedRedAlt" : "WT_Old_FadedRed"));
+			sbar.DrawString(MainHudFont, sbar.FormatNumber(WeaponKills, 1, 8), (116, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? "WT_Old_FadedRedAlt" : "WT_Old_FadedRed"));
 
 			// Preference.
 			double Pref = WeaponKills / double(TotalKillsAvailable) * 100;
@@ -606,7 +606,7 @@ extend class WT_MainHandler
 			sbar.DrawString(MainHudFont, GetTruncatedText(GetActorTag(CurrMonster.Object), MonsterNameLengths[1 + 2 * UiFont.GetInt()]), (-173, -107 + 9 * mRow), DI_TEXT_LEFT, Font.FindFontColor(AlternateColor ? "WT_Old_FadedBlueAlt" : "WT_Old_FadedBlue"));
 
 			// Kills.
-			sbar.DrawString(MainHudFont, sbar.FormatNumber(CurrMonster.Kills, 1, 5), (174, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? "WT_Old_FadedBlueAlt" : "WT_Old_FadedBlue"));
+			sbar.DrawString(MainHudFont, sbar.FormatNumber(CurrMonster.Kills, 1, 8), (174, -107 + 9 * mRow), DI_TEXT_RIGHT, Font.FindFontColor(AlternateColor ? "WT_Old_FadedBlueAlt" : "WT_Old_FadedBlue"));
 
 			mRow++;
 		}
