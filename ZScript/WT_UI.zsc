@@ -223,11 +223,7 @@ extend class WT_MainHandler
 		// Total kills.
 		if (visFlags & VF_PlayerName)
 		{
-			string PlayerName = sbar.CPlayer.mo.GetTag();
-			if (!(MiscFlags & MF_USEDISPLAYNAME) || PlayerName == sbar.CPlayer.cls)
-			{
-				PlayerName = sbar.CPlayer.GetUserName();
-			}
+			string PlayerName = MiscFlags & MF_USEDISPLAYNAME ? PlayerPawn.GetPrintableDisplayName(sbar.CPlayer.cls) : sbar.CPlayer.GetUserName();
 			sbar.DrawString(MainHudFont, PlayerName, (pos.x, pos.y + TotalSize.Y), DI_TL_TEXT_LEFT, Font.CR_WHITE, alpha);
 
 			TotalSize.X = max(TotalSize.X, MainFont.StringWidth(PlayerName));
