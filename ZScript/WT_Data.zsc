@@ -133,6 +133,7 @@ extend class WT_MainHandler
 	private CVar LiteHudColors[7];
 	private CVar LiteHudAlpha;
 	private CVar LiteHudVisibilityFlags;
+	private CVar LiteHudMiscFlags;
 
 	private CVar ScreenBlocks;
 	
@@ -292,6 +293,7 @@ extend class WT_MainHandler
 		LiteHudColors[LElement_WeaponRank] = CVar.FindCVar('wt_lite_color_weaponrank');
 		LiteHudColors[LElement_WeaponKills] = CVar.FindCVar('wt_lite_color_weaponkills');
 		LiteHudVisibilityFlags = CVar.FindCVar('wt_lite_adv_visibility');
+		LiteHudMiscFlags = CVar.FindCVar('wt_lite_misc');
 
 		DrawOverHud = CVar.FindCVar('wt_ui_drawoverhud');
 		UiFont = CVar.FindCVar('wt_ui_font');

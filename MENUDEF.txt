@@ -84,6 +84,11 @@ OptionMenu "WT_LiteHudMenu"
 	Slider "Offset Y", "wt_lite_offset_y", 0, 4.0, 0.01, 2
 	Slider "Opacity", "wt_lite_alpha", 0.1, 1.0, 0.05, 2
 	StaticText ""
+	StaticText "----- Miscellaneous -----", "Teal"
+	FlagOption "Use Display Name", "wt_lite_misc", "YesNo", 0
+	StaticText "Instead of showing the username, it will use the display name for the player class.", "White"
+	StaticText "Useful for immersion.", "White"
+	StaticText ""
 	StaticText "----- Visibility Options -----", "Teal"
 	FlagOption "Player Name", "wt_lite_adv_visibility", "OnOff", 0
 	FlagOption "Total Kills", "wt_lite_adv_visibility", "OnOff", 1

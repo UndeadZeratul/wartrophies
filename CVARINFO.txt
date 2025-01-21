@@ -30,6 +30,7 @@ nosave float wt_lite_offset_y = 0;
 nosave float wt_lite_alpha = 1.0;
 
 nosave int wt_lite_adv_visibility = 2047; // [Ace] Show all.
+nosave int wt_lite_misc = 0;
 
 nosave int wt_lite_usefolders = 0;
 nosave int wt_lite_color_labels = 0;
